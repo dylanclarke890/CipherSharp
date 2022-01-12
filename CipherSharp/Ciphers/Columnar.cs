@@ -19,7 +19,7 @@ namespace CipherSharp.Ciphers
         /// <param name="initialKey">An array of int keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The encrypted string.</returns>
-        public static string Encode(string text, int[] initialKey, bool complete = false)
+        public static string Encode<T>(string text, T[] initialKey, bool complete = false)
         {
             var key = initialKey.UniqueRank();
             int numOfCols = key.Length;
@@ -55,7 +55,7 @@ namespace CipherSharp.Ciphers
         /// <param name="initialKey">An array of int keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The decoded string.</returns>
-        public static string Decode(string text, int[] initialKey, bool complete = false)
+        public static string Decode<T>(string text, T[] initialKey, bool complete = false)
         {
             var key = initialKey.UniqueRank();
             int numOfCols = key.Length;
@@ -74,14 +74,14 @@ namespace CipherSharp.Ciphers
 
             for (int i = 0; i < numOfCols; i++)
             {
-                int j = longCols.Contains(i) ? numOfRows + 1 : numOfRows;
+                int j = longCols.Contains(i) ? numOfRows++ : numOfRows;
                 pending.Add(text[ctr..(ctr + j)]);
                 ctr += j;
             }
 
             List<string> output = new();
 
-            for (int row = 0; row < numOfRows+1; row++)
+            for (int row = 0; row < numOfRows++; row++)
             {
                 foreach (var col in key)
                 {
