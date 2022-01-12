@@ -142,12 +142,13 @@ namespace CipherSharp.Helpers
         }
 
         /// <summary>
-        /// Returns a list ranking number of occurences for each 
-        /// number in an array of numbers.
+        /// Calculates the unique rank for each item in an array. <br/>
+        /// The unique rank is the rolling total amount of times the item occurs
+        /// in the array, based on when it is sorted in ascending order.
         /// </summary>
         /// <param name="numbers">The array to rank.</param>
-        /// <returns>A list of unique occurences.</returns>
-        public static int[] UniqueOccurences(int[] numbers)
+        /// <returns>The unique rank.</returns>
+        public static int[] UniqueRank(int[] numbers)
         {
             Dictionary<int, int> a = new();
             Dictionary<int, int> b = new();
