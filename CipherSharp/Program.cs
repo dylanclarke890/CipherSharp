@@ -11,6 +11,8 @@ namespace CipherSharp
             exampleService.PolybiusExample();
             exampleService.BifidExample();
             exampleService.TrifidExample();
+            exampleService.ColumnarExample();
+            exampleService.ADFGXExample();
         }
     }
 }

@@ -15,9 +15,9 @@ namespace CipherSharp.Services
             Console.WriteLine($"Plain Text: {ExampleText}.");
         }
 
-        public string ExampleText { get; set; } = "helloworld";
+        private readonly string ExampleText = "helloworld";
 
-        public string Key { get; set; }
+        private readonly string Key;
 
         public void PolybiusExample()
         {
@@ -46,7 +46,25 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
-        private void PrintResult(string ciphered, string decoded)
+        public void ColumnarExample()
+        {
+            Console.WriteLine("Columnar Transposition cipher:");
+            var ciphered = Columnar.Encode(ExampleText, new int[2] { 1, 2 });
+            var decoded = Columnar.Decode(ciphered, new int[2] { 1, 2 });
+
+            PrintResult(ciphered, decoded);
+        }
+
+        public void ADFGXExample()
+        {
+            Console.WriteLine("ADFGX cipher:");
+            var ciphered = ADFGX.Encode(ExampleText, Key, new int[2] { 1, 2 }, true);
+            var decoded = ADFGX.Decode(ciphered, Key, new int[2] { 1, 2 });
+
+            PrintResult(ciphered, decoded);
+        }
+
+        private static void PrintResult(string ciphered, string decoded)
         {
             Console.WriteLine($"Cipher Text: {ciphered}");
             Console.WriteLine($"Decoded Text: {decoded}");

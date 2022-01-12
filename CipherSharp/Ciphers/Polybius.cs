@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Enums;
+using CipherSharp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,9 +137,9 @@ namespace CipherSharp.Ciphers
         {
             return mode switch
             {
-                PolybiusMode.IJ => "ABCEDFGHIKLMNOPQRSTUVWXYZ",
-                PolybiusMode.CK => "ABEDFGHIJKLMNOPQRSTUVWXYZ",
-                PolybiusMode.EX => "ABCEDFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                PolybiusMode.IJ => AppConstants.Alphabet.Replace("J", ""),
+                PolybiusMode.CK => AppConstants.Alphabet.Replace("C", ""),
+                PolybiusMode.EX => $"{AppConstants.Alphabet}{AppConstants.Digits}",
                 _ => throw new ArgumentException(mode.ToString()),
             };
         }

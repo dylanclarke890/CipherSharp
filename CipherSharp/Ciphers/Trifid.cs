@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using CipherSharp.Helpers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -95,7 +96,7 @@ namespace CipherSharp.Ciphers
         {
             key = key.ToUpper();
             var triplets = Utilities.CartesianProduct("123", "123", "123");
-            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ+";
+            string alphabet = $"{AppConstants.Alphabet}+";
             alphabet = Utilities.AlphabetPermutation(key, alphabet);
 
             Dictionary<char, string> d1 = new();
