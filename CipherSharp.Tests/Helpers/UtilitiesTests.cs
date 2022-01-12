@@ -134,13 +134,13 @@ namespace CipherSharp.Tests.Helpers
         }
 
         [Fact]
-        public void UniqueRank_StateUnderTest_ExpectedBehavior()
+        public void UniqueRank_IntArray_ReturnsRankOfArray()
         {
             // Arrange
             int[] numbers = new int[8] { 1, 2, 2, 3, 2, 2, 2, 1 };
 
             // Act
-            var result = Utilities.UniqueRank(numbers);
+            var result = numbers.UniqueRank();
 
             // Assert
             var expected = new int[8] { 0, 2, 3, 7, 4, 5, 6, 1 };

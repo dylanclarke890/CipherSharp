@@ -142,19 +142,19 @@ namespace CipherSharp.Helpers
         }
 
         /// <summary>
-        /// Calculates the unique rank for each item in an array. <br/>
+        /// Calculates the unique rank for each item in <paramref name="array"/>. <br/>
         /// The unique rank is the rolling total amount of times the item occurs
-        /// in the array, based on when it is sorted in ascending order.
+        /// in <paramref name="array"/>, based on when it is sorted in ascending order.
         /// </summary>
-        /// <param name="numbers">The array to rank.</param>
-        /// <returns>The unique rank.</returns>
-        public static int[] UniqueRank(int[] numbers)
+        /// <param name="array">The array to rank.</param>
+        /// <returns>An array of ranks for each item in the array.</returns>
+        public static int[] UniqueRank<T>(this T[] array)
         {
-            Dictionary<int, int> a = new();
-            Dictionary<int, int> b = new();
+            Dictionary<T, int> a = new();
+            Dictionary<T, int> b = new();
             int rank = 0;
 
-            foreach (var num in numbers.OrderBy(x => x))
+            foreach (var num in array.OrderBy(x => x))
             {
                 if (!a.ContainsKey(num))
                 {
@@ -169,9 +169,9 @@ namespace CipherSharp.Helpers
                 }
             }
 
-            Dictionary<int, int> bmax = new(b);
+            Dictionary<T, int> bmax = new(b);
             List<int> output = new();
-            foreach (var num in numbers)
+            foreach (var num in array)
             {
                 output.Add(a[num] + bmax[num] - b[num]);
                 b[num]--;

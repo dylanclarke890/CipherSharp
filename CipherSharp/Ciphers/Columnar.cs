@@ -21,7 +21,7 @@ namespace CipherSharp.Ciphers
         /// <returns>The encrypted string.</returns>
         public static string Encode(string text, int[] initialKey, bool complete = false)
         {
-            var key = Utilities.UniqueRank(initialKey);
+            var key = initialKey.UniqueRank();
             int numOfCols = key.Length;
 
             (int numOfRows, int remainder) = Utilities.DivMod(text.Length, numOfCols);
@@ -57,7 +57,7 @@ namespace CipherSharp.Ciphers
         /// <returns>The decoded string.</returns>
         public static string Decode(string text, int[] initialKey, bool complete = false)
         {
-            var key = Utilities.UniqueRank(initialKey);
+            var key = initialKey.UniqueRank();
             int numOfCols = key.Length;
 
             (int numOfRows, int remainder) = Utilities.DivMod(text.Length, numOfCols);
