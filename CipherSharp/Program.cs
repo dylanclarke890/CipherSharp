@@ -1,5 +1,4 @@
-﻿using CipherSharp.Ciphers;
-using System;
+﻿using CipherSharp.Services;
 
 namespace CipherSharp
 {
@@ -7,14 +6,9 @@ namespace CipherSharp
     {
         static void Main(string[] args)
         {
-            PolybiusExample();
-        }
+            var exampleService = new ExampleService("test");
 
-        private static void PolybiusExample()
-        {
-            string key = "test";
-            Console.WriteLine(Polybius.Encode("helloworld", key));
-            Console.WriteLine(Polybius.Decode("25123333415241443322", key));
+            exampleService.BifidExample();
         }
     }
 }
