@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32002.261
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherSharp", "CipherSharp\CipherSharp.csproj", "{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherSharp.Tests", "CipherSharp.Tests\CipherSharp.Tests.csproj", "{1548E030-EF9F-4198-BAF7-12E6FE860605}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {311FB0D1-37A4-4E0D-8627-F6DAD4C6CA81}
+	EndGlobalSection
+EndGlobal
