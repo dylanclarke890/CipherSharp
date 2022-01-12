@@ -8,7 +8,9 @@ namespace CipherSharp
         {
             var exampleService = new ExampleService("test");
 
+            exampleService.PolybiusExample();
             exampleService.BifidExample();
+            exampleService.TrifidExample();
         }
     }
 }

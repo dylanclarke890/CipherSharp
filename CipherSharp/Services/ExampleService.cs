@@ -21,6 +21,7 @@ namespace CipherSharp.Services
 
         public void PolybiusExample()
         {
+            Console.WriteLine("Polybius Square cipher:");
             var ciphered = Polybius.Encode(ExampleText, Key);
             var decoded = Polybius.Decode(ciphered, Key);
 
@@ -29,6 +30,7 @@ namespace CipherSharp.Services
 
         public void BifidExample()
         {
+            Console.WriteLine("Bifid cipher:");
             var ciphered = Bifid.Encode(ExampleText, Key);
             var decoded = Bifid.Decode(ciphered, Key);
 
@@ -37,6 +39,7 @@ namespace CipherSharp.Services
 
         public void TrifidExample()
         {
+            Console.WriteLine("Trifid cipher:");
             var ciphered = Trifid.Encode(ExampleText, Key);
             var decoded = Trifid.Decode(ciphered, Key);
 
@@ -46,7 +49,7 @@ namespace CipherSharp.Services
         private void PrintResult(string ciphered, string decoded)
         {
             Console.WriteLine($"Cipher Text: {ciphered}");
-            Console.WriteLine($"Cipher Text: {decoded}");
+            Console.WriteLine($"Decoded Text: {decoded}");
         }
     }
 }
