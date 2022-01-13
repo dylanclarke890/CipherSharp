@@ -74,14 +74,7 @@ namespace CipherSharp.Ciphers
             for (int i = 0; i < numOfCols; i++)
             {
                 int j = longCols.Contains(i) ? numOfRows + 1 : numOfRows;
-                //if (ctr + j <= text.Length)
-                //{
-                    pending.Add(text[ctr..(ctr + j)]);
-                //}
-                //else
-                //{
-                //    pending.Add(text[ctr..]);
-                //}
+                pending.Add(text[ctr..(ctr + j)]);
                 ctr += j;
             }
 

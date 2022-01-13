@@ -100,15 +100,7 @@ namespace CipherSharp.Helpers
             for (int i = 0; i < iterations; i++)
             {
                 int j = i * chunkSize;
-    //            if (j + chunkSize <= text.Length)
-  //              {
-                    chunks.Add(text[j..(j + chunkSize)]);
-//
-                //}
-                //else
-                //{
-                //    chunks.Add(text[j..]);
-                //}
+                chunks.Add(text[j..(j + chunkSize)]);
             }
 
             return chunks;
