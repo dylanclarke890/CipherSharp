@@ -6,5 +6,6 @@ Ciphers implemented so far:
 - ADFGX
 - Bifid
 - Columnar
+- Double Columnar
 - Polybius
 - Trifid
