@@ -8,11 +8,13 @@ namespace CipherSharp
         {
             var exampleService = new ExampleService("test");
 
-            exampleService.PolybiusExample();
-            exampleService.BifidExample();
-            exampleService.TrifidExample();
-            exampleService.ColumnarExample();
+            exampleService.ADFGVXExample();
             exampleService.ADFGXExample();
+            exampleService.BifidExample();
+            exampleService.ColumnarExample();
+            exampleService.DoubleColumnarExample();
+            exampleService.PolybiusExample();
+            exampleService.TrifidExample();
         }
     }
 }

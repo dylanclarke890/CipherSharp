@@ -82,8 +82,8 @@ namespace CipherSharp.Helpers
         /// specified by <paramref name="chunkSize"/>.
         /// </summary>
         /// <param name="text">The text to split.</param>
-        /// <param name="chunkSize">The max character limit of each item in the array.</param>
-        /// <returns>An array of strings, which have a max size of <paramref name="chunkSize"/>.</returns>
+        /// <param name="chunkSize">The max length of each item in the array.</param>
+        /// <returns>An array of strings, which have a max length of <paramref name="chunkSize"/>.</returns>
         public static IEnumerable<string> SplitIntoChunks(string text, int chunkSize)
         {
             int iterations = text.Length;
@@ -139,6 +139,18 @@ namespace CipherSharp.Helpers
             var square = chunks.Select(x => new List<string>() { x });
 
             return square;
+        }
+
+        /// <summary>
+        /// Displays square in the console.
+        /// </summary>
+        /// <param name="square">The square matrix to display.</param>
+        public static void PrintMatrix(IEnumerable<IEnumerable<string>> square)
+        {
+            foreach (var sq in square)
+            {
+                Console.WriteLine(string.Join(string.Empty, sq));
+            }
         }
 
         /// <summary>

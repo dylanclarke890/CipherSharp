@@ -3,81 +3,72 @@ using CipherSharp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CipherSharp.Ciphers
 {
+    /// <summary>
+    /// The ADFGVX cipher is a variation on the <see cref="ADFGX"/> cipher,
+    /// in which 6 letters are used instead of 5. It is a fractionating
+    /// transposition cipher and is achieved by combining a Polybius Square
+    /// with a Columnar transposition.
+    /// </summary>
     public static class ADFGVX
     {
-        public static string Encode(string text, int[] keys, bool printKey = true)
+        /// <summary>
+        /// Encrypt some text using the ADFGVX cipher.
+        /// </summary>
+        /// <param name="text">The text to encrypt.</param>
+        /// <param name="matrixKey">The key to use for the matrix.</param>
+        /// <param name="columnarKeys">An array of ints to use for the columnar cipher.</param>
+        /// <param name="displaySquare">If true, will print the square to the console.</param>
+        /// <returns>The encrypted text.</returns>
+        public static string Encode(string text, string matrixKey, int[] columnarKeys, bool displaySquare = true)
         {
-            text = text.ToUpper();
-            while (text.Length % keys[1].ToString().Length != 0)
-            {
-                text += "X";
-            }
-
-            string alphabet = Utilities.AlphabetPermutation(keys[0].ToString(), $"{AppConstants.Alphabet}{AppConstants.Digits}");
-            var square = Utilities.CreateMatrix(keys[0].ToString(), PolybiusMode.EX);
-
-            if (printKey)
-            {
-                foreach (var sq in square)
-                {
-                    Console.WriteLine(string.Join(string.Empty, sq));
-                }
-            }
-
-            var pairs = Utilities.CartesianProduct(nameof(ADFGVX), nameof(ADFGVX));
-
-            Dictionary<char, string> d1 = new();
-            Dictionary<string, char> d2 = new();
-
-            foreach (var (letter, pair) in alphabet.Zip(pairs))
-            {
-                string joinedPair = string.Join(string.Empty, pair);
-                d1[letter] = joinedPair;
-                d2[joinedPair] = letter;
-            }
-
-            StringBuilder pending = new();
-
-            foreach (var ltr in text)
-            {
-                pending.Append(d1[ltr]);
-            }
-
-            pending = new(Columnar.Encode(pending.ToString(), keys[1].ToString().ToArray()));
-
-            var codeGroups = Utilities.SplitIntoChunks(pending.ToString(), 2);
-
-            StringBuilder cipherText = new();
-            foreach (var group in codeGroups)
-            {
-                cipherText.Append(group);
-            }
-
-            return cipherText.ToString();
+            return Process(text, matrixKey, columnarKeys, displaySquare, true);
         }
 
-        public static string Decode(string text, int[] keys, bool printKey = true)
+        /// <summary>
+        /// Decodes some text using the ADFGVX cipher.
+        /// </summary>
+        /// <param name="text">The text to decode.</param>
+        /// <param name="matrixKey">The key to use for the matrix.</param>
+        /// <param name="columnarKeys">An array of ints to use for the columnar cipher.</param>
+        /// <param name="displaySquare">If true, will print the square to the console.</param>
+        /// <returns>The decoded text.</returns>
+        public static string Decode(string text, string matrixKey, int[] columnarKeys, bool displaySquare = false)
         {
+            return Process(text, matrixKey, columnarKeys, displaySquare, false);
+        }
+
+        /// <summary>
+        /// Processes text, encoding if <paramref name="encode"/> is <c>True</c>,
+        /// decoding if <c>False</c>.
+        /// </summary>
+        /// <param name="text">The text to process.</param>
+        /// <param name="matrixKey">A string to use to generate the Polybius Square.</param>
+        /// <param name="columnarKeys">An array of ints to use for the Columnar transposition.</param>
+        /// <param name="displaySquare">If <c>True</c>, will print the generated square to console.</param>
+        /// <param name="encode">If <c>True</c>, encodes the text, decode if <c>False</c>.</param>
+        /// <returns></returns>
+        private static string Process(string text, string matrixKey, int[] columnarKeys, bool displaySquare, bool encode)
+        {
+            if (columnarKeys.Length < 2)
+            {
+                throw new ArgumentException("ColumnarKeys needs to have at least two items.");
+            }
+
             text = text.ToUpper();
-            while (text.Length % keys[1].ToString().Length != 0)
+            while (text.Length < columnarKeys.Length)
             {
                 text += "X";
             }
 
-            string alphabet = Utilities.AlphabetPermutation(keys[0].ToString(), $"{AppConstants.Alphabet}{AppConstants.Digits}");
-            var square = Utilities.CreateMatrix(keys[0].ToString(), PolybiusMode.EX);
+            string alphabet = Utilities.AlphabetPermutation(matrixKey, AppConstants.AlphaNumeric);
+            var square = Utilities.CreateMatrix(matrixKey, PolybiusMode.EX);
 
-            if (printKey)
+            if (displaySquare)
             {
-                foreach (var sq in square)
-                {
-                    Console.WriteLine(string.Join(string.Empty, sq));
-                }
+                Utilities.PrintMatrix(square);
             }
 
             var pairs = Utilities.CartesianProduct(nameof(ADFGVX), nameof(ADFGVX));
@@ -92,24 +83,24 @@ namespace CipherSharp.Ciphers
                 d2[joinedPair] = letter;
             }
 
-            StringBuilder pending = new();
-
+            string processed = "";
             foreach (var ltr in text)
             {
-                pending.Append(d1[ltr]);
+                processed += d1[ltr];
             }
 
-            pending = new(Columnar.Decode(pending.ToString(), keys[1].ToString().ToArray()));
+            processed = encode ? Columnar.Encode(processed, columnarKeys) : Columnar.Decode(processed, columnarKeys);
 
-            var codeGroups = Utilities.SplitIntoChunks(pending.ToString(), 2);
+            var codeGroups = Utilities.SplitIntoChunks(processed, 2);
 
-            StringBuilder cipherText = new();
+            string result = "";
+
             foreach (var group in codeGroups)
             {
-                cipherText.Append(group);
+                result += d2[group];
             }
 
-            return cipherText.ToString();
+            return result;
         }
     }
 }

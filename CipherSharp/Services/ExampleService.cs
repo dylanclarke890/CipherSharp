@@ -19,11 +19,20 @@ namespace CipherSharp.Services
 
         private readonly string Key;
 
-        public void PolybiusExample()
+        public void ADFGVXExample()
         {
-            Console.WriteLine("Polybius Square cipher:");
-            var ciphered = Polybius.Encode(ExampleText, Key);
-            var decoded = Polybius.Decode(ciphered, Key);
+            Console.WriteLine("ADFGVX cipher:");
+            var ciphered = ADFGVX.Encode(ExampleText, Key, new int[2] { 1, 2 }, true);
+            var decoded = ADFGVX.Decode(ciphered, Key, new int[2] { 1, 2 });
+
+            PrintResult(ciphered, decoded);
+        }
+
+        public void ADFGXExample()
+        {
+            Console.WriteLine("ADFGX cipher:");
+            var ciphered = ADFGX.Encode(ExampleText, Key, new int[2] { 1, 2 }, true);
+            var decoded = ADFGX.Decode(ciphered, Key, new int[2] { 1, 2 });
 
             PrintResult(ciphered, decoded);
         }
@@ -37,15 +46,6 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
-        public void TrifidExample()
-        {
-            Console.WriteLine("Trifid cipher:");
-            var ciphered = Trifid.Encode(ExampleText, Key);
-            var decoded = Trifid.Decode(ciphered, Key);
-
-            PrintResult(ciphered, decoded);
-        }
-
         public void ColumnarExample()
         {
             Console.WriteLine("Columnar Transposition cipher:");
@@ -55,11 +55,29 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
-        public void ADFGXExample()
+        public void DoubleColumnarExample()
         {
-            Console.WriteLine("ADFGX cipher:");
-            var ciphered = ADFGX.Encode(ExampleText, Key, new int[2] { 1, 2 }, true);
-            var decoded = ADFGX.Decode(ciphered, Key, new int[2] { 1, 2 });
+            Console.WriteLine("Double Columnar Transposition cipher:");
+            var ciphered = DoubleColumnar.Encode(ExampleText, new string[2] { "1", "2" });
+            var decoded = DoubleColumnar.Decode(ciphered, new string[2] { "1", "2" });
+
+            PrintResult(ciphered, decoded);
+        }
+
+        public void PolybiusExample()
+        {
+            Console.WriteLine("Polybius Square cipher:");
+            var ciphered = Polybius.Encode(ExampleText, Key);
+            var decoded = Polybius.Decode(ciphered, Key);
+
+            PrintResult(ciphered, decoded);
+        }
+
+        public void TrifidExample()
+        {
+            Console.WriteLine("Trifid cipher:");
+            var ciphered = Trifid.Encode(ExampleText, Key);
+            var decoded = Trifid.Decode(ciphered, Key);
 
             PrintResult(ciphered, decoded);
         }
