@@ -39,6 +39,13 @@ namespace CipherSharp.Ciphers
             return Columnar.Decode(Columnar.Decode(text, initialKey[1].ToArray(), complete), initialKey[0].ToArray(), complete);
         }
 
+        /// <summary>
+        /// Processes the initial key array.
+        /// </summary>
+        /// <param name="initialKey">The array to process.</param>
+        /// <exception cref="ArgumentException">Thrown if the length of <paramref name="initialKey"/>
+        /// is greater than two.</exception>
+        /// <returns>The processed array.</returns>
         private static string[] HandleInitialKey(string[] initialKey)
         {
             if (initialKey.Length != 2)
