@@ -16,7 +16,7 @@ namespace CipherSharp.Ciphers
         /// Encrypts the text using the Columnar transposition cipher.
         /// </summary>
         /// <param name="text">The text to encrypt.</param>
-        /// <param name="initialKey">An array of int keys to use.</param>
+        /// <param name="initialKey">An array of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The encrypted string.</returns>
         public static string Encode<T>(string text, T[] initialKey, bool complete = false)
@@ -28,7 +28,7 @@ namespace CipherSharp.Ciphers
 
             if (complete)
             {
-                numOfRows = remainder > 0 ? numOfRows++ : numOfRows;
+                numOfRows = remainder > 0 ? numOfRows + 1 : numOfRows;
                 text = Utilities.PadText(text, numOfCols * numOfRows);
             }
 
@@ -52,7 +52,7 @@ namespace CipherSharp.Ciphers
         /// Decodes the text using the Columnar transposition cipher.
         /// </summary>
         /// <param name="text">The text to decode.</param>
-        /// <param name="initialKey">An array of int keys to use.</param>
+        /// <param name="initialKey">An array of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The decoded string.</returns>
         public static string Decode<T>(string text, T[] initialKey, bool complete = false)
@@ -65,8 +65,7 @@ namespace CipherSharp.Ciphers
 
             if (complete)
             {
-                numOfRows = remainder > 0 ? numOfRows++ : numOfRows;
-                text = Utilities.PadText(text, numOfCols * numOfRows);
+                text = Utilities.PadText(text, numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
             }
 
             int ctr = 0;
@@ -74,14 +73,21 @@ namespace CipherSharp.Ciphers
 
             for (int i = 0; i < numOfCols; i++)
             {
-                int j = longCols.Contains(i) ? numOfRows++ : numOfRows;
-                pending.Add(text[ctr..(ctr + j)]);
+                int j = longCols.Contains(i) ? numOfRows + 1 : numOfRows;
+                //if (ctr + j <= text.Length)
+                //{
+                    pending.Add(text[ctr..(ctr + j)]);
+                //}
+                //else
+                //{
+                //    pending.Add(text[ctr..]);
+                //}
                 ctr += j;
             }
 
             List<string> output = new();
 
-            for (int row = 0; row < numOfRows++; row++)
+            for (int row = 0; row < numOfRows + 1; row++)
             {
                 foreach (var col in key)
                 {
