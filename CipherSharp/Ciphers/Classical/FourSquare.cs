@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Four Square cipher is a variation on the Two Square cipher.

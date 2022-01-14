@@ -1,7 +1,7 @@
-﻿using CipherSharp.Ciphers;
+﻿using CipherSharp.Ciphers.Classical;
 using Xunit;
 
-namespace CipherSharp.Tests.Ciphers
+namespace CipherSharp.Tests.Ciphers.Classical
 {
     public class ADFGXTests
     {
@@ -11,7 +11,7 @@ namespace CipherSharp.Tests.Ciphers
             // Arrange
             string text = "helloworld";
             string polybiusKey = "test";
-            int[] columnarKey = new int[2] { 1, 2};
+            int[] columnarKey = new int[2] { 1, 2 };
             bool displaySquare = false;
 
             // Act

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Polybius Square is a simple substitution cipher, achieved by converting each letter

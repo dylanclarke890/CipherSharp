@@ -1,4 +1,4 @@
-﻿using CipherSharp.Ciphers;
+﻿using CipherSharp.Ciphers.Classical;
 using CipherSharp.Enums;
 using System;
 

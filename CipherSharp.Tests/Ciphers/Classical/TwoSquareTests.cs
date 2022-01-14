@@ -1,8 +1,8 @@
-﻿using CipherSharp.Ciphers;
+﻿using CipherSharp.Ciphers.Classical;
 using CipherSharp.Enums;
 using Xunit;
 
-namespace CipherSharp.Tests.Ciphers
+namespace CipherSharp.Tests.Ciphers.Classical
 {
     public class TwoSquareTests
     {
@@ -11,7 +11,7 @@ namespace CipherSharp.Tests.Ciphers
         {
             // Arrange
             string text = "helloworld";
-            string[] keys = new string[2] { "test", "key"};
+            string[] keys = new string[2] { "test", "key" };
             AlphabetMode mode = AlphabetMode.JI;
             bool printKey = false;
 

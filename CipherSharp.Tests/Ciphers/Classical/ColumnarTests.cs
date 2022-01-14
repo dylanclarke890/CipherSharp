@@ -1,7 +1,7 @@
-﻿using CipherSharp.Ciphers;
+﻿using CipherSharp.Ciphers.Classical;
 using Xunit;
 
-namespace CipherSharp.Tests.Ciphers
+namespace CipherSharp.Tests.Ciphers.Classical
 {
     public class ColumnarTests
     {
@@ -40,7 +40,7 @@ namespace CipherSharp.Tests.Ciphers
         {
             // Arrange
             string text = "helloworld";
-            string[] initialKey = new string[2] { "ABC", "DEF"};
+            string[] initialKey = new string[2] { "ABC", "DEF" };
             bool complete = true;
 
             // Act

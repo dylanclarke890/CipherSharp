@@ -1,8 +1,8 @@
-﻿using CipherSharp.Ciphers;
+﻿using CipherSharp.Ciphers.Classical;
 using CipherSharp.Enums;
 using Xunit;
 
-namespace CipherSharp.Tests.Ciphers
+namespace CipherSharp.Tests.Ciphers.Classical
 {
     public class FourSquareTests
     {
@@ -27,7 +27,7 @@ namespace CipherSharp.Tests.Ciphers
         {
             // Arrange
             string text = "KCLLMYMTOA";
-            string[] keys = { "abc", "abc"};
+            string[] keys = { "abc", "abc" };
             AlphabetMode mode = AlphabetMode.JI;
             bool displaySquare = false;
 

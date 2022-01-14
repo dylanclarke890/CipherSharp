@@ -1,8 +1,7 @@
-﻿using CipherSharp.Ciphers;
-using System;
+﻿using CipherSharp.Ciphers.Classical;
 using Xunit;
 
-namespace CipherSharp.Tests.Ciphers
+namespace CipherSharp.Tests.Ciphers.Classical
 {
     public class DoubleColumnarTests
     {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Two Square cipher (also known as double Playfair) is 

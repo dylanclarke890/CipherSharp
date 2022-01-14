@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Columnar cipher is a type of transposition cipher, achieved by reading the

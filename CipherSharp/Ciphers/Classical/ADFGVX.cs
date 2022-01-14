@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The ADFGVX cipher is a variation on the <see cref="ADFGX"/> cipher,
@@ -92,7 +92,7 @@ namespace CipherSharp.Ciphers
 
             processed = encode ? Columnar.Encode(processed, columnarKeys) : Columnar.Decode(processed, columnarKeys);
 
-            var codeGroups = processed.SplitIntoChunks( 2);
+            var codeGroups = processed.SplitIntoChunks(2);
 
             string result = "";
 

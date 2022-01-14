@@ -4,7 +4,7 @@ using CipherSharp.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Playfair cipher is a polygraphic substitution cipher,
@@ -36,7 +36,7 @@ namespace CipherSharp.Ciphers
 
             var codeGroups = text.SplitIntoChunks(2);
             int size = mode is AlphabetMode.EX ? 6 : 5;
-            
+
 
             return EncodeCodeGroups(square, squareIndices, codeGroups, size);
         }

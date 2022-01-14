@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Trifid cipher is a slight variation on the Bifid cipher, except
@@ -37,7 +37,7 @@ namespace CipherSharp.Ciphers
                 .Append(b).Append(c)
                 .ToString()
                 .SplitIntoChunks(3);
-            
+
             StringBuilder cipherText = new();
             foreach (var ltrGroup in pending)
             {
@@ -71,7 +71,7 @@ namespace CipherSharp.Ciphers
 
             var zipped = Enumerable
                 .Range(0, a.Length)
-                .Select<int, (char, char, char)>(i => new (a[i], b[i], c[i]))
+                .Select<int, (char, char, char)>(i => new(a[i], b[i], c[i]))
                 .ToList();
 
             List<string> pendingDecode = new();

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Text;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Bifid cipher is a fractionating transposition cipher, and  uses a
@@ -28,7 +28,7 @@ namespace CipherSharp.Ciphers
 
             for (int i = 0; i < text.Length; i++)
             {
-                a.Append(nums[i*2]);
+                a.Append(nums[i * 2]);
                 b.Append(nums[i * 2 + 1]);
             }
 
@@ -45,7 +45,7 @@ namespace CipherSharp.Ciphers
         {
             string nums = Polybius.Encode(text, key);
             int half = nums.Length / 2;
-            
+
             string a = nums[..half];
             string b = nums[half..];
 

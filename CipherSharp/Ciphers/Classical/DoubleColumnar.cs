@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace CipherSharp.Ciphers
+namespace CipherSharp.Ciphers.Classical
 {
     /// <summary>
     /// The Double Columnar transposition cipher is a more 
