@@ -8,6 +8,7 @@ Ciphers implemented so far:
 - Bifid
 - Columnar
 - Double Columnar
+- Playfair
 - Polybius
 - Trifid
 - Two Square
