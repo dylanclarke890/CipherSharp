@@ -15,6 +15,7 @@ namespace CipherSharp
             exampleService.DoubleColumnarExample();
             exampleService.PolybiusExample();
             exampleService.TrifidExample();
+            exampleService.TwoSquareExample();
         }
     }
 }

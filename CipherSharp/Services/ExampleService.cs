@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers;
+using CipherSharp.Enums;
 using System;
 
 namespace CipherSharp.Services
@@ -78,6 +79,16 @@ namespace CipherSharp.Services
             Console.WriteLine("Trifid cipher:");
             var ciphered = Trifid.Encode(ExampleText, Key);
             var decoded = Trifid.Decode(ciphered, Key);
+
+            PrintResult(ciphered, decoded);
+        }
+
+        public void TwoSquareExample()
+        {
+            Console.WriteLine("Two-Square cipher:");
+            var keys = new string[2] { Key, "test" };
+            var ciphered = TwoSquare.Encode(ExampleText, keys, PolybiusMode.IJ);
+            var decoded = TwoSquare.Decode(ciphered, keys, PolybiusMode.EX);
 
             PrintResult(ciphered, decoded);
         }

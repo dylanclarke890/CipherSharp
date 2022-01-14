@@ -257,5 +257,27 @@ namespace CipherSharp.Helpers
 
             return indices;
         }
+
+        /// <summary>
+        /// Filters <paramref name="array"/> based on <paramref name="predicate"/>,
+        /// then creates a list of ints which is the indices of the items which fit
+        /// the criteria.
+        /// </summary>
+        /// <param name="array">The array to filter.</param>
+        /// <param name="predicate">The predicate to filter by.</param>
+        /// <returns>An array of indices that fit the <paramref name="predicate"/>.</returns>
+        public static int[] IndexWhere<T>(this IEnumerable<T> array, Func<T, bool> predicate)
+        {
+            List<int> indices = new();
+            var arrayAsList = array.ToList();
+            var processedArray = array.Where(predicate);
+
+            foreach (var item in processedArray)
+            {
+                indices.Add(arrayAsList.IndexOf(item));
+            }
+
+            return indices.ToArray();
+        }
     }
 }

@@ -186,10 +186,23 @@ namespace CipherSharp.Tests.Helpers
             IEnumerable<string> array = new List<string>() { "B", "C", "A" };
 
             // Act
-            var result = Utilities.IndirectSort(array);
+            var result = array.IndirectSort();
 
             // Assert
             Assert.Equal(new List<int>() { 2, 0, 1 }, result);
+        }
+
+        [Fact]
+        public void IndexWhere_BasicParameters_ReturnsListOfIndicesThatFitCriteria()
+        {
+            // Arrange
+            IEnumerable<string> array = new List<string>() { "B", "C", "A" };
+
+            // Act
+            var result = array.IndexWhere(x => x == "B" || x == "C" );
+
+            // Assert
+            Assert.Equal(new List<int>() { 0, 1 }, result);
         }
     }
 }
