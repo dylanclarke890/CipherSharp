@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Enums;
+using CipherSharp.Extensions;
 using CipherSharp.Helpers;
 using System;
 using System.Linq;
@@ -34,17 +35,17 @@ namespace CipherSharp.Ciphers
                 text += "X";
             }
 
-            var squareA = Utilities.CreateMatrix(keys[0], mode).ToArray();
-            var squareB = Utilities.CreateMatrix(keys[1], mode).ToArray();
+            var squareA = Matrix.Create(keys[0], mode).ToArray();
+            var squareB = Matrix.Create(keys[1], mode).ToArray();
 
             if (displaySquare)
             {
-                Utilities.PrintMatrix(squareA);
-                Utilities.PrintMatrix(squareB);
+                squareA.Print();
+                squareB.Print();
             }
 
             int size = mode is AlphabetMode.EX ? 6 : 5;
-            var codeGroups = Utilities.SplitIntoChunks(text, 2);
+            var codeGroups = text.SplitIntoChunks(2);
 
             string output = "";
             foreach (var group in codeGroups)
@@ -97,17 +98,17 @@ namespace CipherSharp.Ciphers
                 text += "X";
             }
 
-            var squareA = Utilities.CreateMatrix(keys[0], mode).ToArray();
-            var squareB = Utilities.CreateMatrix(keys[1], mode).ToArray();
+            var squareA = Matrix.Create(keys[0], mode).ToArray();
+            var squareB = Matrix.Create(keys[1], mode).ToArray();
 
             if (displaySquare)
             {
-                Utilities.PrintMatrix(squareA);
-                Utilities.PrintMatrix(squareB);
+                squareA.Print();
+                squareB.Print();
             }
 
             int size = mode is AlphabetMode.EX ? 6 : 5;
-            var codeGroups = Utilities.SplitIntoChunks(text, 2);
+            var codeGroups = text.SplitIntoChunks(2);
 
             string output = "";
             foreach (var group in codeGroups)

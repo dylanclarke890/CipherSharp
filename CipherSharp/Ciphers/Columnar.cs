@@ -1,4 +1,5 @@
-﻿using CipherSharp.Helpers;
+﻿using CipherSharp.Extensions;
+using CipherSharp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,10 +30,10 @@ namespace CipherSharp.Ciphers
             if (complete)
             {
                 numOfRows = remainder > 0 ? numOfRows + 1 : numOfRows;
-                text = Utilities.PadText(text, numOfCols * numOfRows);
+                text = text.PadText(numOfCols * numOfRows);
             }
 
-            var pending = Utilities.SplitIntoChunks(text, numOfCols);
+            var pending = text.SplitIntoChunks(numOfCols);
             List<char> output = new();
             foreach (var col in key.IndirectSort())
             {
@@ -65,7 +66,7 @@ namespace CipherSharp.Ciphers
 
             if (complete)
             {
-                text = Utilities.PadText(text, numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
+                text = text.PadText(numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
             }
 
             int ctr = 0;

@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Enums;
+using CipherSharp.Extensions;
 using CipherSharp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,7 @@ namespace CipherSharp.Ciphers
 
             var transposed = Columnar.Encode(symbols.ToString(), columnarKey);
 
-            var chunks = Utilities.SplitIntoChunks(transposed, 2);
+            var chunks = transposed.SplitIntoChunks(2);
             StringBuilder cipherText = new();
             foreach (var chunk in chunks)
             {
@@ -71,7 +72,7 @@ namespace CipherSharp.Ciphers
 
             var transposed = Columnar.Decode(symbols.ToString(), columnarKey);
 
-            var chunks = Utilities.SplitIntoChunks(transposed, 2);
+            var chunks = transposed.SplitIntoChunks(2);
             StringBuilder decodedText = new();
             foreach (var chunk in chunks)
             {
@@ -88,14 +89,14 @@ namespace CipherSharp.Ciphers
 
             if (displaySquare)
             {
-                var square = Utilities.CreateMatrix(key, AlphabetMode.EX);
+                var square = Matrix.Create(key, AlphabetMode.EX);
                 foreach (var sq in square)
                 {
                     Console.WriteLine(string.Join(string.Empty, sq));
                 }
             }
 
-            var pairs = Utilities.CartesianProduct(nameof(ADFGX), nameof(ADFGX));
+            var pairs = nameof(ADFGX).CartesianProduct(nameof(ADFGX));
 
             Dictionary<char, string> d1 = new();
             Dictionary<string, char> d2 = new();

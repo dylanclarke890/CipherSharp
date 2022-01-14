@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Enums;
+using CipherSharp.Extensions;
 using CipherSharp.Helpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,15 +26,15 @@ namespace CipherSharp.Ciphers
         {
             text = ProcessText(text, mode);
 
-            var square = Utilities.CreateMatrix(key, mode).ToArray();
-            var squareIndices = Utilities.MatrixIndex(square);
+            var square = Matrix.Create(key, mode).ToArray();
+            var squareIndices = square.MatrixIndex();
 
             if (displaySquare)
             {
-                Utilities.PrintMatrix(square);
+                square.Print();
             }
 
-            var codeGroups = Utilities.SplitIntoChunks(text, 2);
+            var codeGroups = text.SplitIntoChunks(2);
             int size = mode is AlphabetMode.EX ? 6 : 5;
             
 
@@ -52,15 +53,15 @@ namespace CipherSharp.Ciphers
         {
             text = ProcessText(text, mode);
 
-            var square = Utilities.CreateMatrix(key, mode).ToArray();
-            var squareIndices = Utilities.MatrixIndex(square);
+            var square = Matrix.Create(key, mode).ToArray();
+            var squareIndices = square.MatrixIndex();
 
             if (displaySquare)
             {
-                Utilities.PrintMatrix(square);
+                square.Print();
             }
 
-            var codeGroups = Utilities.SplitIntoChunks(text, 2);
+            var codeGroups = text.SplitIntoChunks(2);
             int size = mode is AlphabetMode.EX ? 6 : 5;
 
             return DecodeCodeGroups(square, squareIndices, codeGroups, size);

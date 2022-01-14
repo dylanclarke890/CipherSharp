@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Enums;
+using CipherSharp.Extensions;
 using CipherSharp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -64,14 +65,14 @@ namespace CipherSharp.Ciphers
             }
 
             string alphabet = Utilities.AlphabetPermutation(matrixKey, AppConstants.AlphaNumeric);
-            var square = Utilities.CreateMatrix(matrixKey, AlphabetMode.EX);
+            var square = Matrix.Create(matrixKey, AlphabetMode.EX);
 
             if (displaySquare)
             {
-                Utilities.PrintMatrix(square);
+                square.Print();
             }
 
-            var pairs = Utilities.CartesianProduct(nameof(ADFGVX), nameof(ADFGVX));
+            var pairs = nameof(ADFGVX).CartesianProduct(nameof(ADFGVX));
 
             Dictionary<char, string> d1 = new();
             Dictionary<string, char> d2 = new();
@@ -91,7 +92,7 @@ namespace CipherSharp.Ciphers
 
             processed = encode ? Columnar.Encode(processed, columnarKeys) : Columnar.Decode(processed, columnarKeys);
 
-            var codeGroups = Utilities.SplitIntoChunks(processed, 2);
+            var codeGroups = processed.SplitIntoChunks( 2);
 
             string result = "";
 

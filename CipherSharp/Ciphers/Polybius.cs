@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Enums;
+using CipherSharp.Extensions;
 using CipherSharp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace CipherSharp.Ciphers
             string key = GetKey(polybiusMode, initialKey);
 
             var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, polybiusMode is AlphabetMode.EX ? 6 : 5));
-            var codeGroups = Utilities.CartesianProduct(cartesianArray, cartesianArray);
+            var codeGroups = cartesianArray.CartesianProduct(cartesianArray);
 
             Dictionary<char, IEnumerable<string>> result = new();
             foreach (var (i, j) in key.Zip(codeGroups))
@@ -64,7 +65,7 @@ namespace CipherSharp.Ciphers
             string key = GetKey(polybiusMode, initialKey);
 
             var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, polybiusMode is AlphabetMode.EX ? 6 : 5));
-            var codeGroups = Utilities.CartesianProduct(cartesianArray, cartesianArray);
+            var codeGroups = cartesianArray.CartesianProduct(cartesianArray);
 
             Dictionary<string, char> result = new();
             foreach (var (i, j) in key.Zip(codeGroups))

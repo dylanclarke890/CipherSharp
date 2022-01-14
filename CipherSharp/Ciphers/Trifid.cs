@@ -1,4 +1,5 @@
-﻿using CipherSharp.Helpers;
+﻿using CipherSharp.Extensions;
+using CipherSharp.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +38,7 @@ namespace CipherSharp.Ciphers
             a.Append(b).Append(c);
             
             StringBuilder cipherText = new();
-            foreach (var ltrGroup in Utilities.SplitIntoChunks(a.ToString(), 3))
+            foreach (var ltrGroup in a.ToString().SplitIntoChunks(3))
             {
                 cipherText.Append(d2[ltrGroup]);
             }
@@ -95,7 +96,7 @@ namespace CipherSharp.Ciphers
         private static (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts(string key)
         {
             key = key.ToUpper();
-            var triplets = Utilities.CartesianProduct("123", "123", "123");
+            var triplets = "123".CartesianProduct("123", "123");
             string alphabet = $"{AppConstants.Alphabet}+";
             alphabet = Utilities.AlphabetPermutation(key, alphabet);
 

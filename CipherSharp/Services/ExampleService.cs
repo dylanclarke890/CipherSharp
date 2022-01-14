@@ -68,8 +68,8 @@ namespace CipherSharp.Services
         public void FourSquareExample()
         {
             Console.WriteLine("Four Square cipher:");
-            var ciphered = FourSquare.Encode(ExampleText, new string[2] { "1", "2" }, AlphabetMode.JI);
-            var decoded = FourSquare.Decode(ciphered, new string[2] { "1", "2" }, AlphabetMode.JI);
+            var ciphered = FourSquare.Encode(ExampleText, new string[2] { "abc", "abc" }, AlphabetMode.JI);
+            var decoded = FourSquare.Decode(ciphered, new string[2] { "abc", "abc" }, AlphabetMode.JI);
 
             PrintResult(ciphered, decoded);
         }
@@ -106,7 +106,7 @@ namespace CipherSharp.Services
             Console.WriteLine("Two-Square cipher:");
             var keys = new string[2] { Key, "test" };
             var ciphered = TwoSquare.Encode(ExampleText, keys, AlphabetMode.JI);
-            var decoded = TwoSquare.Decode(ciphered, keys, AlphabetMode.EX);
+            var decoded = TwoSquare.Decode(ciphered, keys, AlphabetMode.JI);
 
             PrintResult(ciphered, decoded);
         }
