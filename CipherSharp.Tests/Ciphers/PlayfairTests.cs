@@ -4,38 +4,38 @@ using Xunit;
 
 namespace CipherSharp.Tests.Ciphers
 {
-    public class TwoSquareTests
+    public class PlayfairTests
     {
         [Fact]
         public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
             string text = "helloworld";
-            string[] keys = new string[2] { "test", "key"};
+            string key = "abc";
             AlphabetMode mode = AlphabetMode.JI;
-            bool printKey = false;
+            bool displaySquare = false;
 
             // Act
-            var result = TwoSquare.Encode(text, keys, mode, printKey);
+            var result = Playfair.Encode(text, key, mode, displaySquare);
 
             // Assert
-            Assert.Equal("HEQQOWVWLD", result);
+            Assert.Equal("KCNVMPYMQMCY", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "HEQQOWVWLD";
-            string[] keys = new string[2] { "test", "key" };
+            string text = "KCNVMPYMQMCY";
+            string key = "abc";
             AlphabetMode mode = AlphabetMode.JI;
-            bool printKey = false;
+            bool displaySquare = false;
 
             // Act
-            var result = TwoSquare.Decode(text, keys, mode, printKey);
+            var result = Playfair.Decode(text, key, mode, displaySquare);
 
             // Assert
-            Assert.Equal("HELLOWORLD", result);
+            Assert.Equal("HELXLOWORLDX", result);
         }
     }
 }

@@ -65,6 +65,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void PlayfairExample()
+        {
+            Console.WriteLine("Playfair cipher:");
+            var ciphered = Playfair.Encode(ExampleText, Key, AlphabetMode.JI);
+            var decoded = Playfair.Decode(ciphered, Key, AlphabetMode.JI);
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void PolybiusExample()
         {
             Console.WriteLine("Polybius Square cipher:");
@@ -87,7 +96,7 @@ namespace CipherSharp.Services
         {
             Console.WriteLine("Two-Square cipher:");
             var keys = new string[2] { Key, "test" };
-            var ciphered = TwoSquare.Encode(ExampleText, keys, AlphabetMode.IJ);
+            var ciphered = TwoSquare.Encode(ExampleText, keys, AlphabetMode.JI);
             var decoded = TwoSquare.Decode(ciphered, keys, AlphabetMode.EX);
 
             PrintResult(ciphered, decoded);

@@ -119,7 +119,7 @@ namespace CipherSharp.Helpers
             initialKey = initialKey.ToUpper();
             switch (mode)
             {
-                case AlphabetMode.IJ:
+                case AlphabetMode.JI:
                     initialKey = initialKey.Replace("J", "I");
                     key = AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
                     break;
@@ -139,6 +139,31 @@ namespace CipherSharp.Helpers
             var square = chunks.Select(x => new List<string>() { x });
 
             return square;
+        }
+
+        /// <summary>
+        /// Returns the indexes of a square matrix.
+        /// </summary>
+        /// <param name="matrix">The matrix to process.</param>
+        /// <returns>A dictionary containing the indexes of each letter in the matrix.</returns>
+        public static Dictionary<char, (int, int, int)> MatrixIndex(IEnumerable<IEnumerable<string>> matrix)
+        {
+            var matrixList = matrix.ToList();
+            Dictionary<char, (int, int, int)> indices = new();
+
+            for (int i = 0; i < matrix.Count(); i++)
+            {
+                for (int j = 0; j < matrixList[i].Count(); j++)
+                {
+                    for (int k = 0; k < matrixList[i].ToList()[j].Length; k++)
+                    {
+                        var character = matrixList[i].ToList()[j][k];
+                        indices[character] = (i, j, k);
+                    }
+                }
+            }
+
+            return indices;
         }
 
         /// <summary>

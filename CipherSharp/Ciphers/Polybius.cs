@@ -109,8 +109,8 @@ namespace CipherSharp.Ciphers
             text ??= "";
             return mode switch
             {
-                AlphabetMode.IJ => (key.Replace("J", "I").ToUpper(), text.Replace("J", "I").ToUpper()),
-                AlphabetMode.CK => (key.Replace("J", "I").ToUpper(), text.Replace("C", "K").ToUpper()),
+                AlphabetMode.JI => (key.Replace("J", "I").ToUpper(), text.Replace("J", "I").ToUpper()),
+                AlphabetMode.CK => (key.Replace("C", "K").ToUpper(), text.Replace("C", "K").ToUpper()),
                 AlphabetMode.EX => (key.ToUpper(), text.ToUpper()),
                 _ => throw new ArgumentException(mode.ToString()),
             };
@@ -137,7 +137,7 @@ namespace CipherSharp.Ciphers
         {
             return mode switch
             {
-                AlphabetMode.IJ => AppConstants.Alphabet.Replace("J", ""),
+                AlphabetMode.JI => AppConstants.Alphabet.Replace("J", ""),
                 AlphabetMode.CK => AppConstants.Alphabet.Replace("C", ""),
                 AlphabetMode.EX => $"{AppConstants.Alphabet}{AppConstants.Digits}",
                 _ => throw new ArgumentException(mode.ToString()),
@@ -145,13 +145,13 @@ namespace CipherSharp.Ciphers
         }
 
         /// <summary>
-        /// Determines the <see cref="AlphabetMode"/>. Defaults to <see cref="AlphabetMode.IJ"/>.
+        /// Determines the <see cref="AlphabetMode"/>. Defaults to <see cref="AlphabetMode.JI"/>.
         /// </summary>
         /// <param name="mode">The string to parse.</param>
         /// <returns>The <see cref="AlphabetMode"/>.</returns>
         private static AlphabetMode GetMode(string mode)
         {
-            return Enum.TryParse<AlphabetMode>(mode, out var result) ? result : AlphabetMode.IJ;
+            return Enum.TryParse<AlphabetMode>(mode, out var result) ? result : AlphabetMode.JI;
         }
     }
 }

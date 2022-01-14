@@ -25,7 +25,7 @@ namespace CipherSharp.Ciphers
             text = text.ToUpper();
             text = mode switch
             {
-                AlphabetMode.IJ => text.Replace("J", "I"),
+                AlphabetMode.JI => text.Replace("J", "I"),
                 AlphabetMode.CK => text.Replace("C", "K"),
                 _ => throw new ArgumentException($"Invalid mode: {mode}"),
             };
@@ -88,7 +88,7 @@ namespace CipherSharp.Ciphers
             text = text.ToUpper();
             text = mode switch
             {
-                AlphabetMode.IJ => text.Replace("J", "I"),
+                AlphabetMode.JI => text.Replace("J", "I"),
                 AlphabetMode.CK => text.Replace("C", "K"),
                 _ => throw new ArgumentException($"Invalid mode: {mode}"),
             };

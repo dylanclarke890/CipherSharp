@@ -8,7 +8,7 @@
         /// <summary>
         /// Replaces 'J' with 'I' (25 characters).
         /// </summary>
-        IJ = 0,
+        JI = 0,
 
         /// <summary>
         /// Replaces 'C' with 'K' (25 characters).
