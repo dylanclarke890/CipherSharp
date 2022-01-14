@@ -10,3 +10,4 @@ Ciphers implemented so far:
 - Double Columnar
 - Polybius
 - Trifid
+- Two Square
