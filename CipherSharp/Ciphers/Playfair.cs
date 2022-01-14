@@ -93,18 +93,7 @@ namespace CipherSharp.Ciphers
 
             while (!completed)
             {
-                completed = true;
-                for (int i = 0; i < text.Length / 2; i++)
-                {
-                    string groupOfTwo = text[(i * 2)..(i * 2 + 2)];
-                    if (groupOfTwo[0] == groupOfTwo[1])
-                    {
-                        char replacementChar = groupOfTwo[0] != 'X' ? 'X' : 'Z';
-                        text = $"{text[..(i * 2 + 1)]}{replacementChar}{text[(i * 2 + 1)..]}";
-                        completed = false;
-                        break;
-                    }
-                }
+                completed = CheckForDuplicates(ref text);
             }
 
             if (text.Length % 2 == 1)
@@ -114,6 +103,32 @@ namespace CipherSharp.Ciphers
             }
 
             return text;
+        }
+
+        /// <summary>
+        /// Loops over the text, and replaces double occurences of
+        /// letters (e.g "LL") with an uncommon letter ("LX").
+        /// </summary>
+        /// <param name="text">The text to check</param>
+        /// <returns>False if another iteration is needed.</returns>
+        private static bool CheckForDuplicates(ref string text)
+        {
+            bool completed = true;
+            for (int i = 0; i < text.Length / 2; i++)
+            {
+                string groupOfTwo = text[(i * 2)..(i * 2 + 2)];
+                if (groupOfTwo[0] != groupOfTwo[1])
+                {
+                    continue;
+                }
+
+                char replacementChar = groupOfTwo[0] != 'X' ? 'X' : 'Z';
+                text = $"{text[..(i * 2 + 1)]}{replacementChar}{text[(i * 2 + 1)..]}";
+                completed = false;
+                break;
+            }
+
+            return completed;
         }
 
         /// <summary>

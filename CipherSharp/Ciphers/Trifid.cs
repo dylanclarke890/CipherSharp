@@ -30,15 +30,16 @@ namespace CipherSharp.Ciphers
 
             foreach (var ltr in text)
             {
-                var gr = d1[ltr];
-                a.Append(gr[0]);
-                b.Append(gr[1]);
-                c.Append(gr[2]);
+                EncodeLetter(d1, ltr, a, b, c);
             }
-            a.Append(b).Append(c);
+
+            var pending = a
+                .Append(b).Append(c)
+                .ToString()
+                .SplitIntoChunks(3);
             
             StringBuilder cipherText = new();
-            foreach (var ltrGroup in a.ToString().SplitIntoChunks(3))
+            foreach (var ltrGroup in pending)
             {
                 cipherText.Append(d2[ltrGroup]);
             }
@@ -47,7 +48,7 @@ namespace CipherSharp.Ciphers
         }
 
         /// <summary>
-        /// Decrypt some text using the Bifid cipher.
+        /// Decrypt some text using the Trifid cipher.
         /// </summary>
         /// <param name="text">The text to decrypt.</param>
         /// <param name="key">The key to use.</param>
@@ -57,15 +58,15 @@ namespace CipherSharp.Ciphers
             text = text.ToUpper();
             var (d1, d2) = GetCipherDicts(key);
 
-            StringBuilder textAsCodeGroups = new();
+            StringBuilder numbers = new();
             foreach (var ltr in text)
             {
-                textAsCodeGroups.Append(d1[ltr]);
+                numbers.Append(d1[ltr]);
             }
 
-            string nums = textAsCodeGroups.ToString();
-            string a = nums[..(nums.Length / 3)]; 
-            string b = nums[(nums.Length / 3)..(2 * nums.Length / 3)]; 
+            string nums = numbers.ToString();
+            string a = nums[..(nums.Length / 3)];
+            string b = nums[(nums.Length / 3)..(2 * nums.Length / 3)];
             string c = nums[(2 * nums.Length / 3)..];
 
             var zipped = Enumerable
@@ -86,6 +87,23 @@ namespace CipherSharp.Ciphers
             }
 
             return decodedText.ToString();
+        }
+
+        /// <summary>
+        /// Encodes a letter using <paramref name="cipherDict"/>, and appends each
+        /// char of the result to the stringbuilders.
+        /// </summary>
+        /// <param name="cipherDict">The dict to use for the cipher.</param>
+        /// <param name="letter">The letter to encode.</param>
+        /// <param name="a">Stringbuilder to append result to.</param>
+        /// <param name="b">Stringbuilder to append result to.</param>
+        /// <param name="c">Stringbuilder to append result to.</param>
+        private static void EncodeLetter(Dictionary<char, string> cipherDict, char letter, StringBuilder a, StringBuilder b, StringBuilder c)
+        {
+            var gr = cipherDict[letter];
+            a.Append(gr[0]);
+            b.Append(gr[1]);
+            c.Append(gr[2]);
         }
 
         /// <summary>

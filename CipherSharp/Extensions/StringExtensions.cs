@@ -79,7 +79,7 @@ namespace CipherSharp.Extensions
         /// <param name="fromString">The initial string to pad values from.</param>
         /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The padded text.</returns>
-        public static string PadText(this string text, int totalLength, string fromString = "XXX", string alphabet = AppConstants.Alphabet)
+        public static string Pad(this string text, int totalLength, string fromString = "XXX", string alphabet = AppConstants.Alphabet)
         {
             StringBuilder sb = new(text);
             Random random = new();

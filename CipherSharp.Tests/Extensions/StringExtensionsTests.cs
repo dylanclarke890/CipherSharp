@@ -105,7 +105,7 @@ namespace CipherSharp.Tests.Extensions
             string alphabet = "";
 
             // Act
-            var result = text.PadText(totalLength, fromString, alphabet);
+            var result = text.Pad(totalLength, fromString, alphabet);
 
             // Assert
             Assert.Equal("testxx", result);

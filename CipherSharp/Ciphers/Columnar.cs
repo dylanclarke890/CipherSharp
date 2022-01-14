@@ -30,20 +30,17 @@ namespace CipherSharp.Ciphers
             if (complete)
             {
                 numOfRows = remainder > 0 ? numOfRows + 1 : numOfRows;
-                text = text.PadText(numOfCols * numOfRows);
+                text = text.Pad(numOfCols * numOfRows);
             }
 
             var pending = text.SplitIntoChunks(numOfCols);
             List<char> output = new();
+
             foreach (var col in key.IndirectSort())
             {
-                foreach (var row in pending)
-                {
-                    if (row.Length > col)
-                    {
-                        output.Add(row[col]);
-                    }
-                }
+                output.AddRange(
+                    pending.Where(row => row.Length > col)
+                        .Select(row => row[col]));
             }
 
             return string.Join(string.Empty, output);
@@ -66,7 +63,7 @@ namespace CipherSharp.Ciphers
 
             if (complete)
             {
-                text = text.PadText(numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
+                text = text.Pad(numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
             }
 
             int ctr = 0;
@@ -83,13 +80,9 @@ namespace CipherSharp.Ciphers
 
             for (int row = 0; row < numOfRows + 1; row++)
             {
-                foreach (var col in key)
-                {
-                    if (pending[col].Length > row)
-                    {
-                        output.Add(pending[col][row].ToString());
-                    }
-                }
+                output.AddRange(
+                    key.Where(col => pending[col].Length > row)
+                        .Select(col => pending[col][row].ToString()));
             }
 
             return string.Join(string.Empty, output);

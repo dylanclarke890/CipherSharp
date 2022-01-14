@@ -73,20 +73,7 @@ namespace CipherSharp.Ciphers
                 result[string.Join(string.Empty, j)] = i;
             }
 
-            List<string> pendingDecode;
-            sep ??= string.Empty;
-            if (sep != string.Empty)
-            {
-                pendingDecode = text.Split(sep).ToList();
-            }
-            else
-            {
-                pendingDecode = new();
-                for (int i = 0; i < text.Length / 2; i++)
-                {
-                    pendingDecode.Add(text[(i * 2)..(i * 2 + 2)]);
-                }
-            }
+            List<string> pendingDecode = PrepareTextForDecoding(text, sep);
 
             List<string> decoded = new();
             foreach (var pair in pendingDecode)
@@ -95,6 +82,26 @@ namespace CipherSharp.Ciphers
             }
 
             return string.Join(string.Empty, decoded);
+        }
+
+        private static List<string> PrepareTextForDecoding(string text, string sep)
+        {
+            List<string> pendingDecode;
+            sep ??= string.Empty;
+
+            if (sep != string.Empty)
+            {
+                pendingDecode = text.Split(sep).ToList();
+                return pendingDecode;
+            }
+
+            pendingDecode = new();
+            for (int i = 0; i < text.Length / 2; i++)
+            {
+                pendingDecode.Add(text[(i * 2)..(i * 2 + 2)]);
+            }
+
+            return pendingDecode;
         }
 
         /// <summary>
