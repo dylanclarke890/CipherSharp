@@ -20,13 +20,13 @@ namespace CipherSharp.Ciphers
         /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, string[] keys, PolybiusMode mode, bool displaySquare = true)
+        public static string Encode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
         {
             text = text.ToUpper();
             text = mode switch
             {
-                PolybiusMode.IJ => text.Replace("J", "I"),
-                PolybiusMode.CK => text.Replace("C", "K"),
+                AlphabetMode.IJ => text.Replace("J", "I"),
+                AlphabetMode.CK => text.Replace("C", "K"),
                 _ => throw new ArgumentException($"Invalid mode: {mode}"),
             };
             if (text.Length % 2 == 1)
@@ -43,7 +43,7 @@ namespace CipherSharp.Ciphers
                 Utilities.PrintMatrix(squareB);
             }
 
-            int size = mode is PolybiusMode.EX ? 6 : 5;
+            int size = mode is AlphabetMode.EX ? 6 : 5;
             var codeGroups = Utilities.SplitIntoChunks(text, 2);
 
             string output = "";
@@ -83,13 +83,13 @@ namespace CipherSharp.Ciphers
         /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The decoded text.</returns>
-        public static string Decode(string text, string[] keys, PolybiusMode mode, bool displaySquare = false)
+        public static string Decode(string text, string[] keys, AlphabetMode mode, bool displaySquare = false)
         {
             text = text.ToUpper();
             text = mode switch
             {
-                PolybiusMode.IJ => text.Replace("J", "I"),
-                PolybiusMode.CK => text.Replace("C", "K"),
+                AlphabetMode.IJ => text.Replace("J", "I"),
+                AlphabetMode.CK => text.Replace("C", "K"),
                 _ => throw new ArgumentException($"Invalid mode: {mode}"),
             };
             if (text.Length % 2 == 1)
@@ -106,7 +106,7 @@ namespace CipherSharp.Ciphers
                 Utilities.PrintMatrix(squareB);
             }
 
-            int size = mode is PolybiusMode.EX ? 6 : 5;
+            int size = mode is AlphabetMode.EX ? 6 : 5;
             var codeGroups = Utilities.SplitIntoChunks(text, 2);
 
             string output = "";

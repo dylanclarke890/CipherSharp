@@ -3,7 +3,7 @@
     /// <summary>
     /// Specifies the alphabet mode to use.
     /// </summary>
-    public enum PolybiusMode
+    public enum AlphabetMode
     {
         /// <summary>
         /// Replaces 'J' with 'I' (25 characters).

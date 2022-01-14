@@ -27,11 +27,11 @@ namespace CipherSharp.Ciphers
         /// <returns>The ciphertext.</returns>
         public static string Encode(string text, string initialKey, string sep = "", string mode = "IJ")
         {
-            PolybiusMode polybiusMode = GetMode(mode);
+            AlphabetMode polybiusMode = GetMode(mode);
             (initialKey, text) = ProcessInput(initialKey, text, polybiusMode);
             string key = GetKey(polybiusMode, initialKey);
 
-            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, polybiusMode is PolybiusMode.EX ? 6 : 5));
+            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, polybiusMode is AlphabetMode.EX ? 6 : 5));
             var codeGroups = Utilities.CartesianProduct(cartesianArray, cartesianArray);
 
             Dictionary<char, IEnumerable<string>> result = new();
@@ -59,11 +59,11 @@ namespace CipherSharp.Ciphers
         /// <returns>The decoded text.</returns>
         public static string Decode(string text, string initialKey, string sep = "", string mode = "IJ")
         {
-            PolybiusMode polybiusMode = GetMode(mode);
+            AlphabetMode polybiusMode = GetMode(mode);
             (initialKey, text) = ProcessInput(initialKey, text, polybiusMode);
             string key = GetKey(polybiusMode, initialKey);
 
-            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, polybiusMode is PolybiusMode.EX ? 6 : 5));
+            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, polybiusMode is AlphabetMode.EX ? 6 : 5));
             var codeGroups = Utilities.CartesianProduct(cartesianArray, cartesianArray);
 
             Dictionary<string, char> result = new();
@@ -103,15 +103,15 @@ namespace CipherSharp.Ciphers
         /// <param name="text"></param>
         /// <param name="mode"></param>
         /// <returns>A tuple containing the processed input.</returns>
-        private static (string, string) ProcessInput(string key, string text, PolybiusMode mode)
+        private static (string, string) ProcessInput(string key, string text, AlphabetMode mode)
         {
             key ??= "";
             text ??= "";
             return mode switch
             {
-                PolybiusMode.IJ => (key.Replace("J", "I").ToUpper(), text.Replace("J", "I").ToUpper()),
-                PolybiusMode.CK => (key.Replace("J", "I").ToUpper(), text.Replace("C", "K").ToUpper()),
-                PolybiusMode.EX => (key.ToUpper(), text.ToUpper()),
+                AlphabetMode.IJ => (key.Replace("J", "I").ToUpper(), text.Replace("J", "I").ToUpper()),
+                AlphabetMode.CK => (key.Replace("J", "I").ToUpper(), text.Replace("C", "K").ToUpper()),
+                AlphabetMode.EX => (key.ToUpper(), text.ToUpper()),
                 _ => throw new ArgumentException(mode.ToString()),
             };
         }
@@ -122,7 +122,7 @@ namespace CipherSharp.Ciphers
         /// <param name="mode">Used to get the alphabet to use.</param>
         /// <param name="initialKey">The initial key to generate the key with.</param>
         /// <returns>The generated key.</returns>
-        private static string GetKey(PolybiusMode mode, string initialKey)
+        private static string GetKey(AlphabetMode mode, string initialKey)
         {
             string alphabet = GetAlphabet(mode);
             return Utilities.AlphabetPermutation(initialKey, alphabet);
@@ -131,27 +131,27 @@ namespace CipherSharp.Ciphers
         /// <summary>
         /// Gets the alphabet to use based on <paramref name="mode"/>.
         /// </summary>
-        /// <param name="mode">The <see cref="PolybiusMode"/> to use.</param>
+        /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <returns>The alphabet to use.</returns>
-        private static string GetAlphabet(PolybiusMode mode)
+        private static string GetAlphabet(AlphabetMode mode)
         {
             return mode switch
             {
-                PolybiusMode.IJ => AppConstants.Alphabet.Replace("J", ""),
-                PolybiusMode.CK => AppConstants.Alphabet.Replace("C", ""),
-                PolybiusMode.EX => $"{AppConstants.Alphabet}{AppConstants.Digits}",
+                AlphabetMode.IJ => AppConstants.Alphabet.Replace("J", ""),
+                AlphabetMode.CK => AppConstants.Alphabet.Replace("C", ""),
+                AlphabetMode.EX => $"{AppConstants.Alphabet}{AppConstants.Digits}",
                 _ => throw new ArgumentException(mode.ToString()),
             };
         }
 
         /// <summary>
-        /// Determines the <see cref="PolybiusMode"/>. Defaults to <see cref="PolybiusMode.IJ"/>.
+        /// Determines the <see cref="AlphabetMode"/>. Defaults to <see cref="AlphabetMode.IJ"/>.
         /// </summary>
         /// <param name="mode">The string to parse.</param>
-        /// <returns>The <see cref="PolybiusMode"/>.</returns>
-        private static PolybiusMode GetMode(string mode)
+        /// <returns>The <see cref="AlphabetMode"/>.</returns>
+        private static AlphabetMode GetMode(string mode)
         {
-            return Enum.TryParse<PolybiusMode>(mode, out var result) ? result : PolybiusMode.IJ;
+            return Enum.TryParse<AlphabetMode>(mode, out var result) ? result : AlphabetMode.IJ;
         }
     }
 }

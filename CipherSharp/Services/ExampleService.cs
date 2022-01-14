@@ -87,8 +87,8 @@ namespace CipherSharp.Services
         {
             Console.WriteLine("Two-Square cipher:");
             var keys = new string[2] { Key, "test" };
-            var ciphered = TwoSquare.Encode(ExampleText, keys, PolybiusMode.IJ);
-            var decoded = TwoSquare.Decode(ciphered, keys, PolybiusMode.EX);
+            var ciphered = TwoSquare.Encode(ExampleText, keys, AlphabetMode.IJ);
+            var decoded = TwoSquare.Decode(ciphered, keys, AlphabetMode.EX);
 
             PrintResult(ciphered, decoded);
         }

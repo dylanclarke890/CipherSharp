@@ -88,7 +88,7 @@ namespace CipherSharp.Ciphers
 
             if (displaySquare)
             {
-                var square = Utilities.CreateMatrix(key, PolybiusMode.EX);
+                var square = Utilities.CreateMatrix(key, AlphabetMode.EX);
                 foreach (var sq in square)
                 {
                     Console.WriteLine(string.Join(string.Empty, sq));

@@ -12,7 +12,7 @@ namespace CipherSharp.Tests.Ciphers
             // Arrange
             string text = "helloworld";
             string[] keys = new string[2] { "test", "key"};
-            PolybiusMode mode = PolybiusMode.IJ;
+            AlphabetMode mode = AlphabetMode.IJ;
             bool printKey = false;
 
             // Act
@@ -28,7 +28,7 @@ namespace CipherSharp.Tests.Ciphers
             // Arrange
             string text = "HEQQOWVWLD";
             string[] keys = new string[2] { "test", "key" };
-            PolybiusMode mode = PolybiusMode.IJ;
+            AlphabetMode mode = AlphabetMode.IJ;
             bool printKey = false;
 
             // Act

@@ -115,7 +115,7 @@ namespace CipherSharp.Tests.Helpers
         {
             // Arrange
             string initialKey = "test";
-            PolybiusMode mode = PolybiusMode.EX;
+            AlphabetMode mode = AlphabetMode.EX;
 
             // Act
             var result = Utilities.CreateMatrix(initialKey, mode);

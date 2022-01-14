@@ -111,23 +111,23 @@ namespace CipherSharp.Helpers
         /// and <paramref name="mode"/>.
         /// </summary>
         /// <param name="initialKey">The key to use for permutation.</param>
-        /// <param name="mode">The <see cref="PolybiusMode"/> to use.</param>
+        /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <returns>A square matrix.</returns>
-        public static IEnumerable<IEnumerable<string>> CreateMatrix(string initialKey, PolybiusMode mode)
+        public static IEnumerable<IEnumerable<string>> CreateMatrix(string initialKey, AlphabetMode mode)
         {
             string key;
             initialKey = initialKey.ToUpper();
             switch (mode)
             {
-                case PolybiusMode.IJ:
+                case AlphabetMode.IJ:
                     initialKey = initialKey.Replace("J", "I");
                     key = AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
                     break;
-                case PolybiusMode.CK:
+                case AlphabetMode.CK:
                     initialKey = initialKey.Replace("C", "K");
                     key = AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
                     break;
-                case PolybiusMode.EX:
+                case AlphabetMode.EX:
                     key = AlphabetPermutation(initialKey, $"{AppConstants.Alphabet}{AppConstants.Digits}");
                     break;
                 default:
@@ -135,7 +135,7 @@ namespace CipherSharp.Helpers
 
             }
 
-            var chunks = SplitIntoChunks(key, mode is PolybiusMode.EX ? 6 : 5);
+            var chunks = SplitIntoChunks(key, mode is AlphabetMode.EX ? 6 : 5);
             var square = chunks.Select(x => new List<string>() { x });
 
             return square;
