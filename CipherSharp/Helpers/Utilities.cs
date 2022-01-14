@@ -285,8 +285,8 @@ namespace CipherSharp.Helpers
 
         /// <summary>
         /// Filters <paramref name="array"/> based on <paramref name="predicate"/>,
-        /// then creates a list of ints which is the indices of the items which fit
-        /// the criteria.
+        /// then returns an int array representing the indices of the items in <paramref name="array"/>
+        /// which fit the criteria.
         /// </summary>
         /// <param name="array">The array to filter.</param>
         /// <param name="predicate">The predicate to filter by.</param>

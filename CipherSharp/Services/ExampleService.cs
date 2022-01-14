@@ -65,6 +65,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void FourSquareExample()
+        {
+            Console.WriteLine("Four Square cipher:");
+            var ciphered = FourSquare.Encode(ExampleText, new string[2] { "1", "2" }, AlphabetMode.JI);
+            var decoded = FourSquare.Decode(ciphered, new string[2] { "1", "2" }, AlphabetMode.JI);
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void PlayfairExample()
         {
             Console.WriteLine("Playfair cipher:");
