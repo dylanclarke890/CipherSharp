@@ -5,8 +5,24 @@ using System.Linq;
 
 namespace CipherSharp.Ciphers
 {
+    /// <summary>
+    /// The Four Square cipher is a variation on the Two Square cipher.
+    /// It uses four squares, two of which contain the standard alphabet,
+    /// (minus a letter for a 5x5 square), and two of which are created using
+    /// keys. It translates letter two-by-two (digraphs) by matching them with
+    /// letters in the key squares. Because is using digraphs, it is much less
+    /// susceptible to frequency analysis than monographic substitution ciphers.
+    /// </summary>
     public static class FourSquare
     {
+        /// <summary>
+        /// Encrypt some text using the Four Square cipher.
+        /// </summary>
+        /// <param name="text">The text to encrypt.</param>
+        /// <param name="keys">The keys to use.</param>
+        /// <param name="mode">The alphabet mode to use.</param>
+        /// <param name="displaySquare">If true, will print the square to the console.</param>
+        /// <returns>The encrypted text.</returns>
         public static string Encode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
         {
             text = text.ToUpper();
@@ -61,6 +77,14 @@ namespace CipherSharp.Ciphers
             return output;
         }
 
+        /// <summary>
+        /// Decode some text using the Four Square cipher.
+        /// </summary>
+        /// <param name="text">The text to decode.</param>
+        /// <param name="keys">The keys to use.</param>
+        /// <param name="mode">The alphabet mode to use.</param>
+        /// <param name="displaySquare">If true, will print the square to the console.</param>
+        /// <returns>The decoded text.</returns>
         public static string Decode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
         {
             text = text.ToUpper();

@@ -1,6 +1,5 @@
 ﻿using CipherSharp.Ciphers;
 using CipherSharp.Enums;
-using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers
@@ -8,7 +7,7 @@ namespace CipherSharp.Tests.Ciphers
     public class FourSquareTests
     {
         [Fact]
-        public void Encode_StateUnderTest_ExpectedBehavior()
+        public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
             string text = "helloworld";
@@ -24,7 +23,7 @@ namespace CipherSharp.Tests.Ciphers
         }
 
         [Fact]
-        public void Decode_StateUnderTest_ExpectedBehavior()
+        public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
             string text = "KCLLMYMTOA";
