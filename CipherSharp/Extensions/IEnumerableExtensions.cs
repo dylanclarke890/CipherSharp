@@ -30,6 +30,11 @@ namespace CipherSharp.Extensions
             return indices;
         }
 
+        public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> array)
+        {
+            return array.SelectMany(x => x).Distinct();
+        }
+
         /// <summary>
         /// Filters <paramref name="array"/> based on <paramref name="predicate"/>,
         /// then returns an int array representing the indices of the items in <paramref name="array"/>
@@ -50,6 +55,26 @@ namespace CipherSharp.Extensions
             }
 
             return indices.ToArray();
+        }
+
+        /// <summary>
+        /// Splits <paramref name="list"/> as specified by <paramref name="chunkSize"/>.
+        /// </summary>
+        /// <param name="list">The list to split.</param>
+        /// <param name="chunkSize">The max length of each item in the array.</param>
+        /// <returns>An array of strings, which have a max length of <paramref name="chunkSize"/>.</returns>
+        public static List<List<T>> Split<T>(this List<T> list, int chunkSize)
+        {
+            int iterations = (list.Count % chunkSize == 0) 
+                ? list.Count / chunkSize : list.Count / chunkSize + 1;
+
+            List<List<T>> chunks = new();
+            for (int i = 0; i < iterations; i++)
+            {
+                chunks.Add(list.Skip(i * chunkSize).Take(chunkSize).ToList());
+            }
+
+            return chunks;
         }
     }
 }
