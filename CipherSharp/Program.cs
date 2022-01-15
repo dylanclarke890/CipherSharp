@@ -16,6 +16,7 @@ namespace CipherSharp
             exampleService.FourSquareExample();
             exampleService.PlayfairExample();
             exampleService.PolybiusExample();
+            exampleService.RailFenceExample();
             exampleService.TrifidExample();
             exampleService.TwoSquareExample();
         }
