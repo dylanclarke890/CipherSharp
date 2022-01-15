@@ -38,6 +38,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void AMSCOExample()
+        {
+            Console.WriteLine("AMSCO cipher:");
+            var ciphered = AMSCO.Encode(ExampleText, "TEST", ParityMode.Odd);
+            var decoded = AMSCO.Decode(ciphered, "TEST", ParityMode.Odd);
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void BifidExample()
         {
             Console.WriteLine("Bifid cipher:");

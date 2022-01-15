@@ -10,6 +10,7 @@ namespace CipherSharp
 
             exampleService.ADFGVXExample();
             exampleService.ADFGXExample();
+            exampleService.AMSCOExample();
             exampleService.BifidExample();
             exampleService.ColumnarExample();
             exampleService.DoubleColumnarExample();
