@@ -8,6 +8,7 @@ Ciphers implemented so far:
 - AMSCO
 - Bifid
 - Columnar
+- Disrupted
 - Double Columnar
 - Four Square
 - Playfair
