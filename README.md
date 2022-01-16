@@ -5,8 +5,10 @@ Ciphers implemented so far:
 
 - ADFGVX
 - ADFGX
+- AMSCO
 - Bifid
 - Columnar
+- Disrupted
 - Double Columnar
 - Four Square
 - Playfair
