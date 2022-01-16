@@ -13,6 +13,7 @@ namespace CipherSharp
             exampleService.AMSCOExample();
             exampleService.BifidExample();
             exampleService.ColumnarExample();
+            exampleService.DisruptedExample();
             exampleService.DoubleColumnarExample();
             exampleService.FourSquareExample();
             exampleService.PlayfairExample();

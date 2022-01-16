@@ -65,6 +65,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void DisruptedExample()
+        {
+            Console.WriteLine("Disrupted Transposition cipher:");
+            var ciphered = Disrupted.Encode(ExampleText, "test");
+            var decoded = Disrupted.Decode(ciphered, "test");
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void DoubleColumnarExample()
         {
             Console.WriteLine("Double Columnar Transposition cipher:");
