@@ -119,6 +119,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void RouteExample()
+        {
+            Console.WriteLine("Route cipher:");
+            var ciphered = Route.Encode(ExampleText, 3);
+            var decoded = Route.Decode(ciphered, 3);
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void TrifidExample()
         {
             Console.WriteLine("Trifid cipher:");
