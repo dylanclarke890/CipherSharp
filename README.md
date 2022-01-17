@@ -5,6 +5,7 @@ Ciphers implemented so far:
 
 - ADFGVX
 - ADFGX
+- Affine
 - AMSCO
 - Bifid
 - Columnar
