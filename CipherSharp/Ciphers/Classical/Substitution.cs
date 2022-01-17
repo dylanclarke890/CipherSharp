@@ -21,7 +21,7 @@ namespace CipherSharp.Ciphers.Classical
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, string key, string alphabet = AppConstants.Alphabet)
         {
-            var internalKey = Utilities.AlphabetPermutation(key);
+            var internalKey = Alphabet.AlphabetPermutation(key);
 
             List<char> output = new();
 
@@ -42,7 +42,7 @@ namespace CipherSharp.Ciphers.Classical
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, string key, string alphabet = AppConstants.Alphabet)
         {
-            var internalKey = Utilities.AlphabetPermutation(key);
+            var internalKey = Alphabet.AlphabetPermutation(key);
 
             List<char> output = new();
 

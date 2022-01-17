@@ -133,7 +133,7 @@ namespace CipherSharp.Ciphers.Classical
         private static string GetKey(AlphabetMode mode, string initialKey)
         {
             string alphabet = GetAlphabet(mode);
-            return Utilities.AlphabetPermutation(initialKey, alphabet);
+            return Alphabet.AlphabetPermutation(initialKey, alphabet);
         }
 
         /// <summary>

@@ -23,14 +23,14 @@ namespace CipherSharp.Helpers
             {
                 case AlphabetMode.JI:
                     initialKey = initialKey.Replace("J", "I");
-                    key = Utilities.AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
+                    key = Alphabet.AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
                     break;
                 case AlphabetMode.CK:
                     initialKey = initialKey.Replace("C", "K");
-                    key = Utilities.AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
+                    key = Alphabet.AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
                     break;
                 case AlphabetMode.EX:
-                    key = Utilities.AlphabetPermutation(initialKey, $"{AppConstants.Alphabet}{AppConstants.Digits}");
+                    key = Alphabet.AlphabetPermutation(initialKey, $"{AppConstants.Alphabet}{AppConstants.Digits}");
                     break;
                 default:
                     throw new ArgumentException(mode.ToString());

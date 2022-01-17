@@ -5,19 +5,6 @@ namespace CipherSharp.Tests.Helpers
 {
     public class UtilitiesTests
     {
-        [Fact]
-        public void AlphabetPermutation_BasicParameters_ReturnsPermutatedAlphabet()
-        {
-            // Arrange
-            string key = "test";
-            string alphabet = AppConstants.Alphabet;
-
-            // Act
-            var result = Utilities.AlphabetPermutation(key, alphabet);
-
-            // Assert
-            Assert.Equal("TESABCDFGHIJKLMNOPQRUVWXYZ", result);
-        }
 
         [Fact]
         public void UniqueRank_IntArray_ReturnsRankOfArray()

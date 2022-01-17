@@ -116,7 +116,7 @@ namespace CipherSharp.Ciphers.Classical
             key = key.ToUpper();
             var triplets = "123".CartesianProduct("123", "123");
             string alphabet = $"{AppConstants.Alphabet}+";
-            alphabet = Utilities.AlphabetPermutation(key, alphabet);
+            alphabet = Alphabet.AlphabetPermutation(key, alphabet);
 
             Dictionary<char, string> d1 = new();
             Dictionary<string, char> d2 = new();

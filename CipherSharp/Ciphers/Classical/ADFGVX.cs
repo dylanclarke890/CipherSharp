@@ -64,7 +64,7 @@ namespace CipherSharp.Ciphers.Classical
                 text += "X";
             }
 
-            string alphabet = Utilities.AlphabetPermutation(matrixKey, AppConstants.AlphaNumeric);
+            string alphabet = Alphabet.AlphabetPermutation(matrixKey, AppConstants.AlphaNumeric);
             var square = Matrix.Create(matrixKey, AlphabetMode.EX);
 
             if (displaySquare)

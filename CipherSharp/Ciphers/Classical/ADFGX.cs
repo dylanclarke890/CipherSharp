@@ -85,7 +85,7 @@ namespace CipherSharp.Ciphers.Classical
         private static (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts(string text, string key, bool displaySquare)
         {
             string alphabet = AppConstants.Alphabet.Replace("J", "");
-            alphabet = Utilities.AlphabetPermutation(key, alphabet);
+            alphabet = Alphabet.AlphabetPermutation(key, alphabet);
 
             if (displaySquare)
             {

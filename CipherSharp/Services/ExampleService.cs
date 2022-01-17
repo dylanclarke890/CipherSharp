@@ -210,6 +210,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void VigenereExample()
+        {
+            Console.WriteLine("Vigenere cipher:");
+            var ciphered = Vigenere.Encode(ExampleText, Key);
+            var decoded = Vigenere.Decode(ciphered, Key);
+
+            PrintResult(ciphered, decoded);
+        }
+
         private static void PrintResult(string ciphered, string decoded)
         {
             Console.WriteLine($"Cipher Text: {ciphered}");

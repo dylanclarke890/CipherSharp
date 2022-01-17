@@ -10,43 +10,6 @@ namespace CipherSharp.Helpers
     public static class Utilities
     {
         /// <summary>
-        /// Creates a permutation of the alphabet. Uses <paramref name="key"/> to form the beginning of the
-        /// new alphabet (skipping repeated characters), then any unused letters of <paramref name="alphabet"/>
-        /// are appended in order.
-        /// </summary>
-        /// <param name="key">The key to use for the initial permutation.</param>
-        /// <param name="alphabet">The alphabet to use for the permutation (defaults to the full standard English alphabet).</param>
-        /// <returns>The permutated alphabet.</returns>
-        public static string AlphabetPermutation(string key, string alphabet = AppConstants.Alphabet)
-        {
-            alphabet = alphabet.ToUpper();
-            key = key.ToUpper();
-
-            string k = "";
-            foreach (char ltr in key) // include every unique letter of the key in order of appearance.
-            {
-                if (!alphabet.Contains(ltr))
-                {
-                    throw new ArgumentException($"'{ltr}' not found in {alphabet}.");
-                }
-                if (!k.Contains(ltr))
-                {
-                    k += ltr;
-                }
-            }
-
-            foreach (var ltr in alphabet) // include unused letters of alphabet.
-            {
-                if (!k.Contains(ltr))
-                {
-                    k += ltr;
-                }
-            }
-
-            return k;
-        }
-
-        /// <summary>
         /// Calculates the unique rank for each item in <paramref name="array"/>.<br/>
         /// The unique rank is the rolling total amount of times the item occurs
         /// in <paramref name="array"/>, based on when it is sorted in ascending order.

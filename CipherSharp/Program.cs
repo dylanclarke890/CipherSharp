@@ -28,6 +28,7 @@ namespace CipherSharp
             exampleService.TrifidExample();
             exampleService.TurningGrilleExample();
             exampleService.TwoSquareExample();
+            exampleService.VigenereExample();
         }
     }
 }

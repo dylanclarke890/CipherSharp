@@ -30,6 +30,11 @@ namespace CipherSharp.Extensions
             return indices;
         }
 
+        /// <summary>
+        /// Flattens a list of lists of T into a list of T.
+        /// </summary>
+        /// <param name="array">The array to flatten.</param>
+        /// <returns>The flattened array.</returns>
         public static IEnumerable<T> Flatten<T>(this IEnumerable<IEnumerable<T>> array)
         {
             return array.SelectMany(x => x).Distinct();
@@ -125,6 +130,29 @@ namespace CipherSharp.Extensions
             }
 
             return chunks;
+        }
+
+        /// <summary>
+        /// Pads a list by repeating it's own elements.
+        /// </summary>
+        /// <param name="array">The array to pad.</param>
+        /// <param name="totalSize">The final size of the array.</param>
+        /// <returns>The padded array.</returns>
+        public static IEnumerable<T> Pad<T>(this IEnumerable<T> array, int totalSize)
+        {
+            int currentIndex = 0;
+            var arrayList = array.ToList();
+            while (totalSize > arrayList.Count)
+            {
+                arrayList.Add(arrayList[currentIndex]);
+                currentIndex++;
+                if (currentIndex > array.Count())
+                {
+                    currentIndex = 0;
+                }
+            }
+
+            return arrayList;
         }
     }
 }
