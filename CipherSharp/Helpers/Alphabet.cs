@@ -49,7 +49,7 @@ namespace CipherSharp.Helpers
 
             foreach (var num in nums)
             {
-                if (num > 0)
+                if (num >= 0)
                 {
                     output.Add(alphabet[num]);
                 }
