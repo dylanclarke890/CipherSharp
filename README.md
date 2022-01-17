@@ -6,6 +6,7 @@ Ciphers implemented so far:
 - ADFGVX
 - ADFGX
 - Affine
+- Affine Vigenere
 - AMSCO
 - Atbash
 - Bifid
