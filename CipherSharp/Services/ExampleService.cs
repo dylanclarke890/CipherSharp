@@ -38,6 +38,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void AffineExample()
+        {
+            Console.WriteLine("Affine cipher:");
+            var ciphered = Affine.Encode(ExampleText, new int[2] { 1, 2 });
+            var decoded = Affine.Decode(ciphered, new int[2] { 1, 2 });
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void AMSCOExample()
         {
             Console.WriteLine("AMSCO cipher:");
