@@ -154,5 +154,30 @@ namespace CipherSharp.Extensions
 
             return arrayList;
         }
+
+        /// <summary>
+        /// Zips three lists together. Uses the length of the first
+        /// as a way to loop through, so must be larger or the same size
+        /// as <paramref name="second"/> and <paramref name="third"/>.
+        /// </summary>
+        /// <param name="array">The first array to zip.</param>
+        /// <param name="second">The second array to zip.</param>
+        /// <param name="third">The third array to zip.</param>
+        /// <returns></returns>
+        public static IEnumerable<(T1, T2, T3)> ZipThree<T1, T2, T3>(this IEnumerable<T1> array,
+            IEnumerable<T2> second, IEnumerable<T3> third)
+        {
+            var arrayList = array.ToList();
+            var secList = second.ToList();
+            var thirdList = third.ToList();
+
+
+            List<(T1, T2, T3)> results = Enumerable
+                .Range(0, arrayList.Count)
+                .Select(i => (arrayList[i], secList[i], thirdList[i]))
+                .ToList();
+
+            return results;
+        }
     }
 }
