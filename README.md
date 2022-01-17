@@ -7,6 +7,7 @@ Ciphers implemented so far:
 - ADFGX
 - Affine
 - AMSCO
+- Atbash
 - Bifid
 - Caesar
 - Columnar
@@ -18,6 +19,7 @@ Ciphers implemented so far:
 - Rail-fence
 - Route
 - ROT13
+- Substitution
 - Trifid
 - Turning Grille
 - Two Square
