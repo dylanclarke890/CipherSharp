@@ -16,4 +16,5 @@ Ciphers implemented so far:
 - Rail-fence
 - Route
 - Trifid
+- Turning Grille
 - Two Square
