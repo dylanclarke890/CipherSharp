@@ -9,6 +9,7 @@ Ciphers implemented so far:
 - Affine Vigenere
 - AMSCO
 - Atbash
+- Autokey
 - Bifid
 - Caesar
 - Columnar
