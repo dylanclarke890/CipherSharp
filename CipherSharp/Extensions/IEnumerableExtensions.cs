@@ -67,8 +67,9 @@ namespace CipherSharp.Extensions
         /// <param name="size">The size of the array.</param>
         /// <returns>Two arrays, the first of which is an array of row indexes which fit
         /// the criteria. The second array is an array of column indexes which match.</returns>
-        public static (int[], int[]) IndexesOf<T>(this T[][] array, T compareWith, int size)
+        public static (int[], int[]) IndexesOf<T>(this T[][] array, T compareWith)
         {
+            int size = array.GetLength(0);
             List<int> rowIndices = new();
             List<int> columnIndices = new();
             for (int i = 0; i < size; i++)

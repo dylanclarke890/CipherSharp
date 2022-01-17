@@ -1,13 +1,12 @@
 ﻿using CipherSharp.Ciphers.Classical;
-using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Classical
 {
-    public class FleissnerGrilleTests
+    public class TurningGrilleTests
     {
         [Fact]
-        public void Encode_StateUnderTest_ExpectedBehavior()
+        public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
             string text = "helloworld";
@@ -23,17 +22,17 @@ namespace CipherSharp.Tests.Ciphers.Classical
             int n = 6;
 
             // Act
-            var result = FleissnerGrille.Encode(text, key, n);
+            var result = TurningGrille.Encode(text, key, n);
 
             // Assert
-            Assert.Equal("hrlloworld", result);
+            // Randomised letters each time so no way to verify the entire string, just length
+            Assert.Equal(144, result.Length);
         }
 
         [Fact]
-        public void Decode_StateUnderTest_ExpectedBehavior()
+        public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "helloworld";
             int[] key = new int[36]
             {
                 0, 1, 2, 3, 4, 5, 6, 7,
@@ -43,12 +42,12 @@ namespace CipherSharp.Tests.Ciphers.Classical
                 32, 33, 34, 35
             };
             int n = 6;
-
+            string cipherText = TurningGrille.Encode("helloworld", key, n);
             // Act
-            var result = FleissnerGrille.Decode(text, key, n);
+            var result = TurningGrille.Decode(cipherText, key, n);
 
             // Assert
-            Assert.Equal("hrlloworld", result);
+            Assert.StartsWith("helloworld", result);
         }
     }
 }

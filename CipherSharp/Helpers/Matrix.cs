@@ -52,28 +52,18 @@ namespace CipherSharp.Helpers
         /// <returns></returns>
         public static T[][] Create<T>(int size, T content)
         {
-            var array = new T[,] { };
-
+            List<T[]> array = new();
             for (int i = 0; i < size; i++)
             {
+                List<T> row = new();
                 for (int j = 0; j < size; j++)
                 {
-                    array[i, j] = content;
+                    row.Add(content);
                 }
+                array.Add(row.ToArray());
             }
 
-            //List<T[]> array = new();
-            //for (int i = 0; i < size; i++)
-            //{
-            //    List<T> row = new();
-            //    for (int j = 0; j < size; j++)
-            //    {
-            //        row.Add(content);
-            //    }
-            //    array.Add(row.ToArray());
-            //}
-
-            return array;
+            return array.ToArray();
         }
 
         /// <summary>
@@ -81,8 +71,9 @@ namespace CipherSharp.Helpers
         /// </summary>
         /// <param name="array">The array to rotate.</param>
         /// <param name="size">The size of the array (row/col length).</param>
-        public static T[][] Rotate90Clockwise<T>(this T[][] array, int size)
+        public static void Rotate90Clockwise<T>(this T[][] array)
         {
+            int size = array.GetLength(0);
             // Traverse each cycle
             for (int i = 0; i < size / 2; i++)
             {
@@ -97,8 +88,6 @@ namespace CipherSharp.Helpers
                     array[j][size - 1 - i] = temp;
                 }
             }
-
-            return array;
         }
 
         /// <summary>

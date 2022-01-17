@@ -83,10 +83,9 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
-        public void FleissnerGrilleExample()
+        public void TurningGrilleExample()
         {
-            Console.WriteLine("Fleissner Grille cipher:");
-            string text = "helloworld";
+            Console.WriteLine("Turning Grille cipher:");
             int[] key = new int[36]
             {
                 0, 1, 2, 3, 4, 5, 6, 7,
@@ -96,7 +95,7 @@ namespace CipherSharp.Services
                 32, 33, 34, 35
             };
 
-            var ciphered = FleissnerGrille.Encode(text, key, 6);
+            var ciphered = TurningGrille.Encode(ExampleText, key, 6);
             var decoded = string.Empty;//FleissnerGrille.Decode(ciphered, key, 6);
 
             PrintResult(ciphered, decoded);
