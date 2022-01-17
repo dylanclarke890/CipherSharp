@@ -14,6 +14,7 @@ Ciphers implemented so far:
 - Disrupted
 - Double Columnar
 - Four Square
+- Multi Vigenere
 - Playfair
 - Polybius
 - Rail-fence
@@ -21,5 +22,7 @@ Ciphers implemented so far:
 - ROT13
 - Substitution
 - Trifid
+- Trithemius
 - Turning Grille
 - Two Square
+- Vigenere
