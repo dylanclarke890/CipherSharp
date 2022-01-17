@@ -33,7 +33,7 @@ namespace CipherSharp.Ciphers.Classical
                 output.Add((textNum + keyNum) % length);
             }
 
-            return string.Join(string.Empty, Alphabet.ToLetter(output));
+            return string.Join(string.Empty, output.ToLetter());
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace CipherSharp.Ciphers.Classical
                 output.Add((textNum - keyNum) % length);
             }
 
-            return string.Join(string.Empty, Alphabet.ToLetter(output));
+            return string.Join(string.Empty, output.ToLetter());
         }
     }
 }

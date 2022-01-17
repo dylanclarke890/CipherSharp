@@ -43,14 +43,26 @@ namespace CipherSharp.Helpers
             return k;
         }
 
-        public static IEnumerable<char> ToLetter(IEnumerable<int> nums, string alphabet = AppConstants.Alphabet)
+        public static IEnumerable<char> ToLetter(this IEnumerable<int> nums, string alphabet = AppConstants.Alphabet)
         {
-            var output = nums.Select(num => alphabet[num]);
+            List<char> output = new();
+
+            foreach (var num in nums)
+            {
+                if (num > 0)
+                {
+                    output.Add(alphabet[num]);
+                }
+                else
+                {
+                    output.Add(alphabet[^Math.Abs(num)]);
+                }
+            }
 
             return output;
         }
 
-        public static IEnumerable<int> ToNumber(IEnumerable<char> text, string alphabet = AppConstants.Alphabet)
+        public static IEnumerable<int> ToNumber(this IEnumerable<char> text, string alphabet = AppConstants.Alphabet)
         {
             var output = text.Select(ch => alphabet.IndexOf(ch));
 
