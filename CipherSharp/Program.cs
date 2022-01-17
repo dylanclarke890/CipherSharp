@@ -13,6 +13,7 @@ namespace CipherSharp
             exampleService.AffineExample();
             exampleService.AMSCOExample();
             exampleService.BifidExample();
+            exampleService.CaesarExample();
             exampleService.ColumnarExample();
             exampleService.DisruptedExample();
             exampleService.DoubleColumnarExample();
@@ -21,6 +22,7 @@ namespace CipherSharp
             exampleService.PolybiusExample();
             exampleService.RailFenceExample();
             exampleService.RouteExample();
+            exampleService.ROT13Example();
             exampleService.TrifidExample();
             exampleService.TurningGrilleExample();
             exampleService.TwoSquareExample();

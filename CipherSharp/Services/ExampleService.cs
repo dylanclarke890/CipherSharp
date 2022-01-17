@@ -65,6 +65,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void CaesarExample()
+        {
+            Console.WriteLine("Caesar cipher:");
+            var ciphered = Caesar.Encode(ExampleText, 3);
+            var decoded = Caesar.Decode(ciphered, 3);
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void ColumnarExample()
         {
             Console.WriteLine("Columnar Transposition cipher:");
@@ -88,24 +97,6 @@ namespace CipherSharp.Services
             Console.WriteLine("Double Columnar Transposition cipher:");
             var ciphered = DoubleColumnar.Encode(ExampleText, new string[2] { "1", "2" });
             var decoded = DoubleColumnar.Decode(ciphered, new string[2] { "1", "2" });
-
-            PrintResult(ciphered, decoded);
-        }
-
-        public void TurningGrilleExample()
-        {
-            Console.WriteLine("Turning Grille cipher:");
-            int[] key = new int[36]
-            {
-                0, 1, 2, 3, 4, 5, 6, 7,
-                8, 9, 10, 11, 12, 13, 14, 15,
-                16, 17, 18, 19, 20, 21, 22, 23,
-                24, 25, 26, 27, 28, 29, 30, 31,
-                32, 33, 34, 35
-            };
-
-            var ciphered = TurningGrille.Encode(ExampleText, key, 6);
-            var decoded = string.Empty;//FleissnerGrille.Decode(ciphered, key, 6);
 
             PrintResult(ciphered, decoded);
         }
@@ -155,11 +146,38 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void ROT13Example()
+        {
+            Console.WriteLine("ROT13 cipher:");
+            var ciphered = ROT13.Encode(ExampleText);
+            var decoded = ROT13.Decode(ciphered);
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void TrifidExample()
         {
             Console.WriteLine("Trifid cipher:");
             var ciphered = Trifid.Encode(ExampleText, Key);
             var decoded = Trifid.Decode(ciphered, Key);
+
+            PrintResult(ciphered, decoded);
+        }
+
+        public void TurningGrilleExample()
+        {
+            Console.WriteLine("Turning Grille cipher:");
+            int[] key = new int[36]
+            {
+                0, 1, 2, 3, 4, 5, 6, 7,
+                8, 9, 10, 11, 12, 13, 14, 15,
+                16, 17, 18, 19, 20, 21, 22, 23,
+                24, 25, 26, 27, 28, 29, 30, 31,
+                32, 33, 34, 35
+            };
+
+            var ciphered = TurningGrille.Encode(ExampleText, key, 6);
+            var decoded = TurningGrille.Decode(ciphered, key, 6);
 
             PrintResult(ciphered, decoded);
         }
