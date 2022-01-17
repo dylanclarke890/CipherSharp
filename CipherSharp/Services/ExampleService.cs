@@ -119,6 +119,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void MultiVigenereExample()
+        {
+            Console.WriteLine("Multi Vigenere cipher:");
+            var ciphered = MultiVigenere.Encode(ExampleText, new string[2] { Key, "hello" });
+            var decoded = MultiVigenere.Decode(ciphered, new string[2] { Key, "hello" });
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void PlayfairExample()
         {
             Console.WriteLine("Playfair cipher:");

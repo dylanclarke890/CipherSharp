@@ -37,7 +37,7 @@ namespace CipherSharp.Ciphers.Classical
         }
 
         /// <summary>
-        /// decipher some text using the Vigenere cipher.
+        /// Decipher some text using the Vigenere cipher.
         /// </summary>
         /// <param name="text">The text to decipher.</param>
         /// <param name="key">The key to use.</param>
