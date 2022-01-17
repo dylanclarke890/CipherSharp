@@ -8,6 +8,7 @@ Ciphers implemented so far:
 - Affine
 - AMSCO
 - Bifid
+- Caesar
 - Columnar
 - Disrupted
 - Double Columnar
@@ -16,6 +17,7 @@ Ciphers implemented so far:
 - Polybius
 - Rail-fence
 - Route
+- ROT13
 - Trifid
 - Turning Grille
 - Two Square
