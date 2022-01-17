@@ -13,5 +13,7 @@ Ciphers implemented so far:
 - Four Square
 - Playfair
 - Polybius
+- Rail-fence
+- Route
 - Trifid
 - Two Square
