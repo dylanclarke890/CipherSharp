@@ -12,6 +12,7 @@ namespace CipherSharp
             exampleService.ADFGXExample();
             exampleService.AffineExample();
             exampleService.AMSCOExample();
+            exampleService.AtbashExample();
             exampleService.BifidExample();
             exampleService.CaesarExample();
             exampleService.ColumnarExample();
@@ -23,6 +24,7 @@ namespace CipherSharp
             exampleService.RailFenceExample();
             exampleService.RouteExample();
             exampleService.ROT13Example();
+            exampleService.SubstitutionExample();
             exampleService.TrifidExample();
             exampleService.TurningGrilleExample();
             exampleService.TwoSquareExample();

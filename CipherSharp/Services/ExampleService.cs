@@ -56,6 +56,15 @@ namespace CipherSharp.Services
             PrintResult(ciphered, decoded);
         }
 
+        public void AtbashExample()
+        {
+            Console.WriteLine("Atbash cipher:");
+            var ciphered = Atbash.Encode(ExampleText);
+            var decoded = Atbash.Decode(ciphered);
+
+            PrintResult(ciphered, decoded);
+        }
+
         public void BifidExample()
         {
             Console.WriteLine("Bifid cipher:");
@@ -151,6 +160,15 @@ namespace CipherSharp.Services
             Console.WriteLine("ROT13 cipher:");
             var ciphered = ROT13.Encode(ExampleText);
             var decoded = ROT13.Decode(ciphered);
+
+            PrintResult(ciphered, decoded);
+        }
+
+        public void SubstitutionExample()
+        {
+            Console.WriteLine("Substitution cipher:");
+            var ciphered = Substitution.Encode(ExampleText, Key);
+            var decoded = Substitution.Decode(ciphered, Key);
 
             PrintResult(ciphered, decoded);
         }
