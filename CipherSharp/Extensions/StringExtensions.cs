@@ -63,7 +63,14 @@ namespace CipherSharp.Extensions
             for (int i = 0; i < iterations; i++)
             {
                 int j = i * chunkSize;
-                chunks.Add(text[j..(j + chunkSize)]);
+                if (j + chunkSize > text.Length)
+                {
+                    chunks.Add(text[j..]);
+                }
+                else
+                {
+                    chunks.Add(text[j..(j + chunkSize)]);
+                }
             }
 
             return chunks;

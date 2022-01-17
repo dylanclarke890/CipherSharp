@@ -1,6 +1,5 @@
 ﻿using CipherSharp.Enums;
 using CipherSharp.Helpers;
-using System.Collections.Generic;
 using Xunit;
 
 namespace CipherSharp.Tests.Helpers
@@ -18,14 +17,14 @@ namespace CipherSharp.Tests.Helpers
             var result = Matrix.Create(initialKey, mode);
 
             // Assert
-            List<List<string>> expected = new()
+            string[][] expected = new string[][]
             {
-                new() { "TESABC" },
-                new() { "DFGHIJ" },
-                new() { "KLMNOP" },
-                new() { "QRUVWX" },
-                new() { "YZ0123" },
-                new() { "456789" },
+                new string[]{ "TESABC" },
+                new string[]{ "DFGHIJ" },
+                new string[]{ "KLMNOP" },
+                new string[]{ "QRUVWX" },
+                new string[]{ "YZ0123" },
+                new string[]{ "456789" },
             };
             Assert.Equal(expected, result);
         }

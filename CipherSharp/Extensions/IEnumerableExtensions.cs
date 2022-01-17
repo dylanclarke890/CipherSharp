@@ -58,11 +58,40 @@ namespace CipherSharp.Extensions
         }
 
         /// <summary>
+        /// Loops through <paramref name="array"/> <paramref name="size"/> times,
+        /// checking whether each item is equal to <paramref name="compareWith"/>
+        /// and if so, will append the row and column index to their respective lists.
+        /// </summary>
+        /// <param name="array">The array to check.</param>
+        /// <param name="compareWith">The object to compare items with.</param>
+        /// <param name="size">The size of the array.</param>
+        /// <returns>Two arrays, the first of which is an array of row indexes which fit
+        /// the criteria. The second array is an array of column indexes which match.</returns>
+        public static (int[], int[]) IndexesOf<T>(this T[][] array, T compareWith, int size)
+        {
+            List<int> rowIndices = new();
+            List<int> columnIndices = new();
+            for (int i = 0; i < size; i++)
+            {
+                for (int j = 0; j < size; j++)
+                {
+                    if (array[i][j].Equals(compareWith))
+                    {
+                        rowIndices.Add(i);
+                        columnIndices.Add(j);
+                    }
+                }
+            }
+
+            return (rowIndices.ToArray(), columnIndices.ToArray());
+        }
+
+        /// <summary>
         /// Splits <paramref name="list"/> as specified by <paramref name="chunkSize"/>.
         /// </summary>
         /// <param name="list">The list to split.</param>
         /// <param name="chunkSize">The max length of each item in the array.</param>
-        /// <returns>An array of strings, which have a max length of <paramref name="chunkSize"/>.</returns>
+        /// <returns>An array of items, which have a max length of <paramref name="chunkSize"/>.</returns>
         public static List<List<T>> Split<T>(this List<T> list, int chunkSize)
         {
             int iterations = (list.Count % chunkSize == 0) 
@@ -72,6 +101,26 @@ namespace CipherSharp.Extensions
             for (int i = 0; i < iterations; i++)
             {
                 chunks.Add(list.Skip(i * chunkSize).Take(chunkSize).ToList());
+            }
+
+            return chunks;
+        }
+
+        /// <summary>
+        /// Splits <paramref name="array"/> as specified by <paramref name="chunkSize"/>.
+        /// </summary>
+        /// <param name="array">The list to split.</param>
+        /// <param name="chunkSize">The max length of each item in the array.</param>
+        /// <returns>An array of items, which have a max length of <paramref name="chunkSize"/>.</returns>
+        public static List<T[]> Split<T>(this T[] array, int chunkSize)
+        {
+            int iterations = (array.Length % chunkSize == 0)
+                ? array.Length / chunkSize : array.Length / chunkSize + 1;
+
+            List<T[]> chunks = new();
+            for (int i = 0; i < iterations; i++)
+            {
+                chunks.Add(array.Skip(i * chunkSize).Take(chunkSize).ToArray());
             }
 
             return chunks;
