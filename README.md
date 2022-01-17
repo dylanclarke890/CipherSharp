@@ -17,9 +17,11 @@ Ciphers implemented so far:
 - Disrupted
 - Double Columnar
 - Four Square
+- Multi Beaufort
 - Multi Vigenere
 - Playfair
 - Polybius
+- Progressive Key
 - Rail-fence
 - Route
 - ROT13
