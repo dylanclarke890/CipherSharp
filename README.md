@@ -10,6 +10,7 @@ Ciphers implemented so far:
 - AMSCO
 - Atbash
 - Autokey
+- Beaufort
 - Bifid
 - Caesar
 - Columnar
