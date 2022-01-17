@@ -1,35 +1,34 @@
 ﻿using CipherSharp.Ciphers.Classical;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Classical
 {
-    public class ProgressiveKeyTests
+    public class RecursiveKeyTests
     {
         [Fact]
         public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
-            string text = "helloworld";
-            int numKey = 2;
-            string textKey = "test";
+            string text = "HELLOWORLD";
+            string key = "test";
 
             // Act
-            var result = ProgressiveKey.Encode(text, numKey, textKey);
+            var result = RecursiveKey.Encode(text, key);
 
             // Assert
-            Assert.Equal("AIDEJCIMIA", result);
+            Assert.Equal("AXEEJRJMIA", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "AIDEJCIMIA";
-            int numKey = 2;
-            string textKey = "test";
+            string text = "AXEEJRJMIA";
+            string key = "test";
 
             // Act
-            var result = ProgressiveKey.Decode(text, numKey, textKey);
+            var result = RecursiveKey.Decode(text, key);
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
