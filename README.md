@@ -23,6 +23,7 @@ Ciphers implemented so far:
 - Polybius
 - Progressive Key
 - Rail-fence
+- Recursive Key
 - Route
 - ROT13
 - Substitution
