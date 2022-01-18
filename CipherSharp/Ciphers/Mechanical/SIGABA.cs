@@ -28,45 +28,29 @@ namespace CipherSharp.Ciphers.Mechanical
     /// </summary>
     public static class SIGABA
     {
-        private static char ControlRotor(char letter, string key, int pos, bool invert = false)
-        {
-            return ProcessLetterThroughRotor(letter, key, pos, invert, AppConstants.Alphabet, 26);
-        }
-
-        private static char IndexRotor(char letter, string key, int pos, bool invert = false)
-        {
-            return ProcessLetterThroughRotor(letter, key, pos, invert, AppConstants.Digits, 10);
-        }
-
-        private static char ProcessLetterThroughRotor(char letter, string key, int pos, bool invert, string alphabet, int size)
-        {
-            var entry = alphabet.IndexOf(letter);
-
-            int index = (entry + pos - 1) % size;
-            int outer = 0;
-            if (!invert)
-            {
-                char inner = index < 0 ? key[^Math.Abs(index)] : key[index];
-                outer = (alphabet.IndexOf(inner) - pos + 1) % size;
-            }
-            else
-            {
-                char inner = index < 0 ? alphabet[^Math.Abs(index)] : alphabet[index];
-                outer = (key.IndexOf(inner) - pos + 1) % size;
-            }
-
-            return outer < 0 ? alphabet[^Math.Abs(outer)] : alphabet[outer];
-        }
-
+        /// <summary>
+        /// Encipher some text using the SIGABA cipher.
+        /// </summary>
+        /// <param name="text">The text to encipher.</param>
+        /// <param name="cipherKey">The cipher rotor settings to use.</param>
+        /// <param name="controlKey">The control rotor settings to use.</param>
+        /// <param name="indexKey">The index rotor settings to use.</param>
+        /// <param name="indicatorKey">The indicator key.</param>
+        /// <param name="controlPos">Current position of control rotor.</param>
+        /// <param name="indexPos">Current position of index rotor.</param>
+        /// <returns>The enciphered text.</returns>
         public static string Encode(string text, List<string> cipherKey, List<string> controlKey,
             List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
         {
             text = text.ToUpper();
-            text = text.Replace("Z", "X");
-            text = text.Replace(" ", "Z");
+            text = text.Replace("Z", "X"); // SIGABA turned 'Z' into 'X'
+            text = text.Replace(" ", "Z"); // and turned ' ' (spaces) into 'Z'
+
+            // Save a copy of the settings for each rotor group.
             var ciphersRotorSet = cipherKey.ToList();
             var controlRotorsSet = controlKey.ToList();
             var indexRotorsSet = indexKey.ToList();
+
             var indicator1 = indicatorKey;
             var indicator2 = controlPos;
             var indicator3 = indexPos;
@@ -115,16 +99,19 @@ namespace CipherSharp.Ciphers.Mechanical
             return string.Join(string.Empty, output);
         }
 
-        private static void SplitResultsIntoWiringGroups(Dictionary<char, int> indwiring, List<char> L)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                L[i] = indwiring[L[i]].ToString()[0];
-            }
-        }
-
+        /// <summary>
+        /// Decipher some text using the SIGABA cipher.
+        /// </summary>
+        /// <param name="text">The text to decipher.</param>
+        /// <param name="cipherKey">The cipher rotor settings to use.</param>
+        /// <param name="controlKey">The control rotor settings to use.</param>
+        /// <param name="indexKey">The index rotor settings to use.</param>
+        /// <param name="indicatorKey">The indicator key.</param>
+        /// <param name="controlPos">Current position of control rotor.</param>
+        /// <param name="indexPos">Current position of index rotor.</param>
+        /// <returns>The deciphered text.</returns>
         public static string Decode(string text, List<string> cipherKey, List<string> controlKey,
-    List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
+            List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
         {
             text = text.ToUpper();
             var ciphersRotorSet = cipherKey.ToList();
@@ -188,36 +175,62 @@ namespace CipherSharp.Ciphers.Mechanical
             return string.Join(string.Empty, output);
         }
 
-        /// <summary>
-        /// The outputs of the index rotors determine which of the cipher rotors will move. 
-        /// We use floored division to pair up each of the sent signals.
-        /// </summary>
-        /// <param name="cipherPositions"></param>
-        /// <param name="L"></param>
-        private static void UpdateCipherPositions(List<int> cipherPositions, List<char> L)
+        private static (Dictionary<string, string>, Dictionary<string, string>) GetRotors()
         {
-            
-            HashSet<int> indexRotorOutput = new();
-            foreach (var i in L)
+            // Rotor Wirings for the large rotors
+            // The actual wirings are still classified
+            Dictionary<string, string> largeRotors = new()
             {
-                indexRotorOutput.Add(int.Parse(i.ToString()) / 2);
-            }
+                ["I"] = "PWJVDRGTMBHOLYXUZFQEAINKCS",
+                ["II"] = "MKLWAIBXRUYGTNCSPDFQHZJVOE",
+                ["III"] = "WVYLIJAMXZTSUROENDKQHCFBPG",
+                ["IV"] = "ZRMQWNITBJUKHOFPEYDXAVLSGC",
+                ["V"] = "LGBAZWMIPQTFHEVUYJNCRSKDOX",
+                ["VI"] = "YGOWZXPCBJTIARKHMELNDFVUSQ",
+                ["VII"] = "UZGKPDQRJTFCYOINVMALHEXWSB",
+                ["VIII"] = "OQRTDBUZGPHWNJFELKCIXVSAYM",
+                ["IX"] = "HLEDCOTJMUAWFZQIGRBVYPSNKX",
+                ["X"] = "QKCIYPWLZNHTJVFDURSXEBGMOA"
+            };
+            // Rotor Wirings for the small rotors
+            // The actual wirings are still classified
+            Dictionary<string, string> smallRotors = new()
+            {
+                ["I"] = "9438705162",
+                ["II"] = "8135624097",
+                ["III"] = "5901284736",
+                ["IV"] = "1953742680",
+                ["V"] = "6482359170",
+            };
 
-            foreach (var rtr in indexRotorOutput)
-            {
-                cipherPositions[rtr] = (cipherPositions[rtr] + 1) % 26;
-            }
+            return (largeRotors, smallRotors);
         }
 
-        private static void StepMaze(List<string> controlRotors, List<int> controlPositions, List<char> L)
+        private static Dictionary<char, int> GetIndWiring()
         {
-            foreach (var (r, p) in controlRotors.Zip(controlPositions))
+            // Wiring that connects the control rotors to the index rotors
+            return new()
             {
-                L[0] = ControlRotor(L[0], r, p);
-                L[1] = ControlRotor(L[1], r, p);
-                L[2] = ControlRotor(L[2], r, p);
-                L[3] = ControlRotor(L[3], r, p);
+                ['A'] = 9, ['B'] = 1, ['C'] = 2, ['D'] = 3, ['E'] = 3, ['F'] = 4,
+                ['G'] = 4, ['H'] = 4, ['I'] = 5, ['J'] = 5, ['K'] = 5, ['L'] = 6,
+                ['M'] = 6, ['N'] = 6, ['O'] = 6, ['P'] = 7, ['Q'] = 7, ['R'] = 7,
+                ['S'] = 7, ['T'] = 7, ['U'] = 8, ['V'] = 8, ['W'] = 8, ['X'] = 8,
+                ['Y'] = 8, ['Z'] = 8
+            };
+        }
+
+        private static int AddCipherRotorsAndPositions(List<string> ciphersRotorSet, string indicator1, Dictionary<string, string> largeRotors, List<string> cipherRotors, List<int> cipherPositions)
+        {
+            int counter = 0;
+            for (int ctr = 0; ctr < ciphersRotorSet.Count; ctr++)
+            {
+                var x = ciphersRotorSet[ctr];
+                cipherRotors.Add(largeRotors[x]);
+                cipherPositions.Add(largeRotors[x].IndexOf(indicator1[ctr]));
+                counter = ctr;
             }
+
+            return counter;
         }
 
         private static void AddIndexRotorsAndPositions(List<string> indexRotorsSet, string indicator3, Dictionary<string, string> smallRotors, int counter, List<string> indexRotors, List<int> indexPositions)
@@ -239,15 +252,45 @@ namespace CipherSharp.Ciphers.Mechanical
                 controlPositions.Add(largeRotors[x].IndexOf(indicator2[counter]));
             }
         }
-
-        private static void SendGroupedWiresIntoIndexRotors(List<string> indexRotors, List<int> indexPositions, List<char> L)
+        
+        private static char ControlRotor(char letter, string key, int pos, bool invert = false)
         {
-            foreach (var (r, p) in indexRotors.Zip(indexPositions))
+            return ProcessLetterThroughRotor(letter, key, pos, invert, AppConstants.Alphabet, 26);
+        }
+
+        private static char IndexRotor(char letter, string key, int pos, bool invert = false)
+        {
+            return ProcessLetterThroughRotor(letter, key, pos, invert, AppConstants.Digits, 10);
+        }
+
+        private static char ProcessLetterThroughRotor(char letter, string key, int pos, bool invert, string alphabet, int size)
+        {
+            var entry = alphabet.IndexOf(letter);
+
+            int index = (entry + pos - 1) % size;
+            int outer = 0;
+            if (!invert)
             {
-                L[0] = IndexRotor(L[0], r, p);
-                L[1] = IndexRotor(L[1], r, p);
-                L[2] = IndexRotor(L[2], r, p);
-                L[3] = IndexRotor(L[3], r, p);
+                char inner = index < 0 ? key[^Math.Abs(index)] : key[index];
+                outer = (alphabet.IndexOf(inner) - pos + 1) % size;
+            }
+            else
+            {
+                char inner = index < 0 ? alphabet[^Math.Abs(index)] : alphabet[index];
+                outer = (key.IndexOf(inner) - pos + 1) % size;
+            }
+
+            return outer < 0 ? alphabet[^Math.Abs(outer)] : alphabet[outer];
+        }
+
+        private static void StepMaze(List<string> controlRotors, List<int> controlPositions, List<char> L)
+        {
+            foreach (var (r, p) in controlRotors.Zip(controlPositions))
+            {
+                L[0] = ControlRotor(L[0], r, p);
+                L[1] = ControlRotor(L[1], r, p);
+                L[2] = ControlRotor(L[2], r, p);
+                L[3] = ControlRotor(L[3], r, p);
             }
         }
 
@@ -265,78 +308,38 @@ namespace CipherSharp.Ciphers.Mechanical
             }
         }
 
-        private static int AddCipherRotorsAndPositions(List<string> ciphersRotorSet, string indicator1, Dictionary<string, string> largeRotors, List<string> cipherRotors, List<int> cipherPositions)
+        private static void SplitResultsIntoWiringGroups(Dictionary<char, int> indwiring, List<char> L)
         {
-            int counter = 0;
-            for (int ctr = 0; ctr < ciphersRotorSet.Count; ctr++)
+            for (int i = 0; i < 4; i++)
             {
-                var x = ciphersRotorSet[ctr];
-                cipherRotors.Add(largeRotors[x]);
-                cipherPositions.Add(largeRotors[x].IndexOf(indicator1[ctr]));
-                counter = ctr;
+                L[i] = indwiring[L[i]].ToString()[0];
+            }
+        }
+
+        private static void SendGroupedWiresIntoIndexRotors(List<string> indexRotors, List<int> indexPositions, List<char> L)
+        {
+            foreach (var (r, p) in indexRotors.Zip(indexPositions))
+            {
+                L[0] = IndexRotor(L[0], r, p);
+                L[1] = IndexRotor(L[1], r, p);
+                L[2] = IndexRotor(L[2], r, p);
+                L[3] = IndexRotor(L[3], r, p);
+            }
+        }
+
+        private static void UpdateCipherPositions(List<int> cipherPositions, List<char> L)
+        {
+
+            HashSet<int> indexRotorOutput = new();
+            foreach (var i in L)
+            {
+                indexRotorOutput.Add(int.Parse(i.ToString()) / 2);
             }
 
-            return counter;
-        }
-
-        private static Dictionary<char, int> GetIndWiring()
-        {
-            return new()
+            foreach (var rtr in indexRotorOutput)
             {
-                ['A'] = 9,
-                ['B'] = 1,
-                ['C'] = 2,
-                ['D'] = 3,
-                ['E'] = 3,
-                ['F'] = 4,
-                ['G'] = 4,
-                ['H'] = 4,
-                ['I'] = 5,
-                ['J'] = 5,
-                ['K'] = 5,
-                ['L'] = 6,
-                ['M'] = 6,
-                ['N'] = 6,
-                ['O'] = 6,
-                ['P'] = 7,
-                ['Q'] = 7,
-                ['R'] = 7,
-                ['S'] = 7,
-                ['T'] = 7,
-                ['U'] = 8,
-                ['V'] = 8,
-                ['W'] = 8,
-                ['X'] = 8,
-                ['Y'] = 8,
-                ['Z'] = 8
-            };
-        }
-
-        private static (Dictionary<string, string>, Dictionary<string, string>) GetRotors()
-        {
-            Dictionary<string, string> largeRotors = new()
-            {
-                ["I"] = "PWJVDRGTMBHOLYXUZFQEAINKCS",
-                ["II"] = "MKLWAIBXRUYGTNCSPDFQHZJVOE",
-                ["III"] = "WVYLIJAMXZTSUROENDKQHCFBPG",
-                ["IV"] = "ZRMQWNITBJUKHOFPEYDXAVLSGC",
-                ["V"] = "LGBAZWMIPQTFHEVUYJNCRSKDOX",
-                ["VI"] = "YGOWZXPCBJTIARKHMELNDFVUSQ",
-                ["VII"] = "UZGKPDQRJTFCYOINVMALHEXWSB",
-                ["VIII"] = "OQRTDBUZGPHWNJFELKCIXVSAYM",
-                ["IX"] = "HLEDCOTJMUAWFZQIGRBVYPSNKX",
-                ["X"] = "QKCIYPWLZNHTJVFDURSXEBGMOA"
-            };
-            Dictionary<string, string> smallRotors = new()
-            {
-                ["I"] = "9438705162",
-                ["II"] = "8135624097",
-                ["III"] = "5901284736",
-                ["IV"] = "1953742680",
-                ["V"] = "6482359170",
-            };
-
-            return (largeRotors, smallRotors);
+                cipherPositions[rtr] = (cipherPositions[rtr] + 1) % 26;
+            }
         }
     }
 }
