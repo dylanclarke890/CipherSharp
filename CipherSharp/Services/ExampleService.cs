@@ -1,4 +1,9 @@
-﻿using CipherSharp.Ciphers.Classical;
+﻿using CipherSharp.Ciphers.Other;
+using CipherSharp.Ciphers.Polyalphabetic;
+using CipherSharp.Ciphers.PolybiusSquare;
+using CipherSharp.Ciphers.Square;
+using CipherSharp.Ciphers.Substitution;
+using CipherSharp.Ciphers.Transposition;
 using CipherSharp.Enums;
 using System;
 
@@ -176,8 +181,8 @@ namespace CipherSharp.Services
         public void SubstitutionExample()
         {
             Console.WriteLine("Substitution cipher:");
-            var ciphered = Substitution.Encode(ExampleText, Key);
-            var decoded = Substitution.Decode(ciphered, Key);
+            var ciphered = SimpleSubstitution.Encode(ExampleText, Key);
+            var decoded = SimpleSubstitution.Decode(ciphered, Key);
 
             PrintResult(ciphered, decoded);
         }
