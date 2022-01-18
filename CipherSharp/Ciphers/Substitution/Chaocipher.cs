@@ -67,7 +67,7 @@ namespace CipherSharp.Ciphers.Substitution
             {
                 x = x[1..] + x[0];
             }
-            return key;
+            return x;
         }
         private static string RotateRight(string key, char letter)
         {

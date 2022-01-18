@@ -16,14 +16,14 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             var result = Chaocipher.Encode(text, keys);
 
             // Assert
-            Assert.Equal("WMXXDODGXV", result);
+            Assert.Equal("WAHQZIUETS", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "WMXXDODGXV";
+            string text = "WAHQZIUETS";
             string[] keys = new string[2] { "HXUCZVAMDSLKPEFJRIGTWOBNYQ", "PTLNBQDEOYSFAVZKGJRIHWXUMC" };
 
             // Act
