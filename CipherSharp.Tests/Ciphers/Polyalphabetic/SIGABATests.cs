@@ -7,7 +7,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
     public class SIGABATests
     {
         [Fact]
-        public void Encode_StateUnderTest_ExpectedBehavior()
+        public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
             string text = "HELLOWORLD";
@@ -27,7 +27,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Fact]
-        public void Decode_StateUnderTest_ExpectedBehavior()
+        public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
             string text = "PDVJEZXFCE";
