@@ -1,9 +1,11 @@
 # CipherSharp
-A collection of ciphers implemented in C#.
+A collection of ciphers implemented in C#. Current list includes:
 
-Ciphers implemented so far:
-## Classical:
-- ADFGVX
+## Mechanical 
+- Enigma
+
+## Classical
+- ADFGVX 
 - ADFGX
 - Affine
 - Affine Vigenere
@@ -32,6 +34,3 @@ Ciphers implemented so far:
 - Turning Grille
 - Two Square
 - Vigenere
-
-## Mechanical: 
-- Enigma
