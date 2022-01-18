@@ -2,7 +2,7 @@
 A collection of ciphers implemented in C#.
 
 ## Polyalphabetic
-- Engima
+- Enigma
 - M209
 - Multi-Vigenere
 - SIGABA
