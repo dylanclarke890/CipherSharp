@@ -2,7 +2,7 @@
 A collection of ciphers implemented in C#.
 
 Ciphers implemented so far:
-
+## Classical:
 - ADFGVX
 - ADFGX
 - Affine
@@ -32,3 +32,6 @@ Ciphers implemented so far:
 - Turning Grille
 - Two Square
 - Vigenere
+
+## Mechanical: 
+- Enigma
