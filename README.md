@@ -1,38 +1,46 @@
 # CipherSharp
-A collection of ciphers implemented in C#. Current list includes:
+A collection of ciphers implemented in C#.
 
-## Mechanical 
-- Enigma
+## Polyalphabetic
+- Engima
 - M209
+- Multi-Vigenere
 - SIGABA
+- Trithemius
+- Vigenere
 
-## Classical
-- ADFGVX 
+## Polybius Square
+- ADFGVX
 - ADFGX
-- Affine
-- Affine Vigenere
-- AMSCO
-- Atbash
-- Autokey
-- Beaufort
 - Bifid
+- Polybius
+- Trifid
+
+## Square
+- Four Square
+- Playfair
+- Two Square
+
+## Substitution
+- Affine
+- Affine-Vigenere
+- Atbash
+- Auto Key
+- Beaufort
 - Caesar
+- Multi-Beaufort
+- Progressive Key
+- ROT13
+- Running Key
+- Simple Subtitution
+
+## Transposition
+- AMSCO
 - Columnar
 - Disrupted
 - Double Columnar
-- Four Square
-- Multi Beaufort
-- Multi Vigenere
-- Playfair
-- Polybius
-- Progressive Key
 - Rail-fence
-- Recursive Key
 - Route
-- ROT13
-- Substitution
-- Trifid
-- Trithemius
+
+## Other
 - Turning Grille
-- Two Square
-- Vigenere
