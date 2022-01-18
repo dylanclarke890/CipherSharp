@@ -4,6 +4,7 @@ A collection of ciphers implemented in C#. Current list includes:
 ## Mechanical 
 - Enigma
 - M209
+- SIGABA
 
 ## Classical
 - ADFGVX 
