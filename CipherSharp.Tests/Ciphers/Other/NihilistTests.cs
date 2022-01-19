@@ -1,9 +1,10 @@
-﻿using CipherSharp.Ciphers.Substitution;
+﻿using CipherSharp.Ciphers.Other;
+using CipherSharp.Enums;
 using Xunit;
 
-namespace CipherSharp.Tests.Ciphers.Substitution
+namespace CipherSharp.Tests.Ciphers.Other
 {
-    public class HuttonTests
+    public class NihilistTests
     {
         [Fact]
         public void Encode_BasicParameters_ReturnsCipherText()
@@ -11,23 +12,25 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "helloworld";
             string[] keys = new string[2] { "test", "key" };
+            AlphabetMode mode = AlphabetMode.EX;
 
             // Act
-            var result = Hutton.Encode(text, keys);
+            var result = Nihilist.Encode(text, keys, mode);
 
             // Assert
-            Assert.Equal("NQPUTMXMKR", result);
+            Assert.Equal("55 24 83 63 47 96 66 54 83 52", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "NQPUTMXMKR";
+            string text = "55 24 83 63 47 96 66 54 83 52";
             string[] keys = new string[2] { "test", "key" };
+            AlphabetMode mode = AlphabetMode.EX;
 
             // Act
-            var result = Hutton.Decode(text, keys);
+            var result = Nihilist.Decode(text, keys, mode);
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
