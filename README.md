@@ -2,9 +2,11 @@
 A collection of ciphers implemented in C#.
 
 ## Polyalphabetic
+- Alberti
 - Enigma
 - M209
 - Multi-Vigenere
+- Quagmire - Four variations
 - SIGABA
 - Trithemius
 - Vigenere
@@ -28,11 +30,14 @@ A collection of ciphers implemented in C#.
 - Auto Key
 - Beaufort
 - Caesar
+- Chaocipher
+- Hutton
 - Multi-Beaufort
 - Progressive Key
 - ROT13
 - Running Key
 - Simple Subtitution
+- Straddle Checkerboard
 
 ## Transposition
 - AMSCO
@@ -43,4 +48,6 @@ A collection of ciphers implemented in C#.
 - Route
 
 ## Other
+- DRYAD
+- Nihilist
 - Turning Grille
