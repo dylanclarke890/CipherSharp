@@ -11,13 +11,13 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     public static partial class Quagmire
     {
         /// <summary>
-        /// The Quagmire Two cipher applies the Vigenere cipher except that rather than shifting 
-        /// the normal alphabet in accordance with the key it shifts a scrambled alphabet instead.
+        /// The Quagmire Three is similar to the Quagmire Two but with the first key used to apply a
+        /// simple substitution cipher to the text first.
         /// </summary>
-        public static class Two
+        public static class Three
         {
             /// <summary>
-            /// Encipher some text using the Quagmire Two cipher.
+            /// Encipher some text using the Quagmire Three cipher.
             /// </summary>
             /// <param name="text">The text to encipher.</param>
             /// <param name="keys">The keys to use.</param>
@@ -50,14 +50,14 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 for (int i = 0; i < text.Length; i++)
                 {
                     var t = table[i % indicator.Length];
-                    output.Add(t[alphabet.IndexOf(text[i])]);
+                    output.Add(t[key.IndexOf(text[i])]);
                 }
 
                 return string.Join(string.Empty, output);
             }
 
             /// <summary>
-            /// Decipher some text using the Quagmire Two cipher.
+            /// Decipher some text using the Quagmire Three cipher.
             /// </summary>
             /// <param name="text">The text to decipher.</param>
             /// <param name="keys">The keys to use.</param>
@@ -90,7 +90,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 for (int i = 0; i < text.Length; i++)
                 {
                     var t = table[i % indicator.Length];
-                    output.Add(alphabet[t.IndexOf(text[i])]);
+                    output.Add(key[t.IndexOf(text[i])]);
                 }
 
                 return string.Join(string.Empty, output);
