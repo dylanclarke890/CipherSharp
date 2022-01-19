@@ -3,7 +3,7 @@ using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 {
-    public class QuagmireTests
+    public class QuagmireOneTests
     {
         [Fact]
         public void Encode_BasicParameters_ReturnsCipherText()
