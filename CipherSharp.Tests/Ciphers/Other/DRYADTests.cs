@@ -6,7 +6,7 @@ namespace CipherSharp.Tests.Ciphers.Other
     public class DRYADTests
     {
         [Fact]
-        public void Encode_StateUnderTest_ExpectedBehavior()
+        public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
             string text = "213165587194201";
@@ -20,7 +20,7 @@ namespace CipherSharp.Tests.Ciphers.Other
         }
 
         [Fact]
-        public void Decode_StateUnderTest_ExpectedBehavior()
+        public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
             string text = "213165587194201";
