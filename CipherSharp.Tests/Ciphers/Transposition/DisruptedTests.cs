@@ -10,22 +10,22 @@ namespace CipherSharp.Tests.Ciphers.Transposition
         {
             // Arrange
             string text = "helloworld";
-            string key = "test";
+            string[] key = new string[4] { "test", "key", "test", "key" };
             bool complete = false;
 
             // Act
             var result = Disrupted.Encode(text, key, complete);
 
             // Assert
-            Assert.Equal("elrolhlwod", result);
+            Assert.Equal("ellwhlorod", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "elrolhlwod";
-            string key = "test";
+            string text = "ellwhlorod";
+            string[] key = new string[4] { "test", "key", "test", "key" };
             bool complete = false;
 
             // Act

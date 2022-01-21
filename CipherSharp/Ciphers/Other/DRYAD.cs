@@ -74,7 +74,7 @@ namespace CipherSharp.Ciphers.Other
 
             foreach (var group in text.SplitIntoChunks(5))
             {
-                var row = random.Next(27);
+                var row = random.Next(26);
                 output.Add(((char)(row + 65)).ToString()); // write down the letter indicating the row we are using
 
                 // Pick a random letter from the options to represent that digit
@@ -132,8 +132,6 @@ namespace CipherSharp.Ciphers.Other
                     Console.WriteLine($"{let} : {string.Join(" ", row)}");
                 }
             }
-
-            random = new(); // reset seed
 
             List<string> output = new();
 

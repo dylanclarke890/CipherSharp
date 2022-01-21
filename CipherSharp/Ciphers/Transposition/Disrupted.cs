@@ -22,7 +22,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// <param name="key">The key to use.</param>
         /// <param name="complete">If true, will pad the grid with extra letters.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, string key, bool complete = false)
+        public static string Encode<T>(string text, T[] key, bool complete = false)
         {
             double gridSize = Math.Pow(key.Length, 2);
             int keyLength = key.Length;
@@ -70,7 +70,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// <param name="key">The key to use.</param>
         /// <param name="complete">If true, will pad the grid with extra letters.</param>
         /// <returns>The decoded text.</returns>
-        public static string Decode(string text, string key, bool complete = false)
+        public static string Decode<T>(string text, T[] key, bool complete = false)
         {
             double gridSize = Math.Pow(key.Length, 2);
             int keyLength = key.Length;
@@ -87,6 +87,12 @@ namespace CipherSharp.Ciphers.Transposition
             for (int num = 0; num < rankLength; num++)
             {
                 int rowNum = rank.IndexWhere(j => j == num)[0] + 1;
+                if (text1.Length < rowNum)
+                {
+                    grid[num] = text1;
+                    text1 = string.Empty;
+                    break;
+                }
                 grid[num] = text1[..rowNum];
                 text1 = text1[rowNum..];
             }
@@ -144,7 +150,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// </summary>
         /// <param name="key">Uses key length to generate items.</param>
         /// <returns>A list of empty strings.</returns>
-        private static List<string> CreateEmptyGrid(string key)
+        private static List<string> CreateEmptyGrid<T>(T[] key)
         {
             List<string> grid = new();
             for (int i = 0; i < key.Length; i++)

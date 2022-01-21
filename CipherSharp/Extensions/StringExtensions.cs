@@ -107,5 +107,26 @@ namespace CipherSharp.Extensions
 
             return sb.ToString();
         }
+
+        /// <summary>
+        /// Generator function to return all positions of where a substring is found.
+        /// </summary>
+        /// <param name="text">The text to check.</param>
+        /// <param name="subString">The substring to look for.</param>
+        /// <returns>An iterator to return all of the positions the substring occurs.</returns>
+        public static IEnumerable<int> FindAll(this string text, string subString)
+        {
+            int start = 0;
+            var origText = text;
+
+            while (true)
+            {
+                start = text.IndexOf(subString) + start;
+                if (start == -1 || text == string.Empty) yield break;
+                yield return start;
+                text = origText[start..];
+                start += subString.Length;
+            }
+        }
     }
 }

@@ -100,8 +100,8 @@ namespace CipherSharp.Services
         public void DisruptedExample()
         {
             Console.WriteLine("Disrupted Transposition cipher:");
-            var ciphered = Disrupted.Encode(ExampleText, "test");
-            var decoded = Disrupted.Decode(ciphered, "test");
+            var ciphered = Disrupted.Encode(ExampleText, new string[2] { "test", "key" });
+            var decoded = Disrupted.Decode(ciphered, new string[2] { "test", "key" });
 
             PrintResult(ciphered, decoded);
         }
