@@ -10,6 +10,7 @@ A collection of ciphers implemented in C#.
 - SIGABA
 - Trithemius
 - Vigenere
+- VIC
 
 ## Polybius Square
 - ADFGVX
