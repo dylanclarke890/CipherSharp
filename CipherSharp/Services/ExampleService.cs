@@ -4,7 +4,7 @@ using CipherSharp.Ciphers.PolybiusSquare;
 using CipherSharp.Ciphers.Square;
 using CipherSharp.Ciphers.Substitution;
 using CipherSharp.Ciphers.Transposition;
-using CipherSharp.Enums;
+using CipherSharp.Utility.Enums;
 using System;
 
 namespace CipherSharp.Services
