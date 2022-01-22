@@ -42,6 +42,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         public static string Encode(string text, List<string> cipherKey, List<string> controlKey,
             List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
         {
+            CheckInput(text, cipherKey, controlKey, indexKey, indicatorKey, controlPos, indexPos);
+
             text = text.ToUpper();
             text = text.Replace("Z", "X"); // SIGABA turned 'Z' into 'X'
             text = text.Replace(" ", "Z"); // and turned ' ' (spaces) into 'Z'
@@ -113,6 +115,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         public static string Decode(string text, List<string> cipherKey, List<string> controlKey,
             List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
         {
+            CheckInput(text, cipherKey, controlKey, indexKey, indicatorKey, controlPos, indexPos);
+
             text = text.ToUpper();
             var ciphersRotorSet = cipherKey.ToList();
             var controlRotorsSet = controlKey.ToList();
@@ -173,6 +177,48 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> any parameters are null.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, List<string> cipherKey, List<string> controlKey, List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (cipherKey is null)
+            {
+                throw new ArgumentException($"'{nameof(cipherKey)}' cannot be null.", nameof(cipherKey));
+            }
+
+            if (controlKey is null)
+            {
+                throw new ArgumentException($"'{nameof(controlKey)}' cannot be null.", nameof(controlKey));
+            }
+
+            if (indexKey is null)
+            {
+                throw new ArgumentException($"'{nameof(indexKey)}' cannot be null.", nameof(indexKey));
+            }
+
+            if (string.IsNullOrWhiteSpace(indicatorKey))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(controlPos))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(indexPos))
+            {
+                throw new ArgumentException($"'{nameof(indexPos)}' cannot be null or empty.", nameof(indexPos));
+            }
         }
 
         private static (Dictionary<string, string>, Dictionary<string, string>) GetRotors()

@@ -25,6 +25,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             /// <returns>The enciphered text.</returns>
             public static string Encode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
             {
+                CheckInput(text, keys);
+
                 text = text.ToUpper();
                 keys[0] = keys[0].ToUpper();
                 keys[1] = keys[1].ToUpper();
@@ -65,6 +67,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             /// <returns>The deciphered text.</returns>
             public static string Decode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
             {
+                CheckInput(text, keys);
+
                 text = text.ToUpper();
                 keys[0] = keys[0].ToUpper();
                 keys[1] = keys[1].ToUpper();
@@ -94,6 +98,24 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 }
 
                 return string.Join(string.Empty, output);
+            }
+
+            /// <summary>
+            /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+            /// <paramref name="keys"/> is null or empty.
+            /// </summary>
+            /// <exception cref="ArgumentException"/>
+            private static void CheckInput(string text, string[] keys)
+            {
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+                }
+
+                if (keys is null)
+                {
+                    throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
+                }
             }
         }
     }
