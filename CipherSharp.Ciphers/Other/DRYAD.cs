@@ -32,6 +32,7 @@ namespace CipherSharp.Ciphers.Other
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, int key, bool printPage = false)
         {
+            CheckInput(text, true);
             // Extend the text with zeroes so groups are all the same size
             while (text.Length % 5 != 0)
             {
@@ -98,6 +99,8 @@ namespace CipherSharp.Ciphers.Other
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, int key, bool printPage = false)
         {
+            CheckInput(text, false);
+
             // Extend the text with zeroes so groups are all the same size
             while (text.Length % 5 != 0)
             {
@@ -153,6 +156,24 @@ namespace CipherSharp.Ciphers.Other
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        /// <summary>
+        /// Throws a <see cref="ArgumentException"/> if <paramref name="text"/>
+        /// is null, empty or contains letters if (encoding).
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, bool encoding)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (encoding && text.Any(ch => char.IsLetter(ch)))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot contain letters.", nameof(text));
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers.Other;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Other
@@ -31,6 +32,42 @@ namespace CipherSharp.Tests.Ciphers.Other
 
             // Assert
             Assert.Equal("213165587194201", result);
+        }
+
+        [Fact]
+        public void Encode_NullParameters_ThrowsArgumentException()
+        {
+            // Arrange
+            string text = null;
+            int key = 0;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => DRYAD.Encode(text, key));
+        }
+
+        [Fact]
+        public void Decode_NullParameters_ThrowsArgumentException()
+        {
+            // Arrange
+            string text = null;
+            int key = 0;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => DRYAD.Decode(text, key));
+        }
+
+        [Fact]
+        public void Encode_TextContainsLetters_ThrowsArgumentException()
+        {
+            // Arrange
+            string text = "213165587194201as";
+            int key = 0;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => DRYAD.Encode(text, key));
         }
     }
 }
