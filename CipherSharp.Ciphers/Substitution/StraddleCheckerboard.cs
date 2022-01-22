@@ -23,6 +23,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, string initialKey, int[] keys, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, initialKey, keys);
+
             text = text.ToUpper();
             initialKey = initialKey.ToUpper();
 
@@ -75,6 +77,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, string initialKey, int[] keys, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, initialKey, keys);
+
             text = text.ToUpper();
             initialKey = initialKey.ToUpper();
 
@@ -130,6 +134,24 @@ namespace CipherSharp.Ciphers.Substitution
             }
 
             return output.ToString();
+        }
+
+        private static void CheckInput(string text, string initialKey, int[] keys)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(initialKey))
+            {
+                throw new ArgumentException($"'{nameof(initialKey)}' cannot be null or whitespace.", nameof(initialKey));
+            }
+
+            if (keys is null)
+            {
+                throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
+            }
         }
     }
 }

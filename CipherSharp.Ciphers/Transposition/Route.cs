@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Utility.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -94,6 +95,11 @@ namespace CipherSharp.Ciphers.Transposition
         /// <returns>The prepared text.</returns>
         private static string PrepareText(string text, int key)
         {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
             while (text.Length % key != 0)
             {
                 text += 'X';

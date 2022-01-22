@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace CipherSharp.Ciphers.Substitution
@@ -21,6 +22,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, string key, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, key);
+            alphabet ??= AppConstants.Alphabet;
             var internalKey = Alphabet.AlphabetPermutation(key);
 
             List<char> output = new();
@@ -42,6 +45,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, string key, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, key);
+            alphabet ??= AppConstants.Alphabet;
             var internalKey = Alphabet.AlphabetPermutation(key);
 
             List<char> output = new();
@@ -52,6 +57,24 @@ namespace CipherSharp.Ciphers.Substitution
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="key"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
         }
     }
 }

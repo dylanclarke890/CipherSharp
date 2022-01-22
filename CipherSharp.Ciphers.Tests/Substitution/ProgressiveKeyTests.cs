@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers.Substitution;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Substitution
@@ -33,6 +34,32 @@ namespace CipherSharp.Tests.Ciphers.Substitution
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
+        }
+
+        [Theory]
+        [InlineData("KCLLMYMTOA", null)]
+        [InlineData(null, "test")]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, string textKey)
+        {
+            // Arrange
+            int numKey = 2;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => ProgressiveKey.Encode(text, numKey, textKey));
+        }
+
+        [Theory]
+        [InlineData("KCLLMYMTOA", null)]
+        [InlineData(null, "test")]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, string textKey)
+        {
+            // Arrange
+            int numKey = 2;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => ProgressiveKey.Decode(text, numKey, textKey));
         }
     }
 }

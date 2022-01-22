@@ -21,6 +21,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, int numKey, string textKey, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, textKey);
+
             text = text.ToUpper();
             textKey = textKey.ToUpper();
             var K = textKey.ToNumber(alphabet);
@@ -50,6 +52,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, int numKey, string textKey, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, textKey);
+
             text = text.ToUpper();
             textKey = textKey.ToUpper();
             var K = textKey.ToNumber(alphabet);
@@ -67,6 +71,19 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
             return string.Join(string.Empty, output.ToLetter(alphabet));
+        }
+
+        private static void CheckInput(string text, string textKey)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new System.ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(textKey))
+            {
+                throw new System.ArgumentException($"'{nameof(textKey)}' cannot be null or whitespace.", nameof(textKey));
+            }
         }
     }
 }
