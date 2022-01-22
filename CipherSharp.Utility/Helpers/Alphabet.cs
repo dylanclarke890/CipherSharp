@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CipherSharp.Utility.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -67,6 +68,32 @@ namespace CipherSharp.Utility.Helpers
             var output = text.Select(ch => alphabet.IndexOf(ch));
 
             return output;
+        }
+
+        /// <summary>
+        /// Determines the <see cref="AlphabetMode"/>. Defaults to <see cref="AlphabetMode.JI"/>.
+        /// </summary>
+        /// <param name="mode">The string to parse.</param>
+        /// <returns>The <see cref="AlphabetMode"/>.</returns>
+        public static AlphabetMode GetMode(string mode)
+        {
+            return Enum.TryParse<AlphabetMode>(mode, out var result) ? result : AlphabetMode.JI;
+        }
+
+        /// <summary>
+        /// Gets the alphabet to use based on <paramref name="mode"/>.
+        /// </summary>
+        /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
+        /// <returns>The alphabet to use.</returns>
+        public static string GetAlphabet(AlphabetMode mode)
+        {
+            return mode switch
+            {
+                AlphabetMode.JI => AppConstants.Alphabet.Replace("J", ""),
+                AlphabetMode.CK => AppConstants.Alphabet.Replace("C", ""),
+                AlphabetMode.EX => $"{AppConstants.Alphabet}{AppConstants.Digits}",
+                _ => throw new ArgumentException(mode.ToString()),
+            };
         }
     }
 }
