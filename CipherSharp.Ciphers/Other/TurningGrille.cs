@@ -20,27 +20,29 @@ namespace CipherSharp.Ciphers.Other
     public static class TurningGrille
     {
         /// <summary>
-        /// Encrypt some text using the Turning Grille cipher.
+        /// Encipher some text using the Turning Grille cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
+        /// <param name="text">The text to encipher.</param>
         /// <param name="key">An array of keys to use.</param>
         /// <param name="n">Size of grille</param>
-        /// <returns>The encoded string.</returns>
+        /// <returns>The enciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string Encode(string text, int[] key, int n = 4)
         {
+            CheckInput(text, key);
             CheckKeyLength(key, n);
-
             var keyGroups = key.Split((int)Math.Pow(n / 2, 2));
+            
             int size = n * 2;
             var totalSize = Math.Pow(size, 2);
+            
             CheckTextLength(text, totalSize);
-
             text = PadTextWithRandomChars(text, totalSize);
 
             var grille = Matrix.Create(size, 0);
-            var outMat = Matrix.Create(size, "");
             CreateKeyGrille(n, keyGroups, grille);
 
+            var outMat = Matrix.Create(size, "");
             AddTextToCipherGrille(text, grille, outMat);
 
             StringBuilder output = new();
@@ -53,14 +55,16 @@ namespace CipherSharp.Ciphers.Other
         }
 
         /// <summary>
-        /// Decode some text using the Turning Grille cipher.
+        /// Decipher some text using the Turning Grille cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
+        /// <param name="text">The text to decipher.</param>
         /// <param name="key">An array of keys to use.</param>
         /// <param name="n">Size of grille</param>
-        /// <returns>The decoded string.</returns>
+        /// <returns>The deciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string Decode(string text, int[] key, int n = 4)
         {
+            CheckInput(text, key);
             CheckKeyLength(key, n);
             var keyGroups = key.Split((int)Math.Pow(n / 2, 2));
 
@@ -82,11 +86,30 @@ namespace CipherSharp.Ciphers.Other
         }
 
         /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> is null
+        /// or empty, or <paramref name="key"/> is null.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, int[] key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (key is null)
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null.", nameof(key));
+            }
+        }
+
+        /// <summary>
         /// Throws an error if length of <paramref name="key"/> is 
         /// not equal to <paramref name="n"/>^2.
         /// </summary>
         /// <param name="key">Array of keys.</param>
         /// <param name="n">The size of the array.</param>
+        /// <exception cref="ArgumentException"/>
         private static void CheckKeyLength(int[] key, int n)
         {
             if (key.Length != Math.Pow(n, 2))
@@ -101,6 +124,7 @@ namespace CipherSharp.Ciphers.Other
         /// </summary>
         /// <param name="text">The text to check.</param>
         /// <param name="totalSize">The total allowed size.</param>
+        /// <exception cref="ArgumentException"/>
         private static void CheckTextLength(string text, double totalSize)
         {
             // Can't work with more than size^2 characters at a time 

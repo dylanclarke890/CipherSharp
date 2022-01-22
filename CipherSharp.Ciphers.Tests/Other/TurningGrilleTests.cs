@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers.Other;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Other
@@ -48,6 +49,30 @@ namespace CipherSharp.Tests.Ciphers.Other
 
             // Assert
             Assert.StartsWith("helloworld", result);
+        }
+
+        [Theory]
+        [InlineData("helloworld", null)]
+        [InlineData(null, new int[1] { 1 })]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, int[] key)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => TurningGrille.Encode(text, key));
+        }
+
+        [Theory]
+        [InlineData("IMOTMNNLLK", null)]
+        [InlineData(null, new int[1] { 1 })]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, int[] key)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => TurningGrille.Decode(text, key));
         }
     }
 }

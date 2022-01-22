@@ -1,5 +1,6 @@
 ﻿using CipherSharp.Ciphers.Other;
 using CipherSharp.Utility.Enums;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Other
@@ -34,6 +35,30 @@ namespace CipherSharp.Tests.Ciphers.Other
 
             // Assert
             Assert.Equal("H E L L O W O R L D", result);
+        }
+
+        [Theory]
+        [InlineData("helloworld", null)]
+        [InlineData(null, new string[2] { "test", "key" })]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => Nihilist.Encode(text, keys));
+        }
+
+        [Theory]
+        [InlineData("55 24 83 63 47 96 66 54 83 52", null)]
+        [InlineData(null, new string[2] { "test", "key" })]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => Nihilist.Decode(text, keys));
         }
     }
 }
