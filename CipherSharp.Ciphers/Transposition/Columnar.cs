@@ -14,16 +14,18 @@ namespace CipherSharp.Ciphers.Transposition
     public static class Columnar
     {
         /// <summary>
-        /// Encrypts the text using the Columnar transposition cipher.
+        /// Enciphers the text using the Columnar transposition cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="initialKey">An array of keys to use.</param>
+        /// <param name="text">The text to encipher.</param>
+        /// <param name="key">An array of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
-        /// <returns>The encrypted string.</returns>
-        public static string Encode<T>(string text, T[] initialKey, bool complete = false)
+        /// <returns>The enciphered text.</returns>
+        public static string Encode<T>(string text, T[] key, bool complete = false)
         {
-            var key = initialKey.UniqueRank();
-            int numOfCols = key.Length;
+            CheckInput(text, key);
+
+            var internalKey = key.UniqueRank();
+            int numOfCols = internalKey.Length;
 
             (int numOfRows, int remainder) = Utilities.DivMod(text.Length, numOfCols);
 
@@ -36,7 +38,7 @@ namespace CipherSharp.Ciphers.Transposition
             var pending = text.SplitIntoChunks(numOfCols);
             List<char> output = new();
 
-            foreach (var col in key.IndirectSort())
+            foreach (var col in internalKey.IndirectSort())
             {
                 output.AddRange(
                     pending.Where(row => row.Length > col)
@@ -50,16 +52,18 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decodes the text using the Columnar transposition cipher.
         /// </summary>
         /// <param name="text">The text to decode.</param>
-        /// <param name="initialKey">An array of keys to use.</param>
+        /// <param name="key">An array of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The decoded string.</returns>
-        public static string Decode<T>(string text, T[] initialKey, bool complete = false)
+        public static string Decode<T>(string text, T[] key, bool complete = false)
         {
-            var key = initialKey.UniqueRank();
-            int numOfCols = key.Length;
+            CheckInput(text, key);
+
+            var internalKey = key.UniqueRank();
+            int numOfCols = internalKey.Length;
 
             (int numOfRows, int remainder) = Utilities.DivMod(text.Length, numOfCols);
-            var longCols = key[..remainder];
+            var longCols = internalKey[..remainder];
 
             if (complete)
             {
@@ -81,11 +85,24 @@ namespace CipherSharp.Ciphers.Transposition
             for (int row = 0; row < numOfRows + 1; row++)
             {
                 output.AddRange(
-                    key.Where(col => pending[col].Length > row)
+                    internalKey.Where(col => pending[col].Length > row)
                         .Select(col => pending[col][row].ToString()));
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        private static void CheckInput<T>(string text, T[] key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (key is null)
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null.", nameof(key));
+            }
         }
     }
 }

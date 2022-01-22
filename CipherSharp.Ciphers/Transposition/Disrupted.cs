@@ -24,6 +24,8 @@ namespace CipherSharp.Ciphers.Transposition
         /// <returns>The encrypted text.</returns>
         public static string Encode<T>(string text, T[] key, bool complete = false)
         {
+            CheckInput(text, key);
+
             double gridSize = Math.Pow(key.Length, 2);
             int keyLength = key.Length;
             if (text.Length > gridSize)
@@ -72,6 +74,8 @@ namespace CipherSharp.Ciphers.Transposition
         /// <returns>The decoded text.</returns>
         public static string Decode<T>(string text, T[] key, bool complete = false)
         {
+            CheckInput(text, key);
+
             double gridSize = Math.Pow(key.Length, 2);
             int keyLength = key.Length;
             if (text.Length > gridSize)
@@ -143,6 +147,19 @@ namespace CipherSharp.Ciphers.Transposition
             }
 
             return output1.Append(output2).Replace(" ", string.Empty).ToString();
+        }
+
+        private static void CheckInput<T>(string text, T[] key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (key is null)
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null.", nameof(key));
+            }
         }
 
         /// <summary>

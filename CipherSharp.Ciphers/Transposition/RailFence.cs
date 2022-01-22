@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CipherSharp.Ciphers.Transposition
 {
@@ -25,6 +26,8 @@ namespace CipherSharp.Ciphers.Transposition
         /// <returns>The encrypted text.</returns>
         public static string Encode(string text, int key)
         {
+            CheckText(text);
+
             List<string> fence = PrepareEmptyFence(key);
 
             int railNumber = 0;
@@ -48,6 +51,8 @@ namespace CipherSharp.Ciphers.Transposition
         /// <returns>The decoded text.</returns>
         public static string Decode(string text, int key)
         {
+            CheckText(text);
+
             List<int> chunks = new();
             for (int i = 0; i < key; i++)
             {
@@ -85,6 +90,14 @@ namespace CipherSharp.Ciphers.Transposition
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        public static void CheckText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
         }
 
         /// <summary>

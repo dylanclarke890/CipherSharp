@@ -1,6 +1,7 @@
 ﻿using CipherSharp.Utility.Enums;
 using CipherSharp.Utility.Extensions;
 using CipherSharp.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,15 +18,17 @@ namespace CipherSharp.Ciphers.Transposition
         /// Encrypt some text using the AMSCO cipher
         /// </summary>
         /// <param name="text">The text to encrypt.</param>
-        /// <param name="initialKey">The key to use.</param>
+        /// <param name="key">The key to use.</param>
         /// <param name="mode">The mode to use.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, string initialKey, ParityMode mode)
+        public static string Encode(string text, string key, ParityMode mode)
         {
-            var (key, codeGroups) = ProcessInputData(text, initialKey, mode);
+            CheckInput(text, key);
+
+            var (internalKey, codeGroups) = ProcessInputData(text, key, mode);
 
             List<string> output = new();
-            foreach (var col in key.IndirectSort())
+            foreach (var col in internalKey.IndirectSort())
             {
                 output.AddRange(codeGroups
                     .Where(row => row.Count > col)
@@ -39,14 +42,16 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decode some text using the AMSCO cipher
         /// </summary>
         /// <param name="text">The text to decode.</param>
-        /// <param name="initialKey">The key to use.</param>
+        /// <param name="key">The key to use.</param>
         /// <param name="mode">The mode to use.</param>
         /// <returns>The decpded text.</returns>
-        public static string Decode(string text, string initialKey, ParityMode mode)
+        public static string Decode(string text, string key, ParityMode mode)
         {
-            var (key, codeGroups) = ProcessInputData(text, initialKey, mode);
+            CheckInput(text, key);
+
+            var (internalKey, codeGroups) = ProcessInputData(text, key, mode);
             int numRows = codeGroups.Count;
-            int numCols = key.Length;
+            int numCols = internalKey.Length;
 
             while (codeGroups[^1].Count < numCols)
             {
@@ -57,7 +62,7 @@ namespace CipherSharp.Ciphers.Transposition
             Dictionary<int, (int, ParityMode)> colLengths = new();
 
             var numColRange = Enumerable.Range(0, numCols);
-            foreach (var (colNum, colLensKey) in numColRange.Zip(key))
+            foreach (var (colNum, colLensKey) in numColRange.Zip(internalKey))
             {
                 counter = CountLettersInColumn(codeGroups, numRows, colLengths, colNum, colLensKey);
             }
@@ -66,7 +71,7 @@ namespace CipherSharp.Ciphers.Transposition
             List<List<string>> groupings = new();
             foreach (var col in numColRange)
             {
-                counter = SortTextIntoParityGroupings(text, key, counter, colLengths, groupings, col);
+                counter = SortTextIntoParityGroupings(text, internalKey, counter, colLengths, groupings, col);
             }
 
             foreach (var item in groupings)
@@ -82,10 +87,28 @@ namespace CipherSharp.Ciphers.Transposition
             List<string> output = new();
             foreach (var j in Enumerable.Range(0, numRows))
             {
-                output.AddRange(key.Select(i => groupings[i][j]));
+                output.AddRange(internalKey.Select(i => groupings[i][j]));
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="key"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
         }
 
         /// <summary>

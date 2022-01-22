@@ -1,5 +1,6 @@
 ﻿using CipherSharp.Ciphers.Transposition;
 using CipherSharp.Utility.Enums;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Transposition
@@ -34,6 +35,32 @@ namespace CipherSharp.Tests.Ciphers.Transposition
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
+        }
+
+        [Theory]
+        [InlineData("helloworld", null)]
+        [InlineData(null, "test")]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        {
+            // Arrange
+            ParityMode mode = ParityMode.Odd;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => AMSCO.Decode(text, key, mode));
+        }
+
+        [Theory]
+        [InlineData("IMOTMNNLLK", null)]
+        [InlineData(null, "test")]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
+        {
+            // Arrange
+            ParityMode mode = ParityMode.Odd;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => AMSCO.Decode(text, key, mode));
         }
     }
 }

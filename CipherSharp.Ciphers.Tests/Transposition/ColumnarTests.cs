@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers.Transposition;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Transposition
@@ -63,6 +64,30 @@ namespace CipherSharp.Tests.Ciphers.Transposition
 
             // Assert
             Assert.Equal("helloworld", result);
+        }
+
+        [Theory]
+        [InlineData("KCLLMYMTOA", null)]
+        [InlineData(null, new string[2] { "abc", "abc" })]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => Columnar.Encode(text, keys));
+        }
+
+        [Theory]
+        [InlineData("KCLLMYMTOA", null)]
+        [InlineData(null, new string[2] { "abc", "abc" })]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => Columnar.Decode(text, keys));
         }
     }
 }
