@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers.PolybiusSquare;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.PolybiusSquare
@@ -35,6 +36,36 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
+        }
+
+        [Fact]
+        public void Encode_NullParameters_ThrowsArgumentException()
+        {
+            // Arrange
+            string text = null;
+            string matrixKey = null;
+            int[] columnarKeys = null;
+            bool printKey = false;
+
+            // Act - done in assert
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => ADFGVX.Encode(text, matrixKey, columnarKeys, printKey));
+        }
+
+        [Fact]
+        public void Decode_NullParameters_ThrowsArgumentException()
+        {
+            // Arrange
+            string text = null;
+            string matrixKey = null;
+            int[] columnarKeys = null;
+            bool printKey = false;
+
+            // Act - done in assert
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => ADFGVX.Decode(text, matrixKey, columnarKeys, printKey));
         }
     }
 }
