@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,6 +21,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, int key, string alphabet = AppConstants.Alphabet)
         {
+            CheckText(text);
+
             text = text.ToUpper();
             List<int> textAsNumbers = text.Select(ch => alphabet.IndexOf(ch)).ToList();
 
@@ -42,6 +45,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, int key, string alphabet = AppConstants.Alphabet)
         {
+            CheckText(text);
+
             text = text.ToUpper();
             List<int> textAsNumbers = text.Select(ch => alphabet.IndexOf(ch)).ToList();
 
@@ -53,6 +58,14 @@ namespace CipherSharp.Ciphers.Substitution
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        public static void CheckText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
         }
     }
 }

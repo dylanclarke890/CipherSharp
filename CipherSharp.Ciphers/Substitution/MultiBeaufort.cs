@@ -38,6 +38,8 @@ namespace CipherSharp.Ciphers.Substitution
 
         private static string Process(string text, string[] keys, string alphabet, bool encode)
         {
+            CheckInput(text, keys);
+
             if (!encode)
             {
                 keys = keys.Reverse().ToArray();
@@ -50,6 +52,24 @@ namespace CipherSharp.Ciphers.Substitution
             }
 
             return output;
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="keys"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string[] keys)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (keys == null)
+            {
+                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
+            }
         }
     }
 }
