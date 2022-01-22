@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CipherSharp.Utility.Extensions;
 using CipherSharp.Utility.Helpers;
@@ -36,6 +37,11 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
         private static string Process(string text, bool encode)
         {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
             text = text.ToUpper();
             var indices = Enumerable.Range(0, AlphabetLength)
                 .Pad(text.Length);

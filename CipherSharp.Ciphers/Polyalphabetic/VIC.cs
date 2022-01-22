@@ -27,10 +27,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, string[] keys, string phrase, int transKey)
         {
-            if (phrase.Length != 20)
-            {
-                throw new ArgumentException("Needs a phrase exactly 20 letters long");
-            }
+            CheckInput(text, keys, phrase);
 
             // create keystream
 
@@ -59,10 +56,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, string[] keys, string phrase, int transKey)
         {
-            if (phrase.Length != 20)
-            {
-                throw new ArgumentException("Needs a phrase exactly 20 letters long");
-            }
+            CheckInput(text, keys, phrase);
 
             // create keystream
 
@@ -79,6 +73,29 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             T = StraddleCheckerboard.Decode(T, boardString, boardKey.ToArray(), alphabet);
 
             return T;
+        }
+
+        private static void CheckInput(string text, string[] keys, string phrase)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (keys is null)
+            {
+                throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
+            }
+
+            if (string.IsNullOrWhiteSpace(phrase))
+            {
+                throw new ArgumentException($"'{nameof(phrase)}' cannot be null or whitespace.", nameof(phrase));
+            }
+
+            if (phrase.Length != 20)
+            {
+                throw new ArgumentException("Needs a phrase exactly 20 letters long");
+            }
         }
 
         private static IEnumerable<int> VICRank(string[] keys)
