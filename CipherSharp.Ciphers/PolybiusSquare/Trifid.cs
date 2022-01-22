@@ -1,5 +1,6 @@
 ﻿using CipherSharp.Utility.Extensions;
 using CipherSharp.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,15 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     public static class Trifid
     {
         /// <summary>
-        /// Encrypt some text using the Trifid cipher.
+        /// Encipher some text using the Trifid cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
+        /// <param name="text">The text to encipher.</param>
         /// <param name="key">The key to use.</param>
-        /// <returns>The ciphertext.</returns>
+        /// <returns>The enciphered text.</returns>
         public static string Encode(string text, string key)
         {
+            CheckInput(text, key);
+
             text = text.ToUpper();
             var (d1, d2) = GetCipherDicts(key);
 
@@ -48,13 +51,15 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Decrypt some text using the Trifid cipher.
+        /// Decipher some text using the Trifid cipher.
         /// </summary>
-        /// <param name="text">The text to decrypt.</param>
+        /// <param name="text">The text to decipher.</param>
         /// <param name="key">The key to use.</param>
-        /// <returns>The plaintext.</returns>
+        /// <returns>The deciphered text.</returns>
         public static string Decode(string text, string key)
         {
+            CheckInput(text, key);
+
             text = text.ToUpper();
             var (d1, d2) = GetCipherDicts(key);
 
@@ -90,6 +95,24 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="key"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+        }
+
+        /// <summary>
         /// Encodes a letter using <paramref name="cipherDict"/>, and appends each
         /// char of the result to the stringbuilders.
         /// </summary>
@@ -110,7 +133,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Generates the dicts to use based on the provided key.
         /// </summary>
         /// <param name="key"></param>
-        /// <returns></returns>
+        /// <returns>A tuple containing the dicts to use.</returns>
         private static (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts(string key)
         {
             key = key.ToUpper();

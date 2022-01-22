@@ -14,11 +14,11 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     public static class Bifid
     {
         /// <summary>
-        /// Encrypt some text using the Bifid cipher.
+        /// Encipher some text using the Bifid cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
+        /// <param name="text">The text to encipher.</param>
         /// <param name="key">The key to use.</param>
-        /// <returns>The ciphertext.</returns>
+        /// <returns>The enciphered text.</returns>
         public static string Encode(string text, string key)
         {
             string nums = Polybius.Encode(text, key);
@@ -36,11 +36,11 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Decrypt some text using the Bifid cipher.
+        /// Decipher some text using the Bifid cipher.
         /// </summary>
-        /// <param name="text">The text to decrypt.</param>
+        /// <param name="text">The text to decipher.</param>
         /// <param name="key">The key to use.</param>
-        /// <returns>The plaintext.</returns>
+        /// <returns>The deciphered text.</returns>
         public static string Decode(string text, string key)
         {
             string nums = Polybius.Encode(text, key);

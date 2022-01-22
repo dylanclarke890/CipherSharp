@@ -33,7 +33,7 @@ namespace CipherSharp.Tests.Ciphers.Other
             var result = Nihilist.Decode(text, keys, mode);
 
             // Assert
-            Assert.Equal("HELLOWORLD", result);
+            Assert.Equal("H E L L O W O R L D", result);
         }
     }
 }

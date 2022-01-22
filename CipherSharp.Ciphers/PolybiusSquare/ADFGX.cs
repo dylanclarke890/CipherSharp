@@ -22,15 +22,18 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     public static class ADFGX
     {
         /// <summary>
-        /// Encrypt some text using the ADFGX cipher.
+        /// Encipher some text using the ADFGX cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
+        /// <param name="text">The text to encipher.</param>
         /// <param name="matrixKey">The key to use for the matrix.</param>
         /// <param name="columnarKey">An array of ints to use for the columnar cipher.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The encrypted text.</returns>
+        /// <returns>The enciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string Encode(string text, string matrixKey, int[] columnarKey, bool displaySquare = true)
         {
+            CheckInput(text, matrixKey, columnarKey);
+
             text = ProcessText(text);
             var (d1, d2) = GetCipherDicts(text, matrixKey, displaySquare);
 
@@ -53,15 +56,18 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Decode some text using the ADFGX cipher.
+        /// Decipher some text using the ADFGX cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
+        /// <param name="text">The text to decipher.</param>
         /// <param name="matrixKey">The key to use for the matrix.</param>
         /// <param name="columnarKey">An array of ints to use for the columnar cipher.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The decoded text.</returns>
+        /// <returns>The deciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string Decode(string text, string matrixKey, int[] columnarKey, bool displaySquare = false)
         {
+            CheckInput(text, matrixKey, columnarKey);
+
             text = ProcessText(text);
             var (d1, d2) = GetCipherDicts(text, matrixKey, displaySquare);
 
@@ -81,6 +87,29 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             }
 
             return decodedText.ToString();
+        }
+
+        /// <summary>
+        /// Checks the inputs and throws <see cref="ArgumentException"/>
+        /// if they are null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string matrixKey, int[] columnarKey)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(matrixKey))
+            {
+                throw new ArgumentException($"'{nameof(matrixKey)}' cannot be null or whitespace.", nameof(matrixKey));
+            }
+
+            if (columnarKey is null)
+            {
+                throw new ArgumentException($"'{nameof(columnarKey)}' cannot be null.", nameof(columnarKey));
+            }
         }
 
         private static (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts(string text, string key, bool displaySquare)

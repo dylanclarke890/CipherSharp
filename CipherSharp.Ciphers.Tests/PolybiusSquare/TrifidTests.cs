@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers.PolybiusSquare;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.PolybiusSquare
@@ -31,6 +32,30 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
+        }
+
+        [Theory]
+        [InlineData("helloworld", null)]
+        [InlineData(null, "test")]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => Trifid.Encode(text, key));
+        }
+
+        [Theory]
+        [InlineData("IMOTMNNLLK", null)]
+        [InlineData(null, "test")]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => Trifid.Decode(text, key));
         }
     }
 }
