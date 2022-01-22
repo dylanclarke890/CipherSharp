@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherSharp", "CipherSharp\CipherSharp.csproj", "{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherSharp.Tests", "CipherSharp.Tests\CipherSharp.Tests.csproj", "{1548E030-EF9F-4198-BAF7-12E6FE860605}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherSharp.Ciphers", "CipherSharp.Ciphers\CipherSharp.Ciphers.csproj", "{1149B5C8-9F32-4C6C-84CB-DECBD6DFAC76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherSharp.Ciphers", "CipherSharp.Ciphers\CipherSharp.Ciphers.csproj", "{1149B5C8-9F32-4C6C-84CB-DECBD6DFAC76}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherSharp.Utility", "CipherSharp.Utility\CipherSharp.Utility.csproj", "{BA2B2F94-F0A4-4405-83D9-37FB3B240209}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherSharp.Utility", "CipherSharp.Utility\CipherSharp.Utility.csproj", "{BA2B2F94-F0A4-4405-83D9-37FB3B240209}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "app", "app", "{8DD9B5EC-14B4-4451-9C33-61D55CCF680B}"
 EndProject
@@ -17,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{EA5217DA
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{12F94B51-C717-4568-85FB-A7E12B678EE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherSharp.Ciphers.Tests", "CipherSharp.Ciphers.Tests\CipherSharp.Ciphers.Tests.csproj", "{307FB8F3-F148-43D7-853E-BC33C6F23F24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherSharp.Ciphers.Tests", "CipherSharp.Ciphers.Tests\CipherSharp.Ciphers.Tests.csproj", "{307FB8F3-F148-43D7-853E-BC33C6F23F24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CipherSharp.Utility.Tests", "CipherSharp.Utility.Tests\CipherSharp.Utility.Tests.csproj", "{DD4DD2AA-01CA-4B5B-B775-E0383CC418C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CipherSharp.Utility.Tests", "CipherSharp.Utility.Tests\CipherSharp.Utility.Tests.csproj", "{DD4DD2AA-01CA-4B5B-B775-E0383CC418C0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +29,6 @@ Global
 		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1548E030-EF9F-4198-BAF7-12E6FE860605}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1149B5C8-9F32-4C6C-84CB-DECBD6DFAC76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1149B5C8-9F32-4C6C-84CB-DECBD6DFAC76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1149B5C8-9F32-4C6C-84CB-DECBD6DFAC76}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,7 +51,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{8DD6213A-8417-4357-B8BF-4C6AEAD4E41F} = {8DD9B5EC-14B4-4451-9C33-61D55CCF680B}
-		{1548E030-EF9F-4198-BAF7-12E6FE860605} = {EA5217DA-16A4-454C-BDF1-9D0917BEBF84}
 		{1149B5C8-9F32-4C6C-84CB-DECBD6DFAC76} = {12F94B51-C717-4568-85FB-A7E12B678EE9}
 		{BA2B2F94-F0A4-4405-83D9-37FB3B240209} = {12F94B51-C717-4568-85FB-A7E12B678EE9}
 		{307FB8F3-F148-43D7-853E-BC33C6F23F24} = {EA5217DA-16A4-454C-BDF1-9D0917BEBF84}
