@@ -1,5 +1,6 @@
 ﻿using CipherSharp.Ciphers.Square;
 using CipherSharp.Utility.Enums;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Square
@@ -36,6 +37,34 @@ namespace CipherSharp.Tests.Ciphers.Square
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
+        }
+
+        [Theory]
+        [InlineData("KCLLMYMTOA", null)]
+        [InlineData(null, new string[2] { "abc", "abc" })]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            AlphabetMode mode = AlphabetMode.JI;
+            bool displaySquare = false;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => FourSquare.Encode(text, keys, mode, displaySquare));
+        }
+
+        [Theory]
+        [InlineData("KCLLMYMTOA", null)]
+        [InlineData(null, new string[2]{ "abc", "abc" })]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            AlphabetMode mode = AlphabetMode.JI;
+            bool displaySquare = false;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => FourSquare.Decode(text, keys, mode, displaySquare));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The encrypted text.</returns>
         public static string Encode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
         {
-            return ProcessInput(text, keys, mode, displaySquare);
+            return Process(text, keys, mode, displaySquare);
         }
 
         /// <summary>
@@ -40,7 +40,25 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The decoded text.</returns>
         public static string Decode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
         {
-            return ProcessInput(text, keys, mode, displaySquare);
+            return Process(text, keys, mode, displaySquare);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="keys"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string[] keys)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (keys == null)
+            {
+                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
+            }
         }
 
         /// <summary>
@@ -51,8 +69,10 @@ namespace CipherSharp.Ciphers.Square
         /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The resulting text.</returns>
-        private static string ProcessInput(string text, string[] keys, AlphabetMode mode, bool displaySquare)
+        private static string Process(string text, string[] keys, AlphabetMode mode, bool displaySquare)
         {
+            CheckInput(text, keys);
+
             text = PrepareText(text, mode);
 
             var (squareA, squareB, alphaSquare) = CreateMatrixes(keys, mode);

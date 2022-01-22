@@ -1,6 +1,7 @@
 ﻿using CipherSharp.Utility.Enums;
 using CipherSharp.Utility.Extensions;
 using CipherSharp.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,8 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The encrypted string.</returns>
         public static string Encode(string text, string key, AlphabetMode mode, bool displaySquare = true)
         {
+            CheckInput(text, key);
+
             text = ProcessText(text, mode);
 
             var square = Matrix.Create(key, mode).ToArray();
@@ -51,6 +54,8 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The decoded string.</returns>
         public static string Decode(string text, string key, AlphabetMode mode, bool displaySquare = true)
         {
+            CheckInput(text, key);
+
             text = ProcessText(text, mode);
 
             var square = Matrix.Create(key, mode).ToArray();
@@ -65,6 +70,24 @@ namespace CipherSharp.Ciphers.Square
             int size = mode is AlphabetMode.EX ? 6 : 5;
 
             return DecodeCodeGroups(square, squareIndices, codeGroups, size);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="key"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
         }
 
         /// <summary>

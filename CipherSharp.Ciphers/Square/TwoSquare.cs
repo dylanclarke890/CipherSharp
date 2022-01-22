@@ -25,6 +25,8 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The encrypted text.</returns>
         public static string Encode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
         {
+            CheckInput(text, keys);
+
             text = PrepareText(text, mode);
             var (squareA, squareB) = CreateMatrixes(keys, mode, displaySquare);
 
@@ -50,6 +52,8 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The decoded text.</returns>
         public static string Decode(string text, string[] keys, AlphabetMode mode, bool displaySquare = false)
         {
+            CheckInput(text, keys);
+
             text = PrepareText(text, mode);
             var (squareA, squareB) = CreateMatrixes(keys, mode, displaySquare);
 
@@ -63,6 +67,24 @@ namespace CipherSharp.Ciphers.Square
             }
 
             return output.ToString();
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="keys"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string[] keys)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (keys == null)
+            {
+                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
+            }
         }
 
         /// <summary>
