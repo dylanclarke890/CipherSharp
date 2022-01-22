@@ -15,14 +15,16 @@ namespace CipherSharp.Ciphers.Substitution
     public static class Affine
     {
         /// <summary>
-        /// Encrypt some text using the Affine cipher.
+        /// Encipher some text using the Affine cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
+        /// <param name="text">The text to encipher.</param>
         /// <param name="key">An array of ints. Factors of 26 (length of alphabet) should be avoided.</param>
         /// <param name="alphabet">The alphabet to use.</param>
-        /// <returns>The encrypted string.</returns>
+        /// <returns>The enciphered text.</returns>
         public static string Encode(string text, int[] key, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, key);
+
             text = text.ToUpper();
             if (text.Any(ch => !alphabet.Contains(ch)))
             {
@@ -55,14 +57,16 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decode some text using the Affine cipher.
+        /// Decipher some text using the Affine cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
+        /// <param name="text">The text to decipher.</param>
         /// <param name="key">An array of ints. Factors of 26 (length of alphabet) should be avoided.</param>
         /// <param name="alphabet">The alphabet to use.</param>
-        /// <returns>The decoded string.</returns>
+        /// <returns>The deciphered text.</returns>
         public static string Decode(string text, int[] key, string alphabet = AppConstants.Alphabet)
         {
+            CheckInput(text, key);
+
             text = text.ToUpper();
             if (text.Any(ch => !alphabet.Contains(ch)))
             {
@@ -105,6 +109,24 @@ namespace CipherSharp.Ciphers.Substitution
 
 
             return string.Join(string.Empty, charOutput);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="keys"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, int[] keys)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (keys == null)
+            {
+                throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
+            }
         }
     }
 }

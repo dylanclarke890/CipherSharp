@@ -1,6 +1,7 @@
 ﻿using CipherSharp.Ciphers.Polyalphabetic;
 using CipherSharp.Utility.Enums;
 using CipherSharp.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,6 +25,9 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text, string key, string alphabet = AppConstants.Alphabet, AutoKeyMode mode = AutoKeyMode.Vigenere)
         {
+            CheckInput(text, key);
+            alphabet ??= AppConstants.Alphabet;
+
             text = text.ToUpper();
             key = key.ToUpper();
             var T = text.ToNumber(alphabet).ToList();
@@ -61,6 +65,9 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text, string key, string alphabet = AppConstants.Alphabet, AutoKeyMode mode = AutoKeyMode.Vigenere)
         {
+            CheckInput(text, key);
+            alphabet ??= AppConstants.Alphabet;
+
             text = text.ToUpper();
             key = key.ToUpper();
             var T = text.ToNumber(alphabet).ToList();
@@ -93,6 +100,24 @@ namespace CipherSharp.Ciphers.Substitution
             }
 
             return string.Join(string.Empty, output.ToLetter(alphabet));
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="key"/> is null or empty.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string key)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
         }
     }
 }

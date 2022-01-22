@@ -1,4 +1,6 @@
-﻿namespace CipherSharp.Ciphers.Substitution
+﻿using System;
+
+namespace CipherSharp.Ciphers.Substitution
 {
     /// <summary>
     /// The ROT13 cipher is a simple yet popular variation of the <see cref="SimpleSubstitution"/>
@@ -15,6 +17,7 @@
         /// <returns>The enciphered text.</returns>
         public static string Encode(string text)
         {
+            CheckText(text);
             return SimpleSubstitution.Encode(text, "ZYXWVUTSRQPONMLKJIHGFEDCBA");
         }
 
@@ -25,7 +28,16 @@
         /// <returns>The deciphered text.</returns>
         public static string Decode(string text)
         {
+            CheckText(text);
             return SimpleSubstitution.Decode(text, "ZYXWVUTSRQPONMLKJIHGFEDCBA");
+        }
+
+        private static void CheckText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' should not be null or whitespace.", nameof(text));
+            }
         }
     }
 }
