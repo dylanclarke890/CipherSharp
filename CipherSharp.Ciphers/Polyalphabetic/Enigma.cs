@@ -54,8 +54,14 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return Process(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
         }
 
+        /// <summary>
+        /// Processes the text.
+        /// </summary>
+        /// <returns>The processed text.</returns>
+        /// <exception cref="ArgumentException"/>
         private static string Process(string text, List<string> rotorKeys, string reflectorKey, List<string> positionsKey, List<string> plugs, List<string> ringKeys)
         {
+            CheckInput(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
             // dict of rotors and notch positions
             Dictionary<string, (string, int)> rotorSelect = new()
             {
@@ -158,6 +164,51 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return finalText;
         }
 
+        /// <summary>
+        /// Checks the inputs and throws an <see cref="ArgumentException"/>
+        /// if any are null.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, List<string> rotorKeys, string reflectorKey, List<string> positionsKey, List<string> plugs, List<string> ringKeys)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (rotorKeys is null)
+            {
+                throw new ArgumentException($"'{nameof(rotorKeys)}' cannot be null.", nameof(rotorKeys));
+            }
+
+            if (string.IsNullOrEmpty(reflectorKey))
+            {
+                throw new ArgumentException($"'{nameof(reflectorKey)}' cannot be null.", nameof(reflectorKey));
+            }
+
+            if (positionsKey is null)
+            {
+                throw new ArgumentException($"'{nameof(positionsKey)}' cannot be null.", nameof(positionsKey));
+            }
+
+            if (plugs is null)
+            {
+                throw new ArgumentException($"'{nameof(plugs)}' cannot be null.", nameof(plugs));
+            }
+
+            if (ringKeys is null)
+            {
+                throw new ArgumentException($"'{nameof(ringKeys)}' cannot be null.", nameof(ringKeys));
+            }
+        }
+
+        /// <summary>
+        /// Puts the text through the plugboard.
+        /// </summary>
+        /// <param name="text">The text to process.</param>
+        /// <param name="keys">The keys to use.</param>
+        /// <returns>The processed text.</returns>
+        /// <exception cref="ArgumentException"/>
         private static string Plugboard(string text, List<string> keys)
         {
             if (!keys.Any())
@@ -191,6 +242,14 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return text;
         }
 
+        /// <summary>
+        /// Puts a letter through the rotor and returns the result.
+        /// </summary>
+        /// <param name="letter">The letter to process.</param>
+        /// <param name="key">The key to use.</param>
+        /// <param name="pos">The current position.</param>
+        /// <param name="invert">If true will use the alphabet to get the result.</param>
+        /// <returns>The processed letter.</returns>
         private static char Rotor(char letter, string key, int pos, bool invert = false)
         {
             string alphabet = AppConstants.Alphabet;

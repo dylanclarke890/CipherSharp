@@ -38,8 +38,14 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return Process(text, wheelKey, pins, lugs);
         }
 
+        /// <summary>
+        /// Processes the text.
+        /// </summary>
+        /// <returns>The processed text.</returns>
         private static string Process(string text, string wheelKey, List<string> pins, List<List<int>> lugs)
         {
+            CheckInput(text, wheelKey, pins, lugs);
+
             List<string> wheels = new()
             {
                 "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
@@ -49,11 +55,6 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 "ABCDEFGHIJKLMNOPQRS",
                 "ABCDEFGHIJKLMNOPQ"
             };
-
-            if (wheelKey.Length != 6)
-            {
-                throw new ArgumentException("key1 must be exactly 6 letters.");
-            }
 
             for (int i = 0; i < 6; i++)
             {
@@ -89,6 +90,44 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return string.Join(string.Empty, output.ToLetter());
         }
 
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if any of the parameters
+        /// are null.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string wheelKey, List<string> pins, List<List<int>> lugs)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(wheelKey))
+            {
+                throw new ArgumentException($"'{nameof(wheelKey)}' cannot be null or whitespace.", nameof(wheelKey));
+            }
+
+            if (pins is null)
+            {
+                throw new ArgumentException($"'{nameof(pins)}' cannot be null.", nameof(pins));
+            }
+
+            if (lugs is null)
+            {
+                throw new ArgumentException($"'{nameof(lugs)}' cannot be null.", nameof(lugs));
+            }
+
+            if (wheelKey.Length != 6)
+            {
+                throw new ArgumentException("key1 must be exactly 6 letters.");
+            }
+        }
+
+        /// <summary>
+        /// Translates the pin settings. 
+        /// </summary>
+        /// <param name="pinList">The pin settings.</param>
+        /// <returns>The translated pins.</returns>
         private static List<List<int>> TranslatePins(List<string> pinList)
         {
             List<List<int>> output = new();
@@ -105,6 +144,10 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return output;
         }
 
+        /// <summary>
+        /// Updates the lug position.
+        /// </summary>
+        /// <returns>The updated position.</returns>
         private static List<List<int>> LugPosition(List<List<int>> lug)
         {
             List<List<int>> lugs = new();
@@ -123,6 +166,15 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return lugs;
         }
 
+        /// <summary>
+        /// Creates the keystream.
+        /// </summary>
+        /// <param name="textLength">The length of the text.</param>
+        /// <param name="lugs">The lugs to use.</param>
+        /// <param name="wheels">The wheels to use.</param>
+        /// <param name="pins">The pins to use.</param>
+        /// <param name="activePins">The active pins.</param>
+        /// <returns>Yields the keystream.</returns>
         private static IEnumerable<int> Keystream(int textLength, List<List<int>> lugs, List<string> wheels, List<List<int>> pins, List<int> activePins)
         {
             for (int i = 0; i < textLength; i++)

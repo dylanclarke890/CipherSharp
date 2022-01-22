@@ -29,8 +29,16 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <param name="range">Random gap to make encryption more secure.</param>
         /// <param name="turn">Will rotate the wheel by this amount each time a letter is enciphered.</param>
         /// <returns>The enciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="InvalidOperationException"/>
         public static string Encode(string text, string key, char startingLetter, int[] range, int turn = 0)
         {
+            CheckInput(text, key, startingLetter);
+            if (range == null)
+            {
+                throw new ArgumentException($"'{nameof(range)}' cannot be null.", nameof(range));
+            }
+
             // The outer ring is in order
             string outer = AppConstants.AlphaNumeric;
             // Determine the inner ring
@@ -38,7 +46,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             if (!outer.Contains(startingLetter))
             {
-                throw new ArgumentException("Start position must exist in the inner ring.");
+                throw new InvalidOperationException("Start position must exist in the inner ring.");
             }
 
             // Turn the inner ring until the correct symbol is in the first position
@@ -92,8 +100,12 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <param name="startingLetter">The letter to start rotating from.</param>
         /// <param name="turn">Will rotate the wheel by this amount each time a letter is deciphered.</param>
         /// <returns>The deciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
+        /// <exception cref="InvalidOperationException"/>
         public static string Decode(string text, string key, char startingLetter, int turn = 0)
         {
+            CheckInput(text, key, startingLetter);
+
             // The outer ring is in order
             string outer = AppConstants.AlphaNumeric;
             // Determine the inner ring
@@ -101,7 +113,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             if (!outer.Contains(startingLetter))
             {
-                throw new ArgumentException("Start position must exist in the inner ring.");
+                throw new InvalidOperationException("Start position must exist in the inner ring.");
             }
 
             // Turn the inner ring until the correct symbol is in the first position
@@ -126,6 +138,30 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             }
 
             return string.Join(string.Empty, output);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
+        /// <paramref name="key"/> is null or empty, or <paramref name="startingLetter"/>
+        /// is equal to <c>default(char)</c>.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string key, char startingLetter)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            if (default(char) == startingLetter)
+            {
+                throw new ArgumentException($"'{nameof(startingLetter)}' must be provided.", nameof(startingLetter));
+            }
         }
 
         private static string RotateNTimes(string key, int n)

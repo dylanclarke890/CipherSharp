@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Utility.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
@@ -20,15 +21,12 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <param name="keys">The keys to use.</param>
         /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The enciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string Encode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
         {
-            List<string> output = new();
-            foreach (var key in keys)
-            {
-                output.Add(Process(text, key, alphabet, true));
-            }
-
-            return string.Join(string.Empty, output);
+            CheckInput(text, keys);
+            alphabet ??= AppConstants.Alphabet;
+            return Process(text, keys, alphabet, true);
         }
 
         /// <summary>
@@ -38,17 +36,54 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <param name="keys">The keys to use.</param>
         /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The deciphered text.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string Decode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
+        {
+            CheckInput(text, keys);
+            alphabet ??= AppConstants.Alphabet;
+            return Process(text, keys, alphabet, false);
+        }
+
+        /// <summary>
+        /// Throws an <see cref="ArgumentException"/> if either
+        /// parameter is null.
+        /// </summary>
+        /// <exception cref="ArgumentException"/>
+        private static void CheckInput(string text, string[] keys)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+            }
+
+            if (keys is null)
+            {
+                throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
+            }
+        }
+
+        /// <summary>
+        /// Runs the cipher once for each key in <paramref name="keys"/>.
+        /// </summary>
+        /// <param name="text">The text to process.</param>
+        /// <param name="keys">The keys to use.</param>
+        /// <param name="alphabet">The alphabet to use.</param>
+        /// <returns>The processed text.</returns>
+        private static string Process(string text, string[] keys, string alphabet, bool encode)
         {
             List<string> output = new();
             foreach (var key in keys)
             {
-                output.Add(Process(text, key, alphabet, false));
+                output.Add(Process(text, key, alphabet, encode));
             }
 
             return string.Join(string.Empty, output);
         }
 
+        /// <summary>
+        /// Passes the parameters to Encode or Decode depending on <paramref name="encode"/>.
+        /// </summary>
+        /// <returns>The processed text.</returns>
         private static string Process(string text, string key, string alphabet, bool encode)
         {
             return encode ? Vigenere.Encode(text, key, alphabet) : Vigenere.Decode(text, key, alphabet);

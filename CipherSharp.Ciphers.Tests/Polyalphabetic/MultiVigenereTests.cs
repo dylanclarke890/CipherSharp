@@ -1,4 +1,5 @@
 ﻿using CipherSharp.Ciphers.Polyalphabetic;
+using System;
 using Xunit;
 
 namespace CipherSharp.Tests.Ciphers.Polyalphabetic
@@ -31,6 +32,30 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Assert
             Assert.Contains("HELLOWORLD", result);
+        }
+
+        [Theory]
+        [InlineData("helloworld", null)]
+        [InlineData(null, new string[2] { "test", "key" })]
+        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => MultiVigenere.Decode(text, keys));
+        }
+
+        [Theory]
+        [InlineData("IMOTMNNLLK", null)]
+        [InlineData(null, new string[2] { "test", "key" })]
+        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        {
+            // Arrange
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => MultiVigenere.Decode(text, keys));
         }
     }
 }
