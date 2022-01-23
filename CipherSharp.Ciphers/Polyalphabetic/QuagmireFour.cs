@@ -7,121 +7,85 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// <summary>
     /// The Quagmire ciphers are variations on the <see cref="Vigenere"/>
     /// cipher, using alphabets that are scrambled instead of shifted.
+    /// The Quagmire Four cipher is the same as the Quagmire Three cipher but with
+    /// a different key used for the initial substitution.
     /// </summary>
-    public static partial class Quagmire
+    public class QuagmireFour : BaseQuagmire
     {
-        /// <summary>
-        /// The Quagmire Four cipher is the same as the Quagmire Three cipher but with
-        /// a different key used for the initial substitution.
-        /// </summary>
-        public static class Four
+        public QuagmireFour(string message, string[] keys, string alphabet = AppConstants.Alphabet) : base(message, keys, alphabet)
         {
-            /// <summary>
-            /// Encipher some text using the Quagmire Four cipher.
-            /// </summary>
-            /// <param name="text">The text to encipher.</param>
-            /// <param name="keys">The keys to use.</param>
-            /// <param name="alphabet">The alphabet to use.</param>
-            /// <returns>The enciphered text.</returns>
-            public static string Encode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
+        }
+
+        /// <summary>
+        /// Encipher some text using the Quagmire Four cipher.
+        /// </summary>
+        /// <returns>The enciphered text.</returns>
+        public override string Encode()
+        {
+            var key1 = Alphabet.AlphabetPermutation(Keys[0], Alpha);
+            var key2 = Alphabet.AlphabetPermutation(Keys[1], Alpha);
+            var alphabetLength = Alpha.Length;
+            var indicator = Keys[2];
+            List<string> table = new();
+
+            foreach (var letter in indicator)
             {
-                CheckInput(text, keys);
-
-                alphabet ??= AppConstants.Alphabet;
-                text = text.ToUpper();
-                keys[0] = keys[0].ToUpper();
-                keys[1] = keys[1].ToUpper();
-                keys[2] = keys[2].ToUpper();
-                var key1 = Alphabet.AlphabetPermutation(keys[0], alphabet);
-                var key2 = Alphabet.AlphabetPermutation(keys[1], alphabet);
-                var alphabetLength = alphabet.Length;
-                var indicator = keys[2];
-                List<string> table = new();
-
-                foreach (var letter in indicator)
+                var sh = key2.IndexOf(letter) % alphabetLength;
+                if (sh < 0)
                 {
-                    var sh = key2.IndexOf(letter) % alphabetLength;
-                    if (sh < 0)
-                    {
-                        table.Add(key2[^Math.Abs(sh)..] + key2[..^Math.Abs(sh)]);
-                    }
-                    else
-                    {
-                        table.Add(key2[sh..] + key2[..sh]);
-                    }
+                    table.Add(key2[^Math.Abs(sh)..] + key2[..^Math.Abs(sh)]);
                 }
-
-                List<char> output = new();
-                for (int i = 0; i < text.Length; i++)
+                else
                 {
-                    var t = table[i % indicator.Length];
-                    output.Add(t[key1.IndexOf(text[i])]);
+                    table.Add(key2[sh..] + key2[..sh]);
                 }
-
-                return string.Join(string.Empty, output);
             }
 
-            /// <summary>
-            /// Decipher some text using the Quagmire Four cipher.
-            /// </summary>
-            /// <param name="text">The text to decipher.</param>
-            /// <param name="keys">The keys to use.</param>
-            /// <param name="alphabet">The alphabet to use.</param>
-            /// <returns>The deciphered text.</returns>
-            public static string Decode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
+            List<char> output = new();
+            for (int i = 0; i < Message.Length; i++)
             {
-                CheckInput(text, keys);
-
-                text = text.ToUpper();
-                keys[0] = keys[0].ToUpper();
-                keys[1] = keys[1].ToUpper();
-                keys[2] = keys[2].ToUpper();
-                var key1 = Alphabet.AlphabetPermutation(keys[0], alphabet);
-                var key2 = Alphabet.AlphabetPermutation(keys[1], alphabet);
-                var alphabetLength = alphabet.Length;
-                var indicator = keys[2];
-                List<string> table = new();
-
-                foreach (var letter in indicator)
-                {
-                    var sh = key2.IndexOf(letter) % alphabetLength;
-                    if (sh < 0)
-                    {
-                        table.Add(key2[^Math.Abs(sh)..] + key2[..^Math.Abs(sh)]);
-                    }
-                    else
-                    {
-                        table.Add(key2[sh..] + key2[..sh]);
-                    }
-                }
-
-                List<char> output = new();
-                for (int i = 0; i < text.Length; i++)
-                {
-                    var t = table[i % indicator.Length];
-                    output.Add(key1[t.IndexOf(text[i])]);
-                }
-
-                return string.Join(string.Empty, output);
+                var t = table[i % indicator.Length];
+                output.Add(t[key1.IndexOf(Message[i])]);
             }
 
-            /// <summary>
-            /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-            /// <paramref name="keys"/> is null or empty.
-            /// </summary>
-            /// <exception cref="ArgumentException"/>
-            private static void CheckInput(string text, string[] keys)
-            {
-                if (string.IsNullOrWhiteSpace(text))
-                {
-                    throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-                }
+            Message = string.Join(string.Empty, output);
+            return Message;
+        }
 
-                if (keys is null)
+        /// <summary>
+        /// Decipher some text using the Quagmire Four cipher.
+        /// </summary>
+        /// <returns>The deciphered text.</returns>
+        public override string Decode()
+        {
+            var key1 = Alphabet.AlphabetPermutation(Keys[0], Alpha);
+            var key2 = Alphabet.AlphabetPermutation(Keys[1], Alpha);
+            var alphabetLength = Alpha.Length;
+            var indicator = Keys[2];
+            List<string> table = new();
+
+            foreach (var letter in indicator)
+            {
+                var sh = key2.IndexOf(letter) % alphabetLength;
+                if (sh < 0)
                 {
-                    throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
+                    table.Add(key2[^Math.Abs(sh)..] + key2[..^Math.Abs(sh)]);
+                }
+                else
+                {
+                    table.Add(key2[sh..] + key2[..sh]);
                 }
             }
+
+            List<char> output = new();
+            for (int i = 0; i < Message.Length; i++)
+            {
+                var t = table[i % indicator.Length];
+                output.Add(key1[t.IndexOf(Message[i])]);
+            }
+
+            Message = string.Join(string.Empty, output);
+            return Message;
         }
     }
 }

@@ -11,9 +11,10 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         {
             // Arrange
             string text = "helloworld";
-            string[] keys = new string[2] { "test", "key" };
+            string[] keys = new string[3] { "test", "key", "hello" };
+            QuagmireThree quagmire = new(text, keys);
             // Act
-            var result = Quagmire.Three.Encode(text, keys);
+            var result = quagmire.Encode();
 
             // Assert
             Assert.Equal("VSJZPUSUJQ", result);
@@ -24,36 +25,37 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         {
             // Arrange
             string text = "VSJZPUSUJQ";
-            string[] keys = new string[2] { "test", "key" };
+            string[] keys = new string[3] { "test", "key", "hello" };
+            QuagmireThree quagmire = new(text, keys);
             // Act
-            var result = Quagmire.Three.Decode(text, keys);
+            var result = quagmire.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("helloworld", null)]
-        [InlineData(null, new string[1] { "test" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string text = null;
+            string[] keys = new string[3] { "test", "key", "hello" };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Quagmire.Three.Decode(text, keys));
+            Assert.Throws<ArgumentException>(() => new QuagmireThree(text, keys));
         }
 
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, new string[1] { "test" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "RYZZCCQCZU";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Quagmire.Three.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new QuagmireThree(text, keys));
         }
     }
 }
