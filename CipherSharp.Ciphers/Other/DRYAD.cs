@@ -21,8 +21,15 @@ namespace CipherSharp.Ciphers.Other
     /// randomly. To allow the encryption of long messages rows may be reused, though
     /// this significantly weakens the cipher.
     /// </summary>
-    public static class DRYAD
+    public class DRYAD : BaseCipher
     {
+        public DRYAD(string message, int key) : base(message)
+        {
+            Key = key;
+        }
+
+        public int Key { get; set; }
+
         /// <summary>
         /// Encipher some text using the DRYAD cipher.
         /// </summary>
@@ -30,21 +37,20 @@ namespace CipherSharp.Ciphers.Other
         /// <param name="key">The key to use.</param>
         /// <param name="printPage">If true will display the generated page.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, int key, bool printPage = false)
+        public string Encode(bool printPage = false)
         {
-            CheckInput(text, true);
+            CheckInput(true);
             // Extend the text with zeroes so groups are all the same size
-            while (text.Length % 5 != 0)
+            while (Message.Length % 5 != 0)
             {
-                text += "0";
+                Message += "0";
             }
 
             // Use the key value to generate a random DRYAD page
             List<List<string>> page = new();
-            Random random = new(key);
+            Random random = new(Key);
             for (int i = 0; i < 26; i++)
             {
-                Random randomShuffle = new();
                 var letters = AppConstants.Alphabet.ToList().OrderBy(item => random.Next()).ToList();
                 int pos = 0;
                 List<string> row = new();
@@ -69,11 +75,11 @@ namespace CipherSharp.Ciphers.Other
                 }
             }
 
-            random = new(); // reset seed
+            random = new(); // reset seed 
 
             List<string> output = new();
 
-            foreach (var group in text.SplitIntoChunks(5))
+            foreach (var group in Message.SplitIntoChunks(5))
             {
                 var row = random.Next(26);
                 output.Add(((char)(row + 65)).ToString()); // write down the letter indicating the row we are using
@@ -97,19 +103,19 @@ namespace CipherSharp.Ciphers.Other
         /// <param name="key">The key to use.</param>
         /// <param name="printPage">If true will display the generated page.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, int key, bool printPage = false)
+        public string Decode(bool printPage = false)
         {
-            CheckInput(text, false);
+            CheckInput(false);
 
             // Extend the text with zeroes so groups are all the same size
-            while (text.Length % 5 != 0)
+            while (Message.Length % 5 != 0)
             {
-                text += "0";
+                Message += "0";
             }
 
             // Use the key value to generate a random DRYAD page
             List<List<string>> page = new();
-            Random random = new(key);
+            Random random = new(Key);
             for (int i = 0; i < 26; i++)
             {
                 var letters = AppConstants.Alphabet.ToList().OrderBy(item => random.Next()).ToList();
@@ -138,7 +144,7 @@ namespace CipherSharp.Ciphers.Other
 
             List<string> output = new();
 
-            var split = text.Split(" ");
+            var split = Message.Split(" ");
             foreach (var section in split)
             {
                 var code = page[section[0] - 65];
@@ -159,20 +165,20 @@ namespace CipherSharp.Ciphers.Other
         }
 
         /// <summary>
-        /// Throws a <see cref="ArgumentException"/> if <paramref name="text"/>
-        /// is null, empty or contains letters if (encoding).
+        /// Throws an <see cref="InvalidOperationException"/> if <paramref name="text"/>
+        /// is null, empty or contains letters (if encoding).
         /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, bool encoding)
+        /// <exception cref="InvalidOperationException"/>
+        private void CheckInput(bool encoding)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(Message))
             {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+                throw new InvalidOperationException($"'{nameof(Message)}' cannot be null or whitespace.");
             }
 
-            if (encoding && text.Any(ch => char.IsLetter(ch)))
+            if (encoding && Message.Any(ch => char.IsLetter(ch)))
             {
-                throw new ArgumentException($"'{nameof(text)}' cannot contain letters.", nameof(text));
+                throw new InvalidOperationException($"'{nameof(Message)}' cannot contain letters.");
             }
         }
     }

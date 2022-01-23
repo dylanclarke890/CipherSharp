@@ -12,62 +12,68 @@ namespace CipherSharp.Tests.Ciphers.Other
             // Arrange
             string text = "213165587194201";
             int key = 300633440;
+            DRYAD dryad = new(text, key);
 
             // Act
-            var result = DRYAD.Encode(text, key);
+            var result = dryad.Encode();
 
             // Assert
-            Assert.Equal(20, result.Length);
+            Assert.Equal(20, result.Length); // randomized each time
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "213165587194201";
+            string text = "CZVKVN MUNCKM IKYZAO";
             int key = 300633440;
+            DRYAD dryad = new(text, key);
 
             // Act
-            var result = DRYAD.Decode(DRYAD.Encode(text, key), key);
-
+            var result = dryad.Decode();
+            
             // Assert
             Assert.Equal("213165587194201", result);
         }
 
         [Fact]
-        public void Encode_NullParameters_ThrowsArgumentException()
+        public void Encode_NullParameters_ThrowsInvalidOperationException()
         {
             // Arrange
             string text = null;
             int key = 0;
+            DRYAD dryad = new(text, key);
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => DRYAD.Encode(text, key));
+            Assert.Throws<InvalidOperationException>(() => dryad.Encode());
         }
 
         [Fact]
-        public void Decode_NullParameters_ThrowsArgumentException()
+        public void Decode_NullParameters_ThrowsInvalidOperationException()
         {
             // Arrange
             string text = null;
             int key = 0;
+            DRYAD dryad = new(text, key);
+
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => DRYAD.Decode(text, key));
+            Assert.Throws<InvalidOperationException>(() => dryad.Decode());
         }
 
         [Fact]
-        public void Encode_TextContainsLetters_ThrowsArgumentException()
+        public void Encode_TextContainsLetters_ThrowsInvalidOperationException()
         {
             // Arrange
             string text = "213165587194201as";
             int key = 0;
+            DRYAD dryad = new(text, key);
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => DRYAD.Encode(text, key));
+            Assert.Throws<InvalidOperationException>(() => dryad.Encode());
         }
     }
 }
