@@ -17,33 +17,42 @@ namespace CipherSharp.Ciphers.Other
     /// </para>
     /// This version allows the grille to have any width that is a multiple of four.
     /// </summary>
-    public static class TurningGrille
+    public class TurningGrille : BaseCipher
     {
+        public TurningGrille(string message, int[] keys, int grilleSize = 4) : base(message)
+        {
+            Message = message;
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+            GrilleSize = grilleSize;
+            if (Keys.Length != Math.Pow(grilleSize, 2))
+            {
+                throw new ArgumentException($"Key must have a length of {Math.Pow(grilleSize, 2)}", nameof(grilleSize));
+            }
+        }
+
+        public int[] Keys { get; }
+        
+        public int GrilleSize { get; }
+
+        private double TotalSize { get; }
+
         /// <summary>
         /// Encipher some text using the Turning Grille cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">An array of keys to use.</param>
-        /// <param name="n">Size of grille</param>
         /// <returns>The enciphered text.</returns>
-        /// <exception cref="ArgumentException"/>
-        public static string Encode(string text, int[] key, int n = 4)
+        /// <exception cref="InvalidOperationException"/>
+        public string Encode()
         {
-            CheckInput(text, key);
-            CheckKeyLength(key, n);
-            var keyGroups = key.Split((int)Math.Pow(n / 2, 2));
-            
-            int size = n * 2;
-            var totalSize = Math.Pow(size, 2);
-            
-            CheckTextLength(text, totalSize);
-            text = PadTextWithRandomChars(text, totalSize);
+            var keyGroups = Keys.Split((int)Math.Pow(GrilleSize / 2, 2));
+
+            int size = GrilleSize * 2;
+            PrepareMessage(size);
 
             var grille = Matrix.Create(size, 0);
-            CreateKeyGrille(n, keyGroups, grille);
+            CreateKeyGrille(keyGroups, grille);
 
             var outMat = Matrix.Create(size, "");
-            AddTextToCipherGrille(text, grille, outMat);
+            AddTextToCipherGrille(Message, grille, outMat);
 
             StringBuilder output = new();
             foreach (var row in outMat)
@@ -57,27 +66,19 @@ namespace CipherSharp.Ciphers.Other
         /// <summary>
         /// Decipher some text using the Turning Grille cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">An array of keys to use.</param>
-        /// <param name="n">Size of grille</param>
         /// <returns>The deciphered text.</returns>
-        /// <exception cref="ArgumentException"/>
-        public static string Decode(string text, int[] key, int n = 4)
+        /// <exception cref="InvalidOperationException"/>
+        public string Decode()
         {
-            CheckInput(text, key);
-            CheckKeyLength(key, n);
-            var keyGroups = key.Split((int)Math.Pow(n / 2, 2));
+            var keyGroups = Keys.Split((int)Math.Pow(GrilleSize / 2, 2));
 
-            int size = n * 2;
-            var totalSize = Math.Pow(size, 2);
-
-            CheckTextLength(text, totalSize);
-            text = PadTextWithRandomChars(text, totalSize);
+            int size = GrilleSize * 2;
+            PrepareMessage(size);
 
             var grille = Matrix.Create(size, 0);
-            CreateKeyGrille(n, keyGroups, grille);
+            CreateKeyGrille(keyGroups, grille);
 
-            var groups = text.SplitIntoChunks(size).ToList();
+            var groups = Message.SplitIntoChunks(size).ToList();
 
             StringBuilder output = new();
             ReadThroughGrille(grille, groups, output);
@@ -86,51 +87,29 @@ namespace CipherSharp.Ciphers.Other
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> is null
-        /// or empty, or <paramref name="key"/> is null.
+        /// Prepares the message for the grille.
         /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, int[] key)
+        /// <param name="size">The size of the grille.</param>
+        private void PrepareMessage(int size)
         {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
+            var totalSize = Math.Pow(size, 2);
 
-            if (key is null)
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null.", nameof(key));
-            }
+            CheckMessageLength(totalSize);
+            PadMessageWithRandomChars(totalSize);
         }
 
         /// <summary>
-        /// Throws an error if length of <paramref name="key"/> is 
-        /// not equal to <paramref name="n"/>^2.
-        /// </summary>
-        /// <param name="key">Array of keys.</param>
-        /// <param name="n">The size of the array.</param>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckKeyLength(int[] key, int n)
-        {
-            if (key.Length != Math.Pow(n, 2))
-            {
-                throw new ArgumentException($"Key must have a length of { Math.Pow(n, 2)}");
-            }
-        }
-
-        /// <summary>
-        /// Throws an error if the length of <paramref name="text"/> is longer than
+        /// Throws an error if the length of message is longer than
         /// <paramref name="totalSize"/>.
         /// </summary>
-        /// <param name="text">The text to check.</param>
         /// <param name="totalSize">The total allowed size.</param>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckTextLength(string text, double totalSize)
+        /// <exception cref="InvalidOperationException"/>
+        private void CheckMessageLength(double totalSize)
         {
             // Can't work with more than size^2 characters at a time 
-            if (text.Length > totalSize)
+            if (Message.Length > totalSize)
             {
-                throw new ArgumentException($"Text cannot be longer than {totalSize}");
+                throw new InvalidOperationException($"Message cannot be longer than {totalSize}");
             }
         }
 
@@ -141,40 +120,37 @@ namespace CipherSharp.Ciphers.Other
         /// <param name="text">The text to modify.</param>
         /// <param name="totalSize">The total/minimum allowed size.</param>
         /// <returns>The modified text.</returns>
-        private static string PadTextWithRandomChars(string text, double totalSize)
+        private void PadMessageWithRandomChars(double totalSize)
         {
             int counter = 0;
             Random random = new();
             List<char> alphabet = AppConstants.Alphabet.ToList();
-            while (text.Length < totalSize)
+            while (Message.Length < totalSize)
             {
                 if (counter > 3)
                 {
-                    text += alphabet[random.Next(alphabet.Count)];
+                    Message += alphabet[random.Next(alphabet.Count)];
                 }
                 else
                 {
-                    text += 'X';
+                    Message += 'X';
                     counter++;
                 }
             }
-
-            return text;
         }
 
         /// <summary>
         /// Creates the grille using the key.
         /// </summary>
-        /// <param name="n">The size of the grille,</param>
         /// <param name="keyGroups">The key to use.</param>
         /// <param name="grille">The array to modify.</param>
-        private static void CreateKeyGrille(int n, List<int[]> keyGroups, int[][] grille)
+        private void CreateKeyGrille(List<int[]> keyGroups, int[][] grille)
         {
             foreach (var group in keyGroups)
             {
                 foreach (var digit in group)
                 {
-                    var (pos1, pos2) = Utilities.DivMod(digit, n);
+                    var (pos1, pos2) = Utilities.DivMod(digit, GrilleSize);
                     grille[pos1][pos2] = 1;
                 }
                 grille.Rotate90Clockwise();

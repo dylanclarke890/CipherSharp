@@ -21,9 +21,10 @@ namespace CipherSharp.Tests.Ciphers.Other
             };
 
             int n = 6;
+            TurningGrille turningGrille = new(text, key, n);
 
             // Act
-            var result = TurningGrille.Encode(text, key, n);
+            var result = turningGrille.Encode();
 
             // Assert
             // Randomised letters each time so no way to verify the entire string, just length
@@ -34,6 +35,7 @@ namespace CipherSharp.Tests.Ciphers.Other
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
+            string text = "helloworld";
             int[] key = new int[36]
             {
                 0, 1, 2, 3, 4, 5, 6, 7,
@@ -43,36 +45,25 @@ namespace CipherSharp.Tests.Ciphers.Other
                 32, 33, 34, 35
             };
             int n = 6;
-            string cipherText = TurningGrille.Encode("helloworld", key, n);
+            TurningGrille turningGrille = new(text, key, n);
+
             // Act
-            var result = TurningGrille.Decode(cipherText, key, n);
+            var result = turningGrille.Encode();
 
             // Assert
-            Assert.StartsWith("helloworld", result);
+            Assert.Equal(144, result.Length);
         }
 
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, new int[1] { 1 })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, int[] key)
+        public void CreatingInstanceWithNullParameters_ThrowsArgumentNullException(string text, int[] key)
         {
             // Arrange
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => TurningGrille.Encode(text, key));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, new int[1] { 1 })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, int[] key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => TurningGrille.Decode(text, key));
+            Assert.Throws<ArgumentNullException>(() => new TurningGrille(text, key));
         }
     }
 }
