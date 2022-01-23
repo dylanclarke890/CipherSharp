@@ -9,26 +9,33 @@ namespace CipherSharp.Ciphers.Other
     /// The Nihilist cipher is a composite cipher that uses the Polybius Square 
     /// along with a modified Vigenere cipher.
     /// </summary>
-    public static class Nihilist
+    public class Nihilist : BaseCipher
     {
+        public Nihilist(string message, string[] keys, AlphabetMode polybiusMode = AlphabetMode.EX)
+            : base(message)
+        {
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+            PolybiusMode = polybiusMode;
+        }
+
+        public string[] Keys { get; set; }
+
+        public AlphabetMode PolybiusMode { get; set; }
+
         /// <summary>
         /// Encipher some text using the Nihilist cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="keys">The key to use.</param>
-        /// <param name="mode">The mode to use.</param>
         /// <returns>The enciphered text.</returns>
         /// <exception cref="ArgumentException"/>
-        public static string Encode(string text, string[] keys, AlphabetMode mode = AlphabetMode.EX)
+        public string Encode()
         {
-            CheckInput(text, keys);
             // Convert the vigenere key into numbers using the polybius square
-            var keynum = Polybius.Encode(keys[1], keys[0], " ", mode);
+            var keynum = Polybius.Encode(Keys[1], Keys[0], " ", PolybiusMode);
 
             var keyNums = keynum.Split(" ").Select(n => int.Parse(n)).ToList();
             var kLength = keyNums.Count;
 
-            var textnum = Polybius.Encode(text, keys[0], " ", mode);
+            var textnum = Polybius.Encode(Message, Keys[0], " ", PolybiusMode);
             var textNums = textnum.Split(" ").Select(n => int.Parse(n)).ToList();
 
             for (int i = 0; i < textNums.Count; i++)
@@ -42,21 +49,16 @@ namespace CipherSharp.Ciphers.Other
         /// <summary>
         /// Decipher some text using the Nihilist cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="keys">The key to use.</param>
-        /// <param name="mode">The mode to use.</param>
         /// <returns>The deciphered text.</returns>
         /// <exception cref="ArgumentException"/>
-        public static string Decode(string text, string[] keys, AlphabetMode mode = AlphabetMode.EX)
+        public string Decode()
         {
-            CheckInput(text, keys);
             // Convert the vigenere key into numbers using the polybius square
-            var keynum = Polybius.Encode(keys[1], keys[0], " ", mode);
-
+            var keynum = Polybius.Encode(Keys[1], Keys[0], " ", PolybiusMode);
             var keyNums = keynum.Split(" ").Select(n => int.Parse(n)).ToList();
             var kLength = keyNums.Count;
 
-            var textNums = text.Split(" ").Select(ch => int.Parse(ch)).ToList();
+            var textNums = Message.Split(" ").Select(ch => int.Parse(ch)).ToList();
 
             for (int i = 0; i < textNums.Count; i++)
             {
@@ -64,28 +66,9 @@ namespace CipherSharp.Ciphers.Other
             }
 
             var textnum = string.Join(" ", textNums);
-
-            var dtext = Polybius.Decode(textnum, keys[0], " ", mode);
+            var dtext = Polybius.Decode(textnum, Keys[0], " ", PolybiusMode);
 
             return dtext;
-        }
-
-        /// <summary>
-        /// Throws a <see cref="ArgumentException"/> if <paramref name="text"/>
-        /// is null or empty, or <paramref name="keys"/> is null.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys is null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
-            }
         }
     }
 }
