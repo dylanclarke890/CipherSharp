@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BenchmarkDotNet.Running;
+using CipherSharp.Utility.Benchmarks.Helpers;
 
 namespace CipherSharp.Utility.Benchmarks
 {
@@ -6,6 +7,7 @@ namespace CipherSharp.Utility.Benchmarks
     {
         static void Main()
         {
+            BenchmarkRunner.Run<ToLetterBenchmarks>();
         }
     }
 }

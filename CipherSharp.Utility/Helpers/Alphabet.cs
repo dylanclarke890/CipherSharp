@@ -44,40 +44,38 @@ namespace CipherSharp.Utility.Helpers
             return k;
         }
 
+        /// <summary>
+        /// Returns the letter representation of a number in the range -26 to 25
+        /// (or the length of <paramref name="alphabet"/>).
+        /// </summary>
+        /// <param name="nums">The numbers to covert.</param>
+        /// <param name="alphabet">The alphabet to use</param>
+        /// <returns>The converted numbers.</returns>
         public static IEnumerable<char> ToLetter(this IEnumerable<int> nums, string alphabet = AppConstants.Alphabet)
         {
-            List<char> output = new();
-
-            foreach (var num in nums)
-            {
-                if (num >= 0)
-                {
-                    output.Add(alphabet[num]);
-                }
-                else
-                {
-                    output.Add(alphabet[^Math.Abs(num)]);
-                }
-            }
-
-            return output;
-        }
-
-        public static IEnumerable<int> ToNumber(this IEnumerable<char> text, string alphabet = AppConstants.Alphabet)
-        {
-            var output = text.Select(ch => alphabet.IndexOf(ch));
-
-            return output;
+            return nums.Select(digit => alphabet[digit < 0 ? digit + alphabet.Length : digit]);
         }
 
         /// <summary>
-        /// Determines the <see cref="AlphabetMode"/>. Defaults to <see cref="AlphabetMode.JI"/>.
+        /// Returns the number representation of a letter in the range 0 to 25
+        /// (or the length of <paramref name="alphabet"/>).
+        /// </summary>
+        /// <param name="nums">The letters to covert.</param>
+        /// <param name="alphabet">The alphabet to use</param>
+        /// <returns>The converted letters.</returns>
+        public static IEnumerable<int> ToNumber(this IEnumerable<char> text, string alphabet = AppConstants.Alphabet)
+        {
+            return text.Select(ch => alphabet.IndexOf(ch));
+        }
+
+        /// <summary>
+        /// Determines the <see cref="AlphabetMode"/>. Defaults to <paramref name="defaultMode"/>.
         /// </summary>
         /// <param name="mode">The string to parse.</param>
         /// <returns>The <see cref="AlphabetMode"/>.</returns>
-        public static AlphabetMode GetMode(string mode)
+        public static AlphabetMode GetMode(string mode, AlphabetMode defaultMode = AlphabetMode.JI)
         {
-            return Enum.TryParse<AlphabetMode>(mode, out var result) ? result : AlphabetMode.JI;
+            return Enum.TryParse<AlphabetMode>(mode, out var result) ? result : defaultMode;
         }
 
         /// <summary>
@@ -85,6 +83,7 @@ namespace CipherSharp.Utility.Helpers
         /// </summary>
         /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <returns>The alphabet to use.</returns>
+        /// <exception cref="ArgumentException"/>
         public static string GetAlphabet(AlphabetMode mode)
         {
             return mode switch
@@ -92,7 +91,7 @@ namespace CipherSharp.Utility.Helpers
                 AlphabetMode.JI => AppConstants.Alphabet.Replace("J", ""),
                 AlphabetMode.CK => AppConstants.Alphabet.Replace("C", ""),
                 AlphabetMode.EX => $"{AppConstants.Alphabet}{AppConstants.Digits}",
-                _ => throw new ArgumentException(mode.ToString()),
+                _ => throw new ArgumentException($"'{nameof(mode)}' could not be determined.", nameof(mode)),
             };
         }
     }
