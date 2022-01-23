@@ -26,59 +26,111 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// tactical information.
     /// </para>
     /// </summary>
-    public static class SIGABA
+    public class SIGABA : BaseCipher
     {
-        /// <summary>
-        /// Encipher some text using the SIGABA cipher.
-        /// </summary>
-        /// <param name="text">The text to encipher.</param>
+        private readonly Dictionary<string, string> _largeRotors = new()
+        {
+            ["I"] = "PWJVDRGTMBHOLYXUZFQEAINKCS",
+            ["II"] = "MKLWAIBXRUYGTNCSPDFQHZJVOE",
+            ["III"] = "WVYLIJAMXZTSUROENDKQHCFBPG",
+            ["IV"] = "ZRMQWNITBJUKHOFPEYDXAVLSGC",
+            ["V"] = "LGBAZWMIPQTFHEVUYJNCRSKDOX",
+            ["VI"] = "YGOWZXPCBJTIARKHMELNDFVUSQ",
+            ["VII"] = "UZGKPDQRJTFCYOINVMALHEXWSB",
+            ["VIII"] = "OQRTDBUZGPHWNJFELKCIXVSAYM",
+            ["IX"] = "HLEDCOTJMUAWFZQIGRBVYPSNKX",
+            ["X"] = "QKCIYPWLZNHTJVFDURSXEBGMOA"
+        };
+        private readonly Dictionary<string, string> _smallRotors = new()
+        {
+            ["I"] = "9438705162",
+            ["II"] = "8135624097",
+            ["III"] = "5901284736",
+            ["IV"] = "1953742680",
+            ["V"] = "6482359170",
+        };
+        private readonly Dictionary<char, int> _indWirings = new()
+            {
+                ['A'] = 9, ['B'] = 1,
+                ['C'] = 2, ['D'] = 3, ['E'] = 3, ['F'] = 4, ['G'] = 4, ['H'] = 4,
+                ['I'] = 5, ['J'] = 5, ['K'] = 5, ['L'] = 6, ['M'] = 6, ['N'] = 6,
+                ['O'] = 6, ['P'] = 7, ['Q'] = 7, ['R'] = 7, ['S'] = 7, ['T'] = 7,
+                ['U'] = 8, ['V'] = 8, ['W'] = 8, ['X'] = 8, ['Y'] = 8, ['Z'] = 8
+            };
+
+    public List<string> CipherKey { get; }
+        public List<string> ControlKey { get; }
+        public List<string> IndexKey { get; }
+        public string IndicatorKey { get; }
+        public string ControlPos { get; }
+        public string IndexPos { get; }
+
         /// <param name="cipherKey">The cipher rotor settings to use.</param>
         /// <param name="controlKey">The control rotor settings to use.</param>
         /// <param name="indexKey">The index rotor settings to use.</param>
         /// <param name="indicatorKey">The indicator key.</param>
         /// <param name="controlPos">Current position of control rotor.</param>
         /// <param name="indexPos">Current position of index rotor.</param>
-        /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, List<string> cipherKey, List<string> controlKey,
-            List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
+        public SIGABA(string message, List<string> cipherKey, List<string> controlKey,
+            List<string> indexKey, string indicatorKey, string controlPos, string indexPos) : base(message)
         {
-            CheckInput(text, cipherKey, controlKey, indexKey, indicatorKey, controlPos, indexPos);
+            if (string.IsNullOrWhiteSpace(indicatorKey))
+            {
+                throw new ArgumentException($"'{nameof(indicatorKey)}' cannot be null or whitespace.", nameof(indicatorKey));
+            }
 
-            text = text.ToUpper();
-            text = text.Replace("Z", "X"); // SIGABA turned 'Z' into 'X'
-            text = text.Replace(" ", "Z"); // and turned ' ' (spaces) into 'Z'
+            if (string.IsNullOrWhiteSpace(controlPos))
+            {
+                throw new ArgumentException($"'{nameof(controlPos)}' cannot be null or whitespace.", nameof(controlPos));
+            }
+
+            if (string.IsNullOrWhiteSpace(indexPos))
+            {
+                throw new ArgumentException($"'{nameof(indexPos)}' cannot be null or whitespace.", nameof(indexPos));
+            }
+            CipherKey = cipherKey ?? throw new ArgumentNullException(nameof(cipherKey));
+            ControlKey = controlKey ?? throw new ArgumentNullException(nameof(controlKey));
+            IndexKey = indexKey ?? throw new ArgumentNullException(nameof(indexKey));
+            IndicatorKey = indicatorKey;
+            ControlPos = controlPos;
+            IndexPos = indexPos;
+        }
+
+        /// <summary>
+        /// Encipher some text using the SIGABA cipher.
+        /// </summary>
+        /// <returns>The enciphered text.</returns>
+        public string Encode()
+        {
+            Message = Message.Replace("Z", "X"); // SIGABA turned 'Z' into 'X'
+            Message = Message.Replace(" ", "Z"); // and turned ' ' (spaces) into 'Z'
 
             // Save a copy of the settings for each rotor group.
-            var ciphersRotorSet = cipherKey.ToList();
-            var controlRotorsSet = controlKey.ToList();
-            var indexRotorsSet = indexKey.ToList();
+            var ciphersRotorSet = CipherKey.ToList();
+            var controlRotorsSet = ControlKey.ToList();
+            var indexRotorsSet = IndexKey.ToList();
 
-            var indicator1 = indicatorKey;
-            var indicator2 = controlPos;
-            var indicator3 = indexPos;
-
-            (Dictionary<string, string> largeRotors,
-                Dictionary<string, string> smallRotors) = GetRotors();
+            var indicator1 = IndicatorKey;
+            var indicator2 = ControlPos;
+            var indicator3 = IndexPos;
 
             List<string> cipherRotors = new();
             List<int> cipherPositions = new();
-            int counter = AddCipherRotorsAndPositions(ciphersRotorSet, indicator1, largeRotors, cipherRotors, cipherPositions);
+            int counter = AddCipherRotorsAndPositions(ciphersRotorSet, indicator1, _largeRotors, cipherRotors, cipherPositions);
 
             List<string> controlRotors = new();
             List<int> controlPositions = new();
-            AddControlRotorsAndPositions(controlRotorsSet, indicator2, largeRotors, counter, controlRotors, controlPositions);
+            AddControlRotorsAndPositions(controlRotorsSet, indicator2, _largeRotors, counter, controlRotors, controlPositions);
 
             List<string> indexRotors = new();
             List<int> indexPositions = new();
-            AddIndexRotorsAndPositions(indexRotorsSet, indicator3, smallRotors, counter, indexRotors, indexPositions);
-
-            Dictionary<char, int> indwiring = GetIndWiring();
+            AddIndexRotorsAndPositions(indexRotorsSet, indicator3, _smallRotors, counter, indexRotors, indexPositions);
 
             List<char> output = new();
-            for (int ctr = 0; ctr < text.Length; ctr++)
+            for (int ctr = 0; ctr < Message.Length; ctr++)
             {
                 int count = ctr + 1;
-                var T = text[ctr];
+                var T = Message[ctr];
                 foreach (var (r, p) in cipherRotors.Zip(cipherPositions))
                 {
                     T = ControlRotor(T, r, p);
@@ -91,7 +143,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
                 AdvanceControlRotors(controlPositions, count);
 
-                SplitResultsIntoWiringGroups(indwiring, L);
+                SplitResultsIntoWiringGroups(_indWirings, L);
 
                 SendGroupedWiresIntoIndexRotors(indexRotors, indexPositions, L);
 
@@ -104,32 +156,20 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <summary>
         /// Decipher some text using the SIGABA cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="cipherKey">The cipher rotor settings to use.</param>
-        /// <param name="controlKey">The control rotor settings to use.</param>
-        /// <param name="indexKey">The index rotor settings to use.</param>
-        /// <param name="indicatorKey">The indicator key.</param>
-        /// <param name="controlPos">Current position of control rotor.</param>
-        /// <param name="indexPos">Current position of index rotor.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, List<string> cipherKey, List<string> controlKey,
-            List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
+        public string Decode()
         {
-            CheckInput(text, cipherKey, controlKey, indexKey, indicatorKey, controlPos, indexPos);
-
-            text = text.ToUpper();
-            var ciphersRotorSet = cipherKey.ToList();
-            var controlRotorsSet = controlKey.ToList();
-            var indexRotorsSet = indexKey.ToList();
-            var indicator1 = indicatorKey;
-            var indicator2 = controlPos;
-            var indicator3 = indexPos;
-            (Dictionary<string, string> largeRotors,
-                Dictionary<string, string> smallRotors) = GetRotors();
+            Message = Message.ToUpper();
+            var ciphersRotorSet = CipherKey.ToList();
+            var controlRotorsSet = ControlKey.ToList();
+            var indexRotorsSet = IndexKey.ToList();
+            var indicator1 = IndicatorKey;
+            var indicator2 = ControlPos;
+            var indicator3 = IndexPos;
 
             List<string> cipherRotors = new();
             List<int> cipherPositions = new();
-            int counter = AddCipherRotorsAndPositions(ciphersRotorSet, indicator1, largeRotors, cipherRotors, cipherPositions);
+            int counter = AddCipherRotorsAndPositions(ciphersRotorSet, indicator1, _largeRotors, cipherRotors, cipherPositions);
 
             // Decoding so reverse the rotors.
             var cipherRotorsRev = cipherRotors.ToList();
@@ -137,17 +177,15 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             List<string> controlRotors = new();
             List<int> controlPositions = new();
-            AddControlRotorsAndPositions(controlRotorsSet, indicator2, largeRotors, counter, controlRotors, controlPositions);
+            AddControlRotorsAndPositions(controlRotorsSet, indicator2, _largeRotors, counter, controlRotors, controlPositions);
 
             List<string> indexRotors = new();
             List<int> indexPositions = new();
-            AddIndexRotorsAndPositions(indexRotorsSet, indicator3, smallRotors, counter, indexRotors, indexPositions);
-
-            Dictionary<char, int> indwiring = GetIndWiring();
+            AddIndexRotorsAndPositions(indexRotorsSet, indicator3, _smallRotors, counter, indexRotors, indexPositions);
 
             List<char> output = new();
 
-            for (int ctr = 0; ctr < text.Length; ctr++)
+            for (int ctr = 0; ctr < Message.Length; ctr++)
             {
                 // We need to pass the signal through the cipher rotors in reverse
                 // when we are decrypting. The order of the rotor was reversed earlier
@@ -156,7 +194,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 int count = ctr + 1;
                 var cipherPositionRev = cipherPositions.ToList();
                 cipherPositionRev.Reverse();
-                var T = text[ctr];
+                var T = Message[ctr];
                 foreach (var (r, p) in cipherRotorsRev.Zip(cipherPositionRev))
                 {
                     T = ControlRotor(T, r, p, true);
@@ -169,7 +207,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
                 AdvanceControlRotors(controlPositions, count);
 
-                SplitResultsIntoWiringGroups(indwiring, L);
+                SplitResultsIntoWiringGroups(_indWirings, L);
 
                 SendGroupedWiresIntoIndexRotors(indexRotors, indexPositions, L);
 
@@ -177,113 +215,6 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             }
 
             return string.Join(string.Empty, output);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> any parameters are null.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, List<string> cipherKey, List<string> controlKey, List<string> indexKey, string indicatorKey, string controlPos, string indexPos)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (cipherKey is null)
-            {
-                throw new ArgumentException($"'{nameof(cipherKey)}' cannot be null.", nameof(cipherKey));
-            }
-
-            if (controlKey is null)
-            {
-                throw new ArgumentException($"'{nameof(controlKey)}' cannot be null.", nameof(controlKey));
-            }
-
-            if (indexKey is null)
-            {
-                throw new ArgumentException($"'{nameof(indexKey)}' cannot be null.", nameof(indexKey));
-            }
-
-            if (string.IsNullOrWhiteSpace(indicatorKey))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(controlPos))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(indexPos))
-            {
-                throw new ArgumentException($"'{nameof(indexPos)}' cannot be null or empty.", nameof(indexPos));
-            }
-        }
-
-        private static (Dictionary<string, string>, Dictionary<string, string>) GetRotors()
-        {
-            // Rotor Wirings for the large rotors
-            // The actual wirings are still classified
-            Dictionary<string, string> largeRotors = new()
-            {
-                ["I"] = "PWJVDRGTMBHOLYXUZFQEAINKCS",
-                ["II"] = "MKLWAIBXRUYGTNCSPDFQHZJVOE",
-                ["III"] = "WVYLIJAMXZTSUROENDKQHCFBPG",
-                ["IV"] = "ZRMQWNITBJUKHOFPEYDXAVLSGC",
-                ["V"] = "LGBAZWMIPQTFHEVUYJNCRSKDOX",
-                ["VI"] = "YGOWZXPCBJTIARKHMELNDFVUSQ",
-                ["VII"] = "UZGKPDQRJTFCYOINVMALHEXWSB",
-                ["VIII"] = "OQRTDBUZGPHWNJFELKCIXVSAYM",
-                ["IX"] = "HLEDCOTJMUAWFZQIGRBVYPSNKX",
-                ["X"] = "QKCIYPWLZNHTJVFDURSXEBGMOA"
-            };
-            // Rotor Wirings for the small rotors
-            // The actual wirings are still classified
-            Dictionary<string, string> smallRotors = new()
-            {
-                ["I"] = "9438705162",
-                ["II"] = "8135624097",
-                ["III"] = "5901284736",
-                ["IV"] = "1953742680",
-                ["V"] = "6482359170",
-            };
-
-            return (largeRotors, smallRotors);
-        }
-
-        private static Dictionary<char, int> GetIndWiring()
-        {
-            // Wiring that connects the control rotors to the index rotors
-            return new()
-            {
-                ['A'] = 9,
-                ['B'] = 1,
-                ['C'] = 2,
-                ['D'] = 3,
-                ['E'] = 3,
-                ['F'] = 4,
-                ['G'] = 4,
-                ['H'] = 4,
-                ['I'] = 5,
-                ['J'] = 5,
-                ['K'] = 5,
-                ['L'] = 6,
-                ['M'] = 6,
-                ['N'] = 6,
-                ['O'] = 6,
-                ['P'] = 7,
-                ['Q'] = 7,
-                ['R'] = 7,
-                ['S'] = 7,
-                ['T'] = 7,
-                ['U'] = 8,
-                ['V'] = 8,
-                ['W'] = 8,
-                ['X'] = 8,
-                ['Y'] = 8,
-                ['Z'] = 8
-            };
         }
 
         private static int AddCipherRotorsAndPositions(List<string> ciphersRotorSet, string indicator1, Dictionary<string, string> largeRotors, List<string> cipherRotors, List<int> cipherPositions)
