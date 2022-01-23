@@ -17,9 +17,10 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             List<string> positionsKey = new() { "A", "B", "C" };
             List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
             List<string> ringKeys = new() { "A", "B", "C" };
+            Enigma enigma = new(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
 
             // Act
-            var result = Enigma.Encode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
+            var result = enigma.Encode();
 
             // Assert
             Assert.Equal("FFPMNIQOQC", result);
@@ -35,16 +36,17 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             List<string> positionsKey = new() { "A", "B", "C" };
             List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
             List<string> ringKeys = new() { "A", "B", "C" };
-
+            Enigma enigma = new(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
+            
             // Act
-            var result = Enigma.Decode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
+            var result = enigma.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
         [Fact]
-        public void Encode_NullText_ThrowsArgumentException()
+        public void CreatingNewInstanceWith_NullText_ThrowsArgumentNullException()
         {
             // Arrange
             string text = null;
@@ -56,11 +58,12 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Encode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
+            Assert.Throws<ArgumentNullException>(
+                () => new Enigma(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
         }
 
         [Fact]
-        public void Encode_NullRotorKeys_ThrowsArgumentException()
+        public void CreatingNewInstanceWith_NullRotorKeys_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -72,11 +75,12 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Encode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
+            Assert.Throws<ArgumentNullException>(
+                () => new Enigma(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
         }
 
         [Fact]
-        public void Encode_NullReflectorKey_ThrowsArgumentException()
+        public void CreatingNewInstanceWith_NullReflectorKey_ThrowsArgumentException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -88,27 +92,29 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Encode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
+            Assert.Throws<ArgumentException>(
+                () => new Enigma(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
         }
 
         [Fact]
-        public void Encode_NullPositionsKey_ThrowsArgumentException()
+        public void CreatingNewInstanceWith_NullPositionKeys_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
             List<string> rotorKeys = new() { "I", "II", "III" };
             string reflectorKey = "A";
-            List<string> positionsKey = null;
+            List<string> positionKeys = null;
             List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
             List<string> ringKeys = new() { "A", "B", "C" };
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Encode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
+            Assert.Throws<ArgumentNullException>(
+                () => new Enigma(text, rotorKeys, reflectorKey, positionKeys, plugs, ringKeys));
         }
 
         [Fact]
-        public void Encode_NullPlugs_ThrowsArgumentException()
+        public void CreatingNewInstanceWith_NullPlugs_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -120,11 +126,12 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Encode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
+            Assert.Throws<ArgumentNullException>(
+                () => new Enigma(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
         }
 
         [Fact]
-        public void Encode_NullRingKeys_ThrowsArgumentException()
+        public void CreatingNewInstanceWith_NullRingKeys_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -136,103 +143,8 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Encode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
-        }
-
-        [Fact]
-        public void Decode_NullText_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = null;
-            List<string> rotorKeys = new() { "I", "II", "III" };
-            string reflectorKey = "A";
-            List<string> positionsKey = new() { "A", "B", "C" };
-            List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
-            List<string> ringKeys = new() { "A", "B", "C" };
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Decode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
-        }
-
-        [Fact]
-        public void Decode_NullRotorKeys_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = "FFPMNIQOQC";
-            List<string> rotorKeys = null;
-            string reflectorKey = "A";
-            List<string> positionsKey = new() { "A", "B", "C" };
-            List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
-            List<string> ringKeys = new() { "A", "B", "C" };
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Decode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
-        }
-
-        [Fact]
-        public void Decode_NullReflectorKey_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = "FFPMNIQOQC";
-            List<string> rotorKeys = new() { "I", "II", "III" };
-            string reflectorKey = null;
-            List<string> positionsKey = new() { "A", "B", "C" };
-            List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
-            List<string> ringKeys = new() { "A", "B", "C" };
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Decode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
-        }
-
-        [Fact]
-        public void Decode_NullPositionsKey_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = "FFPMNIQOQC";
-            List<string> rotorKeys = new() { "I", "II", "III" };
-            string reflectorKey = "A";
-            List<string> positionsKey = null;
-            List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
-            List<string> ringKeys = new() { "A", "B", "C" };
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Decode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
-        }
-
-        [Fact]
-        public void Decode_NullPlugs_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = "FFPMNIQOQC";
-            List<string> rotorKeys = new() { "I", "II", "III" };
-            string reflectorKey = "A";
-            List<string> positionsKey = new() { "A", "B", "C" };
-            List<string> plugs = null;
-            List<string> ringKeys = new() { "A", "B", "C" };
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Decode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
-        }
-
-        [Fact]
-        public void Decode_NullRingKeys_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = "FFPMNIQOQC";
-            List<string> rotorKeys = new() { "I", "II", "III" };
-            string reflectorKey = "A";
-            List<string> positionsKey = new() { "A", "B", "C" };
-            List<string> plugs = new() { "ABCEDFGHIJ", "KLMNOPQRST" };
-            List<string> ringKeys = null;
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Enigma.Decode(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
+            Assert.Throws<ArgumentNullException>(
+                () => new Enigma(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
         }
     }
 }

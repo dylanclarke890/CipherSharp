@@ -20,38 +20,65 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// for each message.The receiving station would have to know and use the exact settings employed
     /// by the transmitting station to successfully decrypt a message.
     /// </summary>
-    public static class Enigma
+    public class Enigma : BaseCipher
     {
+        /// <summary>
+        /// Dictionary of rotors and notch positions.
+        /// </summary>
+        private readonly Dictionary<string, (string, int)> _rotorSelections = new()
+        {
+            ["I"] = ("EKMFLGDQVZNTOWYHXUSPAIBRCJ", 18),
+            ["II"] = ("AJDKSIRUXBLHWTMCQGZNPYFVOE", 6),
+            ["III"] = ("BDFHJLCPRTXVZNYEIWGAKMUSQO", 14),
+            ["IV"] = ("ESOVPZJAYQUIRHXLNFTGKDCMWB", 11),
+            ["V"] = ("VZBRGITYUPSDNHLXAWMJQOFECK", 0),
+        };
+        private readonly Dictionary<string, string> _reflectorSelections = new()
+        {
+            ["A"] = "EJMZALYXVBWFCRQUONTSPIKHGD",
+            ["B"] = "YRUHQSLDPXNGOKMIEBFZCWVJAT",
+            ["C"] = "FVPJIAOYEDRZXWGCTKUQSBNMHL",
+        };
+
+        public List<string> RotorKeys { get; }
+        public string ReflectorKey { get; }
+        public List<string> PositionKeys { get; }
+        public List<string> Plugs { get; }
+        public List<string> RingKeys { get; }
+
+        /// <param name="message">The message to encipher.</param>
+        /// <param name="rotorKeys">Three selections out of ["I", "II", "III", "IV", "V"]</param>
+        /// <param name="reflectorKey">A letter of the alphabet.</param>
+        /// <param name="positionKeys">A list of three letters.</param>
+        /// <param name="plugs">Two length 10 strings to use for plugs.</param>
+        /// <param name="ringKeys">A list of three letters.</param>
+        public Enigma(string message, List<string> rotorKeys, string reflectorKey, 
+            List<string> positionKeys, List<string> plugs, List<string> ringKeys) : base(message)
+        {
+            RotorKeys = rotorKeys ?? throw new ArgumentNullException(nameof(rotorKeys));
+            PositionKeys = positionKeys ?? throw new ArgumentNullException(nameof(positionKeys));
+            Plugs = plugs ?? throw new ArgumentNullException(nameof(plugs));
+            RingKeys = ringKeys ?? throw new ArgumentNullException(nameof(ringKeys));
+            ReflectorKey = !string.IsNullOrWhiteSpace(reflectorKey) ? reflectorKey 
+                : throw new ArgumentException($"'{nameof(reflectorKey)}' cannot be null or whitespace.", nameof(reflectorKey));
+        }
+
         /// <summary>
         /// Encipher some text using the Enigma cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="rotorKeys">Three selections out of ["I", "II", "III", "IV", "V"]</param>
-        /// <param name="reflectorKey">A letter of the alphabet.</param>
-        /// <param name="positionsKey">A list of three letters.</param>
-        /// <param name="plugs">Two length 10 strings to use for plugs.</param>
-        /// <param name="ringKeys">A list of three letters.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text,
-            List<string> rotorKeys, string reflectorKey, List<string> positionsKey, List<string> plugs, List<string> ringKeys)
+        public string Encode()
         {
-            return Process(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
+            return Process();
         }
 
         /// <summary>
         /// Decipher some text using the Enigma cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="rotorKeys">Three selections out of ["I", "II", "III", "IV", "V"]</param>
-        /// <param name="reflectorKey">A letter of the alphabet.</param>
-        /// <param name="positionsKey">A list of three letters.</param>
-        /// <param name="plugs">Two length 10 strings to use for plugs.</param>
-        /// <param name="ringKeys">A list of three letters.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text,
-            List<string> rotorKeys, string reflectorKey, List<string> positionsKey, List<string> plugs, List<string> ringKeys)
+        public string Decode()
         {
-            return Process(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
+            return Process();
         }
 
         /// <summary>
@@ -59,48 +86,29 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// </summary>
         /// <returns>The processed text.</returns>
         /// <exception cref="ArgumentException"/>
-        private static string Process(string text, List<string> rotorKeys, string reflectorKey, List<string> positionsKey, List<string> plugs, List<string> ringKeys)
+        private string Process()
         {
-            CheckInput(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys);
-            // dict of rotors and notch positions
-            Dictionary<string, (string, int)> rotorSelect = new()
-            {
-                ["I"] = ("EKMFLGDQVZNTOWYHXUSPAIBRCJ", 18),
-                ["II"] = ("AJDKSIRUXBLHWTMCQGZNPYFVOE", 6),
-                ["III"] = ("BDFHJLCPRTXVZNYEIWGAKMUSQO", 14),
-                ["IV"] = ("ESOVPZJAYQUIRHXLNFTGKDCMWB", 11),
-                ["V"] = ("VZBRGITYUPSDNHLXAWMJQOFECK", 0),
-            };
-
-            // dict of reflectors
-            Dictionary<string, string> reflectorSelect = new()
-            {
-                ["A"] = "EJMZALYXVBWFCRQUONTSPIKHGD",
-                ["B"] = "YRUHQSLDPXNGOKMIEBFZCWVJAT",
-                ["C"] = "FVPJIAOYEDRZXWGCTKUQSBNMHL",
-            };
-
             List<string> rotors = new();
             List<int> notches = new();
 
-            foreach (var num in rotorKeys)
+            foreach (var num in RotorKeys)
             {
-                var (rotor, notch) = rotorSelect[num];
+                var (rotor, notch) = _rotorSelections[num];
                 rotors.Add(rotor);
                 notches.Add(notch);
             }
 
-            var reflector = reflectorSelect[reflectorKey];
+            var reflector = _reflectorSelections[ReflectorKey];
             // Translate the letters of the rotor positions and ring positions to numbers
             string alphabet = AppConstants.Alphabet;
             List<int> positions = new();
-            foreach (var ltr in positionsKey)
+            foreach (var ltr in PositionKeys)
             {
                 positions.Add(alphabet.IndexOf(ltr.ToUpper()));
             }
 
             List<int> rings = new();
-            foreach (var ltr in ringKeys)
+            foreach (var ltr in RingKeys)
             {
                 rings.Add(alphabet.IndexOf(ltr));
             }
@@ -118,11 +126,11 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 positions[i] -= rings[i];
             }
 
-            text = Plugboard(text, plugs);
+            Message = Plugboard(Message, Plugs);
 
             List<char> output = new();
 
-            foreach (var ltr in text)
+            foreach (var ltr in Message)
             {
                 var T = ltr;
 
@@ -159,47 +167,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             }
 
             string finalText = string.Join(string.Empty, output);
-            finalText = Plugboard(finalText, plugs);
+            Message = Plugboard(finalText, Plugs);
 
-            return finalText;
-        }
-
-        /// <summary>
-        /// Checks the inputs and throws an <see cref="ArgumentException"/>
-        /// if any are null.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, List<string> rotorKeys, string reflectorKey, List<string> positionsKey, List<string> plugs, List<string> ringKeys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (rotorKeys is null)
-            {
-                throw new ArgumentException($"'{nameof(rotorKeys)}' cannot be null.", nameof(rotorKeys));
-            }
-
-            if (string.IsNullOrEmpty(reflectorKey))
-            {
-                throw new ArgumentException($"'{nameof(reflectorKey)}' cannot be null.", nameof(reflectorKey));
-            }
-
-            if (positionsKey is null)
-            {
-                throw new ArgumentException($"'{nameof(positionsKey)}' cannot be null.", nameof(positionsKey));
-            }
-
-            if (plugs is null)
-            {
-                throw new ArgumentException($"'{nameof(plugs)}' cannot be null.", nameof(plugs));
-            }
-
-            if (ringKeys is null)
-            {
-                throw new ArgumentException($"'{nameof(ringKeys)}' cannot be null.", nameof(ringKeys));
-            }
+            return Message;
         }
 
         /// <summary>
