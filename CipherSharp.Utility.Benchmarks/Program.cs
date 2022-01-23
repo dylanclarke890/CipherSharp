@@ -7,7 +7,7 @@ namespace CipherSharp.Utility.Benchmarks
     {
         static void Main()
         {
-            BenchmarkRunner.Run<ToLetterBenchmarks>();
+            BenchmarkRunner.Run<AlphabetPermutationBenchmarks>();
         }
     }
 }
