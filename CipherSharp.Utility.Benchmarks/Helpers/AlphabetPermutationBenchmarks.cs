@@ -21,19 +21,19 @@ namespace CipherSharp.Utility.Benchmarks.Helpers
         [Benchmark]
         public void AlphabetPermutationWithHashSet()
         {
-            AlphabetPermutationAlternatives.WithHashSet(Key, Alpha);
+            AlphabetAlternatives.AlphabetPermutationWithHashSet(Key, Alpha);
         }
 
         [Benchmark]
         public void AlphabetPermutationWithForLoop()
         {
-            AlphabetPermutationAlternatives.WithForLoop(Key, Alpha);
+            AlphabetAlternatives.AlphabetPermutationWithForLoop(Key, Alpha);
         }
 
         [Benchmark]
         public void AlphabetPermutationWithForLoopAndLinq()
         {
-            AlphabetPermutationAlternatives.WithForLoopAndLinq(Key, Alpha);
+            AlphabetAlternatives.AlphabetPermutationWithForLoopAndLinq(Key, Alpha);
         }
     }
 }

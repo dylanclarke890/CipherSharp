@@ -5,9 +5,50 @@ using System.Linq;
 
 namespace CipherSharp.Utility.Benchmarks.Helpers
 {
-    public static class AlphabetPermutationAlternatives
+    public static class AlphabetAlternatives
     {
-        public static string WithHashSet(string key, string alphabet = AppConstants.Alphabet)
+        public static IEnumerable<char> ToLetterBase(this IEnumerable<int> nums, string alphabet = AppConstants.Alphabet)
+        {
+            List<char> output = new();
+
+            foreach (var num in nums)
+            {
+                if (num >= 0)
+                {
+                    output.Add(alphabet[num]);
+                }
+                else
+                {
+                    output.Add(alphabet[^Math.Abs(num)]);
+                }
+            }
+
+            return output;
+        }
+
+        public static IEnumerable<char> ToLetterAddingInsteadOfUsingAbs(this IEnumerable<int> nums, string alphabet = AppConstants.Alphabet)
+        {
+            List<char> output = new();
+
+            foreach (var num in nums)
+            {
+                int temp = num;
+                if (num < 0)
+                {
+                    temp += alphabet.Length;
+                }
+                output.Add(alphabet[temp]);
+            }
+
+            return output;
+        }
+
+        public static IEnumerable<char> ToLetterUsingLinq(this IEnumerable<int> nums, string alphabet = AppConstants.Alphabet)
+        {
+            return nums.Select(digit => alphabet[digit < 0 ? digit + alphabet.Length : digit]);
+        }
+
+        public static string AlphabetPermutationWithHashSet(string key, string alphabet = AppConstants.Alphabet)
         {
             HashSet<char> alphabetHash = alphabet.ToUpper().ToHashSet();
             HashSet<char> permutated = new();
@@ -29,7 +70,7 @@ namespace CipherSharp.Utility.Benchmarks.Helpers
             return string.Join(string.Empty, permutated);
         }
 
-        public static string WithForLoop(string key, string alphabet = AppConstants.Alphabet)
+        public static string AlphabetPermutationWithForLoop(string key, string alphabet = AppConstants.Alphabet)
         {
             alphabet = alphabet.ToUpper();
             key = key.ToUpper();
@@ -60,7 +101,7 @@ namespace CipherSharp.Utility.Benchmarks.Helpers
             return k;
         }
 
-        public static string WithForLoopAndLinq(string key, string alphabet = AppConstants.Alphabet)
+        public static string AlphabetPermutationWithForLoopAndLinq(string key, string alphabet = AppConstants.Alphabet)
         {
             alphabet = alphabet.ToUpper();
             key = key.ToUpper();

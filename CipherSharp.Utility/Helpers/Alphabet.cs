@@ -25,7 +25,7 @@ namespace CipherSharp.Utility.Helpers
             {
                 if (!alphabet.Contains(ltr))
                 {
-                    throw new ArgumentException($"'{ltr}' not found in {alphabet}.");
+                    throw new ArgumentException($"'{ltr}' not found in {alphabet}.", nameof(key));
                 }
                 if (!k.Contains(ltr))
                 {

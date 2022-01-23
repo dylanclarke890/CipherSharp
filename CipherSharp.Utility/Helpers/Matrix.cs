@@ -9,35 +9,34 @@ namespace CipherSharp.Utility.Helpers
     public static class Matrix
     {
         /// <summary>
-        /// Create a square matrix of values based on <paramref name="initialKey"/>
+        /// Create a square matrix of values based on <paramref name="key"/>
         /// and <paramref name="mode"/>.
         /// </summary>
-        /// <param name="initialKey">The key to use for permutation.</param>
+        /// <param name="key">The key to use for permutation.</param>
         /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <returns>A square matrix.</returns>
-        public static string[][] Create(string initialKey, AlphabetMode mode)
+        public static string[][] Create(string key, AlphabetMode mode)
         {
-            string key;
-            initialKey = initialKey.ToUpper();
+            string modifiedKey;
+            modifiedKey = key.ToUpper();
             switch (mode)
             {
                 case AlphabetMode.JI:
-                    initialKey = initialKey.Replace("J", "I");
-                    key = Alphabet.AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
+                    modifiedKey = modifiedKey.Replace("J", "I");
+                    modifiedKey = Alphabet.AlphabetPermutation(modifiedKey, AppConstants.Alphabet.Replace("J", ""));
                     break;
                 case AlphabetMode.CK:
-                    initialKey = initialKey.Replace("C", "K");
-                    key = Alphabet.AlphabetPermutation(initialKey, AppConstants.Alphabet.Replace("J", ""));
+                    modifiedKey = modifiedKey.Replace("C", "K");
+                    modifiedKey = Alphabet.AlphabetPermutation(modifiedKey, AppConstants.Alphabet.Replace("J", ""));
                     break;
                 case AlphabetMode.EX:
-                    key = Alphabet.AlphabetPermutation(initialKey, $"{AppConstants.Alphabet}{AppConstants.Digits}");
+                    modifiedKey = Alphabet.AlphabetPermutation(modifiedKey, $"{AppConstants.Alphabet}{AppConstants.Digits}");
                     break;
                 default:
-                    throw new ArgumentException(mode.ToString());
-
+                    throw new ArgumentException($"'{nameof(mode)}' could not be determined.", nameof(mode));
             }
 
-            var chunks = key.SplitIntoChunks(mode is AlphabetMode.EX ? 6 : 5);
+            var chunks = modifiedKey.SplitIntoChunks(mode is AlphabetMode.EX ? 6 : 5);
             var square = chunks.Select(x => new string[] { x }).ToArray();
 
             return square;
