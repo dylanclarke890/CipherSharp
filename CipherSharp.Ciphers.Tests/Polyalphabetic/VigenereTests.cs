@@ -12,9 +12,10 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             // Arrange
             string text = "helloworld";
             string key = "test";
+            Vigenere vigenere = new(text, key);
 
             // Act
-            var result = Vigenere.Encode(text, key);
+            var result = vigenere.Encode();
 
             // Assert
             Assert.Equal("GDKKNVNQKC", result);
@@ -26,9 +27,9 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             // Arrange
             string text = "GDKKNVNQKC";
             string key = "test";
-
+            Vigenere vigenere = new(text, key);
             // Act
-            var result = Vigenere.Decode(text, key);
+            var result = vigenere.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -37,25 +38,13 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Vigenere.Decode(text, key));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => Vigenere.Encode(text, key));
+            Assert.Throws<ArgumentException>(() => new Vigenere(text, key));
         }
     }
 }

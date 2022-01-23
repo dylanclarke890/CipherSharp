@@ -10,11 +10,11 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
-            string text = "HELLOWORLD";
+            string message = "HELLOWORLD";
             string[] keys = new string[2] { "test", "key" };
-
+            MultiVigenere multiVigenere = new (message, keys);
             // Act
-            var result = MultiVigenere.Encode(text, keys);
+            var result = multiVigenere.Encode();
 
             // Assert
             Assert.Equal("GDKKNVNQKCGDKKNVNQKC", result);
@@ -24,38 +24,38 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "GDKKNVNQKCGDKKNVNQKC";
+            string message = "GDKKNVNQKCGDKKNVNQKC";
             string[] keys = new string[2] { "test", "key" };
-
+            MultiVigenere multiVigenere = new(message, keys);
             // Act
-            var result = MultiVigenere.Decode(text, keys);
+            var result = multiVigenere.Decode();
 
             // Assert
             Assert.Contains("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("helloworld", null)]
-        [InlineData(null, new string[2] { "test", "key" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string message = null;
+            string[] keys = new string[2] { "test", "key" };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => MultiVigenere.Decode(text, keys));
+            Assert.Throws<ArgumentException>(() => new MultiVigenere(message, keys));
         }
 
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, new string[2] { "test", "key" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string message = "helloworld";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => MultiVigenere.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new MultiVigenere(message, keys));
         }
     }
 }

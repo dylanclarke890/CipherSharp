@@ -12,69 +12,53 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// Vigenere cipher with a key equal to the product of their length but is much 
     /// easier to remember.
     /// </summary>
-    public static class MultiVigenere
+    public class MultiVigenere : BaseCipher
     {
+        public string[] Keys { get; }
+        public string Alphabet { get; }
+
+        public MultiVigenere(string message, string[] keys, string alphabet = AppConstants.Alphabet) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(alphabet))
+            {
+                throw new ArgumentException($"'{nameof(alphabet)}' cannot be null or whitespace.", nameof(alphabet));
+            }
+
+            Message = message;
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+            Alphabet = alphabet;
+        }
+
         /// <summary>
         /// Encipher some text using the Multi Vigenere cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The enciphered text.</returns>
         /// <exception cref="ArgumentException"/>
-        public static string Encode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
+        public string Encode()
         {
-            CheckInput(text, keys);
-            alphabet ??= AppConstants.Alphabet;
-            return Process(text, keys, alphabet, true);
+            return Process(true);
         }
 
         /// <summary>
         /// Decipher some text using the Multi Vigenere cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The deciphered text.</returns>
         /// <exception cref="ArgumentException"/>
-        public static string Decode(string text, string[] keys, string alphabet = AppConstants.Alphabet)
+        public string Decode()
         {
-            CheckInput(text, keys);
-            alphabet ??= AppConstants.Alphabet;
-            return Process(text, keys, alphabet, false);
+            return Process(false);
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if either
-        /// parameter is null.
+        /// Runs the cipher once for each key in keys.
         /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys is null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
-            }
-        }
-
-        /// <summary>
-        /// Runs the cipher once for each key in <paramref name="keys"/>.
-        /// </summary>
-        /// <param name="text">The text to process.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The processed text.</returns>
-        private static string Process(string text, string[] keys, string alphabet, bool encode)
+        private string Process(bool encode)
         {
             List<string> output = new();
-            foreach (var key in keys)
+            foreach (var key in Keys)
             {
-                output.Add(Process(text, key, alphabet, encode));
+                output.Add(Process(key, encode));
             }
 
             return string.Join(string.Empty, output);
@@ -84,9 +68,10 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Passes the parameters to Encode or Decode depending on <paramref name="encode"/>.
         /// </summary>
         /// <returns>The processed text.</returns>
-        private static string Process(string text, string key, string alphabet, bool encode)
+        private string Process(string key, bool encode)
         {
-            return encode ? Vigenere.Encode(text, key, alphabet) : Vigenere.Decode(text, key, alphabet);
+            Vigenere vigenere = new(Message, key, Alphabet);
+            return encode ? vigenere.Encode() : vigenere.Decode();
         }
     }
 }

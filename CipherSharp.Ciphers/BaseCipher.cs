@@ -11,7 +11,7 @@ namespace CipherSharp.Ciphers
                 throw new ArgumentException($"'{nameof(message)}' cannot be null or whitespace.", nameof(message));
             }
 
-            Message = message;
+            Message = message.ToUpper();
         }
 
         public string Message { get; set; }
