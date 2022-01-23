@@ -7,7 +7,19 @@ namespace CipherSharp.Tests.Ciphers.Other
     public class DRYADTests
     {
         [Fact]
-        public void Encode_BasicParameters_ReturnsCipherText()
+        public void CreatingInstanceWithNullMessage_ThrowsArgumentNullException()
+        {
+            // Arrange
+            string text = null;
+            int key = 0;
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentNullException>(() => new DRYAD(text, key));
+        }
+
+        [Fact]
+        public void Encode_BasicParameters_ReturnsCipherTextOfExpectedLength()
         {
             // Arrange
             string text = "213165587194201";
@@ -18,7 +30,7 @@ namespace CipherSharp.Tests.Ciphers.Other
             var result = dryad.Encode();
 
             // Assert
-            Assert.Equal(20, result.Length); // randomized each time
+            Assert.Equal(20, result.Length); // resulting text is random each time
         }
 
         [Fact]
@@ -34,33 +46,6 @@ namespace CipherSharp.Tests.Ciphers.Other
             
             // Assert
             Assert.Equal("213165587194201", result);
-        }
-
-        [Fact]
-        public void Encode_NullParameters_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            string text = null;
-            int key = 0;
-            DRYAD dryad = new(text, key);
-            // Act
-
-            // Assert
-            Assert.Throws<InvalidOperationException>(() => dryad.Encode());
-        }
-
-        [Fact]
-        public void Decode_NullParameters_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            string text = null;
-            int key = 0;
-            DRYAD dryad = new(text, key);
-
-            // Act
-
-            // Assert
-            Assert.Throws<InvalidOperationException>(() => dryad.Decode());
         }
 
         [Fact]
