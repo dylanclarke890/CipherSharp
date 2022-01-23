@@ -15,9 +15,10 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             string wheelKey = "ABCDEF";
             List<string> pins = new();
             List<List<int>> lugs = new();
+            M209 m209 = new(text, wheelKey, pins, lugs);
 
             // Act
-            var result = M209.Encode(text, wheelKey, pins, lugs);
+            var result = m209.Encode();
 
             // Assert
             Assert.Equal("SVOOLDLIOW", result);
@@ -31,9 +32,10 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             string wheelKey = "ABCDEF";
             List<string> pins = new();
             List<List<int>> lugs = new();
+            M209 m209 = new(text, wheelKey, pins, lugs);
 
             // Act
-            var result = M209.Decode(text, wheelKey, pins, lugs);
+            var result = m209.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -42,7 +44,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         [Theory]
         [InlineData("SVOOLDLIOW", null)]
         [InlineData(null, "ABCDEF")]
-        public void Encode_NullStrings_ThrowsArgumentException(string text, string wheelKey)
+        public void NewInstance_NullStrings_ThrowsArgumentException(string text, string wheelKey)
         {
             // Arrange
             List<string> pins = new();
@@ -51,11 +53,11 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => M209.Encode(text, wheelKey, pins, lugs));
+            Assert.Throws<ArgumentException>(() => new M209(text, wheelKey, pins, lugs));
         }
 
         [Fact]
-        public void Encode_NullPins_ThrowsArgumentException()
+        public void NewInstance_NullPins_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "SVOOLDLIOW";
@@ -66,11 +68,11 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => M209.Encode(text, wheelKey, pins, lugs));
+            Assert.Throws<ArgumentNullException>(() => new M209(text, wheelKey, pins, lugs));
         }
 
         [Fact]
-        public void Encode_NullLugs_ThrowsArgumentException()
+        public void NewInstance_NullLugs_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "SVOOLDLIOW";
@@ -81,52 +83,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => M209.Encode(text, wheelKey, pins, lugs));
-        }
-
-        [Theory]
-        [InlineData("SVOOLDLIOW", null)]
-        [InlineData(null, "ABCDEF")]
-        public void Decode_NullStrings_ThrowsArgumentException(string text, string wheelKey)
-        {
-            // Arrange
-            List<string> pins = new();
-            List<List<int>> lugs = new();
-
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => M209.Decode(text, wheelKey, pins, lugs));
-        }
-
-        [Fact]
-        public void Decode_NullPins_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = "SVOOLDLIOW";
-            string wheelKey = "ABCDEF";
-            List<string> pins = null;
-            List<List<int>> lugs = new();
-
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => M209.Decode(text, wheelKey, pins, lugs));
-        }
-
-        [Fact]
-        public void Decode_NullLugs_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = "SVOOLDLIOW";
-            string wheelKey = "ABCDEF";
-            List<string> pins = new();
-            List<List<int>> lugs = null;
-
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => M209.Decode(text, wheelKey, pins, lugs));
+            Assert.Throws<ArgumentNullException>(() => new M209(text, wheelKey, pins, lugs));
         }
     }
 }

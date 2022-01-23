@@ -7,16 +7,28 @@ namespace CipherSharp.Tests.Ciphers.Other
 {
     public class NihilistTests
     {
-        [Theory]
-        [InlineData("helloworld", null)]
-        [InlineData(null, new string[2] { "test", "key" })]
-        public void CreatingInstanceWithNullParameters_ThrowsArgumentNullException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKey_ThrowsArgumentNullException()
         {
             // Arrange
+            string message = "helloworld";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() => new Nihilist(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new Nihilist(message, keys));
+        }
+
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
+        {
+            // Arrange
+            string message = null;
+            string[] keys = new string[2] { "test", "key"};
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => new Nihilist(message, keys));
         }
 
         [Fact]

@@ -26,7 +26,12 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         public Alberti(string message, string key, char startPos, int turn = 0)
             : base(message)
         {
-            Key = !string.IsNullOrWhiteSpace(key) ? key : throw new ArgumentNullException(key);
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            Key = key;
             Turn = turn;
             StartPosition = char.IsLetter(startPos) ? startPos 
                 : throw new ArgumentException($"'{nameof(startPos)}' must be a letter.", nameof(startPos));

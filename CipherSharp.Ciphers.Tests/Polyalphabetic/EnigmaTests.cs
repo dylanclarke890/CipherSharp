@@ -46,7 +46,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Fact]
-        public void CreatingNewInstanceWith_NullText_ThrowsArgumentNullException()
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
             string text = null;
@@ -58,12 +58,12 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Act
             // Assert
-            Assert.Throws<ArgumentNullException>(
+            Assert.Throws<ArgumentException>(
                 () => new Enigma(text, rotorKeys, reflectorKey, positionsKey, plugs, ringKeys));
         }
 
         [Fact]
-        public void CreatingNewInstanceWith_NullRotorKeys_ThrowsArgumentNullException()
+        public void NewInstance_NullRotorKeys_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -80,7 +80,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Fact]
-        public void CreatingNewInstanceWith_NullReflectorKey_ThrowsArgumentException()
+        public void NewInstance_NullReflectorKey_ThrowsArgumentException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -97,7 +97,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Fact]
-        public void CreatingNewInstanceWith_NullPositionKeys_ThrowsArgumentNullException()
+        public void NewInstance_NullPositionKeys_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -114,7 +114,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Fact]
-        public void CreatingNewInstanceWith_NullPlugs_ThrowsArgumentNullException()
+        public void NewInstance_NullPlugs_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";
@@ -131,7 +131,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Fact]
-        public void CreatingNewInstanceWith_NullRingKeys_ThrowsArgumentNullException()
+        public void NewInstance_NullRingKeys_ThrowsArgumentNullException()
         {
             // Arrange
             string text = "FFPMNIQOQC";

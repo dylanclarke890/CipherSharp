@@ -10,74 +10,83 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// Compact and portable, it used a series of rotors to encode and decode secret military messages. 
     /// The US Army widely used the machine during World War II.
     /// </summary>
-    public static class M209
+    public class M209 : BaseCipher
     {
-        /// <summary>
-        /// Encipher some text using the M209 cipher.
-        /// </summary>
-        /// <param name="text">The text to encipher.</param>
+        private readonly List<string> _wheels = new()
+        {
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+            "ABCDEFGHIJKLMNOPQRSTUVXYZ",
+            "ABCDEFGHIJKLMNOPQRSTUVX",
+            "ABCDEFGHIJKLMNOPQRSTU",
+            "ABCDEFGHIJKLMNOPQRS",
+            "ABCDEFGHIJKLMNOPQ"
+        };
+
+        public string WheelKey { get; }
+        public List<string> Pins { get; }
+        public List<List<int>> Lugs { get; }
+
+        /// <param name="message">The text to decipher.</param>
         /// <param name="wheelKey">The key to use for the wheel.</param>
         /// <param name="pins">An array of pins to use.</param>
         /// <param name="lugs">An array of array of lug values to use.</param>
-        /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string wheelKey, List<string> pins, List<List<int>> lugs)
+        public M209(string message, string wheelKey, List<string> pins, List<List<int>> lugs) : base(message)
         {
-            return Process(text, wheelKey, pins, lugs);
+            if (string.IsNullOrEmpty(wheelKey))
+            {
+                throw new ArgumentException($"'{nameof(wheelKey)}' cannot be null or empty.", nameof(wheelKey));
+            }
+            Pins = pins ?? throw new ArgumentNullException(nameof(pins));
+            Lugs = lugs ?? throw new ArgumentNullException(nameof(lugs));
+            WheelKey = wheelKey;
+        }
+
+        /// <summary>
+        /// Encipher some text using the M209 cipher.
+        /// </summary>
+        /// <returns>The enciphered text.</returns>
+        public string Encode()
+        {
+            return Process();
         }
 
         /// <summary>
         /// Decipher some text using the M209 cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="wheelKey">The key to use for the wheel.</param>
-        /// <param name="pins">An array of pins to use.</param>
-        /// <param name="lugs">An array of array of lug values to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string wheelKey, List<string> pins, List<List<int>> lugs)
+        public string Decode()
         {
-            return Process(text, wheelKey, pins, lugs);
+            return Process();
         }
 
         /// <summary>
         /// Processes the text.
         /// </summary>
         /// <returns>The processed text.</returns>
-        private static string Process(string text, string wheelKey, List<string> pins, List<List<int>> lugs)
+        private string Process()
         {
-            CheckInput(text, wheelKey, pins, lugs);
-
-            List<string> wheels = new()
-            {
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                "ABCDEFGHIJKLMNOPQRSTUVXYZ",
-                "ABCDEFGHIJKLMNOPQRSTUVX",
-                "ABCDEFGHIJKLMNOPQRSTU",
-                "ABCDEFGHIJKLMNOPQRS",
-                "ABCDEFGHIJKLMNOPQ"
-            };
-
             for (int i = 0; i < 6; i++)
             {
-                if (!wheels[i].Contains(wheelKey[i]))
+                if (!_wheels[i].Contains(WheelKey[i]))
                 {
-                    throw new ArgumentException($"Wheel {i + 1} can only have letters in {wheels[i]}");
+                    throw new ArgumentException($"Wheel {i + 1} can only have letters in {_wheels[i]}");
                 }
             }
 
-            var textAsNumbers = text.ToNumber();
-            var translatedPins = TranslatePins(pins);
-            lugs = LugPosition(lugs);
+            var textAsNumbers = Message.ToNumber();
+            var translatedPins = TranslatePins(Pins);
+            var updatedLugs = LugPosition(Lugs);
             var sh = new List<int>() { 15, 14, 13, 12, 11, 10 };
 
             // For each wheel add up the shift of the wheel and the position of the key
             // letter that is on it.
             var activePins = new List<int>() { 0, 0, 0, 0, 0, 0 };
 
-            for (int i = 0; i < wheels.Count; i++)
+            for (int i = 0; i < _wheels.Count; i++)
             {
-                activePins[i] = sh[i] + wheels[i].IndexOf(wheelKey[i]);
+                activePins[i] = sh[i] + _wheels[i].IndexOf(WheelKey[i]);
             }
-            var K = Keystream(text.Length, lugs, wheels, translatedPins, activePins);
+            var K = Keystream(Message.Length, updatedLugs, _wheels, translatedPins, activePins);
 
             List<int> output = new();
 
@@ -87,40 +96,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 output.Add(s);
             }
 
-            return string.Join(string.Empty, output.ToLetter());
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if any of the parameters
-        /// are null.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string wheelKey, List<string> pins, List<List<int>> lugs)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(wheelKey))
-            {
-                throw new ArgumentException($"'{nameof(wheelKey)}' cannot be null or whitespace.", nameof(wheelKey));
-            }
-
-            if (pins is null)
-            {
-                throw new ArgumentException($"'{nameof(pins)}' cannot be null.", nameof(pins));
-            }
-
-            if (lugs is null)
-            {
-                throw new ArgumentException($"'{nameof(lugs)}' cannot be null.", nameof(lugs));
-            }
-
-            if (wheelKey.Length != 6)
-            {
-                throw new ArgumentException("key1 must be exactly 6 letters.");
-            }
+            Message = string.Join(string.Empty, output.ToLetter());
+            return Message;
         }
 
         /// <summary>

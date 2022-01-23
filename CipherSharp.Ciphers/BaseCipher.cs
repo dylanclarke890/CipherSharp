@@ -6,7 +6,12 @@ namespace CipherSharp.Ciphers
     {
         public BaseCipher(string message)
         {
-            Message = !string.IsNullOrWhiteSpace(message) ? message : throw new ArgumentNullException(nameof(message));
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                throw new ArgumentException($"'{nameof(message)}' cannot be null or whitespace.", nameof(message));
+            }
+
+            Message = message;
         }
 
         public string Message { get; set; }

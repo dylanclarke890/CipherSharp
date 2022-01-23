@@ -54,16 +54,28 @@ namespace CipherSharp.Tests.Ciphers.Other
             Assert.Equal(144, result.Length);
         }
 
-        [Theory]
-        [InlineData("helloworld", null)]
-        [InlineData(null, new int[1] { 1 })]
-        public void CreatingInstanceWithNullParameters_ThrowsArgumentNullException(string text, int[] key)
+        [Fact]
+        public void NewInstance_NullKey_ThrowsArgumentNullException()
         {
             // Arrange
+            string message = "helloworld";
+            int[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() => new TurningGrille(text, key));
+            Assert.Throws<ArgumentNullException>(() => new TurningGrille(message, keys));
+        }
+
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
+        {
+            // Arrange
+            string message = null;
+            int[] keys = new int[2] { 1, 2 };
+            // Act
+
+            // Assert
+            Assert.Throws<ArgumentException>(() => new TurningGrille(message, keys));
         }
     }
 }

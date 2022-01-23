@@ -58,7 +58,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void CreatingNewInstanceWithNullParameters_ThrowsArgumentNullException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             char letter = 'A';
@@ -66,14 +66,14 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             // Act
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() => new Alberti(text, key, letter, turn));
+            Assert.Throws<ArgumentException>(() => new Alberti(text, key, letter, turn));
         }
 
         [Theory]
         [InlineData('4')]
         [InlineData('!')]
         [InlineData('\0')]
-        public void CreatingNewInstanceWithNonLetterStartingPos_ThrowsArgumentException(char letter)
+        public void NewInstance_NonLetterStartingPos_ThrowsArgumentException(char letter)
         {
             // Arrange
             string text = "OLUUX5X0UK";

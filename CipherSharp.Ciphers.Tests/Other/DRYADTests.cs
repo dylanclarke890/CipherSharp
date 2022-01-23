@@ -7,7 +7,7 @@ namespace CipherSharp.Tests.Ciphers.Other
     public class DRYADTests
     {
         [Fact]
-        public void CreatingInstanceWithNullMessage_ThrowsArgumentNullException()
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
             string text = null;
@@ -15,7 +15,7 @@ namespace CipherSharp.Tests.Ciphers.Other
             // Act
 
             // Assert
-            Assert.Throws<ArgumentNullException>(() => new DRYAD(text, key));
+            Assert.Throws<ArgumentException>(() => new DRYAD(text, key));
         }
 
         [Fact]
