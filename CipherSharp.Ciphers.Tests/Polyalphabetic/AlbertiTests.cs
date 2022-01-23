@@ -15,9 +15,10 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             char startingLetter = 'H';
             int[] range = new int[2] { 1, 2 };
             int turn = 0;
+            Alberti alberti = new(text, key, startingLetter, turn);
 
             // Act
-            var result = Alberti.Encode(text, key, startingLetter, range, turn);
+            var result = alberti.Encode(range);
 
             // Assert
             Assert.Equal("OLUUX5X0UK", result);
@@ -31,41 +32,56 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             string key = "TEST";
             char startingLetter = 'H';
             int turn = 0;
-
+            Alberti alberti = new(text, key, startingLetter, turn);
             // Act
-            var result = Alberti.Decode(text, key, startingLetter, turn);
+            var result = alberti.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("helloworld", null, 'A', new int[1] { 1 })]
-        [InlineData(null, "test", 'A', new int[1] { 1 })]
-        [InlineData("helloworld", "test", '\0', new int[1] { 1 })]
-        [InlineData("helloworld", "test", 'A', null)]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key, char letter, int[] range)
+        [Fact]
+        public void Encode_NullRange_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "OLUUX5X0UK";
+            string key = "TEST";
+            char startingLetter = 'H';
             int turn = 0;
+            Alberti alberti = new(text, key, startingLetter, turn);
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Alberti.Encode(text, key, letter, range, turn));
+            Assert.Throws<ArgumentNullException>(() => alberti.Encode(null));
         }
 
         [Theory]
-        [InlineData("helloworld", null, 'A')]
-        [InlineData(null, "test", 'A')]
-        [InlineData("helloworld", "test", '\0')]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key, char letter)
+        [InlineData("helloworld", null)]
+        [InlineData(null, "test")]
+        public void CreatingNewInstanceWithNullParameters_ThrowsArgumentNullException(string text, string key)
         {
             // Arrange
+            char letter = 'A';
             int turn = 0;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Alberti.Decode(text, key, letter, turn));
+            Assert.Throws<ArgumentNullException>(() => new Alberti(text, key, letter, turn));
+        }
+
+        [Theory]
+        [InlineData('4')]
+        [InlineData('!')]
+        [InlineData('\0')]
+        public void CreatingNewInstanceWithNonLetterStartingPos_ThrowsArgumentException(char letter)
+        {
+            // Arrange
+            string text = "OLUUX5X0UK";
+            string key = "TEST";
+            int turn = 0;
+            // Act
+            // Assert
+            Assert.Throws<ArgumentException>(() => new Alberti(text, key, letter, turn));
         }
     }
 }

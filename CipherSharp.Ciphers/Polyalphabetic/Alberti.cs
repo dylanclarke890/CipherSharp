@@ -16,77 +16,59 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// rotated to the start position. An additional argument for the turning rate can
     /// also be provided which determines how much to turn after each letter. By
     /// default the turning rate is zero. The inner ring only turns when a number is
-    /// encrypted.
+    /// encrypted or a gap is selected.
     /// </summary>
-    public static class Alberti
+    public class Alberti : BaseCipher
     {
+        public string Key { get;}
+        public char StartPosition { get;}
+        public int Turn { get; }
+        public Alberti(string message, string key, char startPos, int turn = 0)
+            : base(message)
+        {
+            Key = !string.IsNullOrWhiteSpace(key) ? key : throw new ArgumentNullException(key);
+            Turn = turn;
+            StartPosition = char.IsLetter(startPos) ? startPos 
+                : throw new ArgumentException($"'{nameof(startPos)}' must be a letter.", nameof(startPos));
+        }
+
         /// <summary>
         /// Encipher some text using the Alberti cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="startingLetter">The letter to start rotating from.</param>
         /// <param name="range">Random gap to make encryption more secure.</param>
-        /// <param name="turn">Will rotate the wheel by this amount each time a letter is enciphered.</param>
         /// <returns>The enciphered text.</returns>
         /// <exception cref="ArgumentException"/>
+        /// <exception cref="ArgumentNullException"/>
         /// <exception cref="InvalidOperationException"/>
-        public static string Encode(string text, string key, char startingLetter, int[] range, int turn = 0)
+        public string Encode(int[] range)
         {
-            CheckInput(text, key, startingLetter);
             if (range == null)
             {
-                throw new ArgumentException($"'{nameof(range)}' cannot be null.", nameof(range));
+                throw new ArgumentNullException(nameof(range));
             }
+            CheckPlainTextForDigit();
 
-            // The outer ring is in order
-            string outer = AppConstants.AlphaNumeric;
-            // Determine the inner ring
-            string inner = (key == "") ? outer : Alphabet.AlphabetPermutation(key, outer);
+            string outerRing = GetOuterRing();
+            string innerRing = GetInnerRing(outerRing);
 
-            if (!outer.Contains(startingLetter))
-            {
-                throw new InvalidOperationException("Start position must exist in the inner ring.");
-            }
-
-            // Turn the inner ring until the correct symbol is in the first position
-            while (inner[0] != startingLetter)
-            {
-                inner = RotateNTimes(inner, 1);
-            }
-
-            // Raise an error if there are digits in the plaintext since they will
-            // cause decoding errors.
-            string invalid = AppConstants.Digits;
-            
-            foreach (var num in invalid)
-            {
-                if (text.Any(ch => ch == num))
-                {
-                    throw new ArgumentException("Cannot include numbers in the plaintext.");
-                }
-            }
-
-            // Choose where the first gap is
             Random random = new();
             int gap = random.Next(Math.Abs(range[0] - range[1]));
             List<char> output = new();
-            
-            foreach (var ch in text)
+
+            foreach (var ch in Message) // Encrypt one by one and count down to gap
             {
-                // Encrypt one by one and count down to gap
-                output.Add(inner[outer.IndexOf(ch)]);
+                output.Add(innerRing[outerRing.IndexOf(ch)]);
                 gap--;
-                if (gap == 0)
+                if (gap == 0) // encrypt 
                 {
                     // If we reached the gap encrypt a number, turn the wheel, and
                     // choose the size of the next gap.
                     var randomDigit = AppConstants.Digits[random.Next(AppConstants.Digits.Length)];
-                    output.Add(outer[inner.IndexOf(randomDigit)]);
-                    inner = RotateNTimes(inner, int.Parse(randomDigit.ToString()));
+                    output.Add(outerRing[innerRing.IndexOf(randomDigit)]);
+                    innerRing = RotateNTimes(innerRing, int.Parse(randomDigit.ToString()));
                     gap = random.Next(Math.Abs(range[0] - range[1]));
                 }
-                inner = RotateNTimes(inner, turn);
+                innerRing = RotateNTimes(innerRing, Turn);
             }
 
             return string.Join(string.Empty, output);
@@ -95,84 +77,74 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <summary>
         /// Decipher some text using the Alberti cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="startingLetter">The letter to start rotating from.</param>
-        /// <param name="turn">Will rotate the wheel by this amount each time a letter is deciphered.</param>
         /// <returns>The deciphered text.</returns>
-        /// <exception cref="ArgumentException"/>
         /// <exception cref="InvalidOperationException"/>
-        public static string Decode(string text, string key, char startingLetter, int turn = 0)
+        public string Decode()
         {
-            CheckInput(text, key, startingLetter);
-
-            // The outer ring is in order
-            string outer = AppConstants.AlphaNumeric;
-            // Determine the inner ring
-            string inner = (key == "") ? outer : Alphabet.AlphabetPermutation(key, outer);
-
-            if (!outer.Contains(startingLetter))
-            {
-                throw new InvalidOperationException("Start position must exist in the inner ring.");
-            }
-
-            // Turn the inner ring until the correct symbol is in the first position
-            while (inner[0] != startingLetter)
-            {
-                inner = RotateNTimes(inner, 1);
-            }
+            string outerRing = GetOuterRing();
+            string innerRing = GetInnerRing(outerRing);
 
             List<char> output = new();
-            foreach (var ch in text)
+            foreach (var ch in Message)
             {
-                var dec = outer[inner.IndexOf(ch)];
-                if (AppConstants.Digits.Contains(dec))
+                var gapOrLetter = outerRing[innerRing.IndexOf(ch)];
+                if (AppConstants.Digits.Contains(gapOrLetter))
                 {
-                    inner = RotateNTimes(inner, int.Parse(dec.ToString()));
+                    innerRing = RotateNTimes(innerRing, int.Parse(gapOrLetter.ToString()));
                 }
                 else
                 {
-                    output.Add(dec);
+                    output.Add(gapOrLetter);
                 }
-                inner = RotateNTimes(inner, turn);
+                innerRing = RotateNTimes(innerRing, Turn);
             }
 
             return string.Join(string.Empty, output);
         }
 
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="key"/> is null or empty, or <paramref name="startingLetter"/>
-        /// is equal to <c>default(char)</c>.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string key, char startingLetter)
+        private void CheckPlainTextForDigit()
         {
-            if (string.IsNullOrWhiteSpace(text))
+            foreach (var num in AppConstants.Digits)
             {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+                if (Message.Any(ch => ch == num)) // numbers in plaintext will cause decoding errors.
+                {
+                    throw new ArgumentException("Cannot include numbers in the plaintext.");
+                }
+            }
+        }
+
+        private string GetOuterRing()
+        {
+            string outerRing = AppConstants.AlphaNumeric;
+            if (!outerRing.Contains(StartPosition))
+            {
+                throw new InvalidOperationException("Start position must exist in the inner ring.");
             }
 
-            if (string.IsNullOrWhiteSpace(key))
+            return outerRing;
+        }
+
+        private string GetInnerRing(string outerRing)
+        {
+            string innerRing = Alphabet.AlphabetPermutation(Key, outerRing);
+            // Turn the inner ring until the correct symbol is in the first position
+            while (innerRing[0] != StartPosition)
             {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+                innerRing = RotateNTimes(innerRing, 1);
             }
 
-            if (default(char) == startingLetter)
-            {
-                throw new ArgumentException($"'{nameof(startingLetter)}' must be provided.", nameof(startingLetter));
-            }
+            return innerRing;
         }
 
         private static string RotateNTimes(string key, int n)
         {
-            var x = key[..];
+            var temp = key[..];
 
             for (int i = 0; i < n; i++)
             {
-                x = x[1..] + x[0];
+                temp = temp[1..] + temp[0];
             }
-            return x;
+            return temp;
         }
     }
 }
