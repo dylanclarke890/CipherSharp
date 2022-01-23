@@ -14,9 +14,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string matrixKey = "test";
             int[] columnarKeys = new int[2] { 0, 2 };
             bool printKey = false;
-
+            ADFGVX aDFGVX = new(text, matrixKey, columnarKeys);
             // Act
-            var result = ADFGVX.Encode(text, matrixKey, columnarKeys, printKey);
+            var result = aDFGVX.Encode(printKey);
 
             // Assert
             Assert.Equal("DMNNLRF2ZD", result);
@@ -30,9 +30,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string matrixKey = "test";
             int[] columnarKeys = new int[2] { 0, 2 };
             bool printKey = false;
-
+            ADFGVX aDFGVX = new(text, matrixKey, columnarKeys);
             // Act
-            var result = ADFGVX.Decode(text, matrixKey, columnarKeys, printKey);
+            var result = aDFGVX.Decode(printKey);
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -45,12 +45,10 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string text = null;
             string matrixKey = null;
             int[] columnarKeys = null;
-            bool printKey = false;
 
             // Act - done in assert
-
             // Assert
-            Assert.Throws<ArgumentException>(() => ADFGVX.Encode(text, matrixKey, columnarKeys, printKey));
+            Assert.Throws<ArgumentException>(() => new ADFGVX(text, matrixKey, columnarKeys));
         }
 
         [Fact]
@@ -60,12 +58,10 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string text = null;
             string matrixKey = null;
             int[] columnarKeys = null;
-            bool printKey = false;
 
             // Act - done in assert
-
             // Assert
-            Assert.Throws<ArgumentException>(() => ADFGVX.Decode(text, matrixKey, columnarKeys, printKey));
+            Assert.Throws<ArgumentException>(() => new ADFGVX(text, matrixKey, columnarKeys));
         }
     }
 }

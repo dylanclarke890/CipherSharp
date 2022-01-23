@@ -14,56 +14,58 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// transposition cipher and is achieved by combining a Polybius Square
     /// with a Columnar transposition.
     /// </summary>
-    public static class ADFGVX
+    public class ADFGVX : BaseCipher
     {
+        public string MatrixKey { get; }
+        public int[] ColumnarKeys { get; }
+
+        /// <param name="matrixKey">A string to use to generate the Polybius Square.</param>
+        /// <param name="columnarKeys">An array of ints to use for the Columnar transposition.</param>
+        public ADFGVX(string message, string matrixKey, int[] columnarKeys) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(matrixKey))
+            {
+                throw new ArgumentException($"'{nameof(matrixKey)}' cannot be null or whitespace.", nameof(matrixKey));
+            }
+
+            MatrixKey = matrixKey;
+            ColumnarKeys = columnarKeys ?? throw new ArgumentNullException(nameof(columnarKeys));
+        }
+
         /// <summary>
         /// Encipher some text using the ADFGVX cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="matrixKey">The key to use for the matrix.</param>
-        /// <param name="columnarKeys">An array of ints to use for the columnar cipher.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string matrixKey, int[] columnarKeys, bool displaySquare = true)
+        public string Encode(bool displaySquare = true)
         {
-            return Process(text, matrixKey, columnarKeys, displaySquare, true);
+            return Process(displaySquare, true);
         }
 
         /// <summary>
         /// Decipher some text using the ADFGVX cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="matrixKey">The key to use for the matrix.</param>
-        /// <param name="columnarKeys">An array of ints to use for the columnar cipher.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string matrixKey, int[] columnarKeys, bool displaySquare = false)
+        public string Decode(bool displaySquare = false)
         {
-            return Process(text, matrixKey, columnarKeys, displaySquare, false);
+            return Process(displaySquare, false);
         }
 
         /// <summary>
         /// Processes text, encoding if <paramref name="encode"/> is <c>True</c>,
         /// decoding if <c>False</c>.
         /// </summary>
-        /// <param name="text">The text to process.</param>
-        /// <param name="matrixKey">A string to use to generate the Polybius Square.</param>
-        /// <param name="columnarKeys">An array of ints to use for the Columnar transposition.</param>
-        /// <param name="displaySquare">If <c>True</c>, will print the generated square to console.</param>
-        /// <param name="encode">If <c>True</c>, encodes the text, decode if <c>False</c>.</param>
         /// <returns>The processed text.</returns>
-        private static string Process(string text, string matrixKey, int[] columnarKeys, bool displaySquare, bool encode)
+        private string Process(bool displaySquare, bool encode)
         {
-            CheckInput(text, matrixKey, columnarKeys);
-
-            text = text.ToUpper();
-            while (text.Length < columnarKeys.Length)
+            while (Message.Length < ColumnarKeys.Length)
             {
-                text += "X";
+                Message += "X";
             }
 
-            string alphabet = Alphabet.AlphabetPermutation(matrixKey, AppConstants.AlphaNumeric);
-            var square = Matrix.Create(matrixKey, AlphabetMode.EX);
+            string alphabet = Alphabet.AlphabetPermutation(MatrixKey, AppConstants.AlphaNumeric);
+            var square = Matrix.Create(MatrixKey, AlphabetMode.EX);
 
             if (displaySquare)
             {
@@ -83,12 +85,12 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             }
 
             string processed = "";
-            foreach (var ltr in text)
+            foreach (var ltr in Message)
             {
                 processed += d1[ltr];
             }
 
-            processed = encode ? Columnar.Encode(processed, columnarKeys) : Columnar.Decode(processed, columnarKeys);
+            processed = encode ? Columnar.Encode(processed, ColumnarKeys) : Columnar.Decode(processed, ColumnarKeys);
 
             var codeGroups = processed.SplitIntoChunks(2);
 
@@ -100,35 +102,6 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Checks <paramref name="text"/> and <paramref name="matrixKey"/> to ensure they are 
-        /// not null or whitespace, and ensures that <paramref name="columnarKeys"/> is not null 
-        /// and has at least two items.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string matrixKey, int[] columnarKeys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(matrixKey))
-            {
-                throw new ArgumentException($"'{nameof(matrixKey)}' cannot be null or whitespace.", nameof(matrixKey));
-            }
-
-            if (columnarKeys is null)
-            {
-                throw new ArgumentNullException(nameof(columnarKeys));
-            }
-
-            if (columnarKeys.Length < 2)
-            {
-                throw new ArgumentException($"'{nameof(columnarKeys)}' needs to have at least two items.", nameof(columnarKeys));
-            }
         }
     }
 }
