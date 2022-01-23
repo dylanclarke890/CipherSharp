@@ -11,9 +11,9 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         {
             // Arrange
             string text = "helloworld";
-
+            Trithemius trithemius = new(text);
             // Act
-            var result = Trithemius.Encode(text);
+            var result = trithemius.Encode();
 
             // Assert
             Assert.Equal("HFNOSBUYTM", result);
@@ -24,34 +24,23 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         {
             // Arrange
             string text = "HFNOSBUYTM";
-
+            Trithemius trithemius = new(text);
             // Act
-            var result = Trithemius.Decode(text);
+            var result = trithemius.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
         [Fact]
-        public void Encode_NullText_Throws_ArgumentException()
+        public void NewInstance_NullText_ThrowsArgumentException()
         {
             // Arrange
             string text = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Trithemius.Encode(text));
-        }
-
-        [Fact]
-        public void Decode_NullText_Throws_ArgumentException()
-        {
-            // Arrange
-            string text = null;
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => Trithemius.Decode(text));
+            Assert.Throws<ArgumentException>(() => new Trithemius(text));
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CipherSharp.Utility.Extensions;
 using CipherSharp.Utility.Helpers;
@@ -11,41 +10,37 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// predecessor to the Vigenere cipher. Each letter is shifted by one more than
     /// the previous letter.
     /// </summary>
-    public static class Trithemius
+    public class Trithemius : BaseCipher
     {
         private static readonly int AlphabetLength = 26;
+
+        public Trithemius(string message) : base(message)
+        {
+        }
 
         /// <summary>
         /// Encipher some text using the Trithemius cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text)
+        public string Encode()
         {
-            return Process(text, true);
+            return Process(true);
         }
 
         /// <summary>
         /// Decipher some text using the Trithemius cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text)
+        public string Decode()
         {
-            return Process(text, false);
+            return Process(false);
         }
 
-        private static string Process(string text, bool encode)
+        private string Process(bool encode)
         {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            text = text.ToUpper();
             var indices = Enumerable.Range(0, AlphabetLength)
-                .Pad(text.Length);
-            var nums = text.ToNumber();
+                .Pad(Message.Length);
+            var nums = Message.ToNumber();
 
             List<int> output = new();
             if (encode)
@@ -63,7 +58,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 }
             }
 
-            return string.Join(string.Empty, output.ToLetter());
+            Message = string.Join(string.Empty, output.ToLetter());
+            return Message;
         }
     }
 }

@@ -8,38 +8,47 @@ using System.Linq;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
-
     /// <summary>
     /// The VIC cipher is regarded as the most complex modification of the Nihilist cipher family.
     /// It is considered to be one of the strongest ciphers, which can be used manually without computers. 
     /// By the time it was disclosed as a result of betrayal, American counterintelligence hadn't managed
     /// to break the cipher.
     /// </summary>
-    public static class VIC
+    public class VIC : BaseCipher
     {
+        public string[] Keys { get; }
+        public string Phrase { get; }
+        public int TransKey { get; }
+
+        public VIC(string message, string[] keys, string phrase, int transKey) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(phrase))
+            {
+                throw new ArgumentException($"'{nameof(phrase)}' cannot be null or whitespace.", nameof(phrase));
+            }
+
+            Message = message;
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+            Phrase = phrase;
+            TransKey = transKey;
+        }
+
         /// <summary>
         /// Encipher some text using the VIC cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="keys">The key to use.</param>
-        /// <param name="phrase">The phrase to use.</param>
-        /// <param name="transKey">The key to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string[] keys, string phrase, int transKey)
+        public string Encode()
         {
-            CheckInput(text, keys, phrase);
-
             // create keystream
-
-            var kstr = VICKeyStream(keys, phrase);
+            var kstr = VICKeyStream();
             var board = VICBoard(kstr.GetRange(50, kstr.Count - 50).ToList());
 
-            var (simpleK, disruptedK) = VICTransKeys(kstr, transKey);
+            var (simpleK, disruptedK) = VICTransKeys(kstr);
             var alphabet = AppConstants.Alphabet + "./";
 
             var (boardString, boardKey) = board;
 
-            var T = StraddleCheckerboard.Encode(text, boardString, boardKey.ToArray(), alphabet);
+            var T = StraddleCheckerboard.Encode(Message, boardString, boardKey.ToArray(), alphabet);
             T = Columnar.Encode(T, simpleK.ToArray());
             T = Disrupted.Encode(T, disruptedK.ToArray());
 
@@ -49,59 +58,24 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <summary>
         /// Decipher some text using the VIC cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="keys">The key to use.</param>
-        /// <param name="phrase">The phrase to use.</param>
-        /// <param name="transKey">The key to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string[] keys, string phrase, int transKey)
+        public string Decode()
         {
-            CheckInput(text, keys, phrase);
-
             // create keystream
 
-            var kstr = VICKeyStream(keys, phrase);
+            var kstr = VICKeyStream();
             var board = VICBoard(kstr.GetRange(50, kstr.Count - 50).ToList());
 
-            var (simpleK, disruptedK) = VICTransKeys(kstr, transKey);
+            var (simpleK, disruptedK) = VICTransKeys(kstr);
             var alphabet = AppConstants.Alphabet + "./";
 
             var (boardString, boardKey) = board;
 
-            var T = Disrupted.Decode(text, disruptedK.ToArray());
+            var T = Disrupted.Decode(Message, disruptedK.ToArray());
             T = Columnar.Decode(T, simpleK.ToArray());
             T = StraddleCheckerboard.Decode(T, boardString, boardKey.ToArray(), alphabet);
 
             return T;
-        }
-
-        private static void CheckInput(string text, string[] keys, string phrase)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys is null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null.", nameof(keys));
-            }
-
-            if (string.IsNullOrWhiteSpace(phrase))
-            {
-                throw new ArgumentException($"'{nameof(phrase)}' cannot be null or whitespace.", nameof(phrase));
-            }
-
-            if (phrase.Length != 20)
-            {
-                throw new ArgumentException("Needs a phrase exactly 20 letters long");
-            }
-        }
-
-        private static IEnumerable<int> VICRank(string[] keys)
-        {
-            var rank = keys.UniqueRank();
-            return rank.Select(ke => (ke + 1) % 10);
         }
 
         private static void ChainAddition(List<int> arr, int n)
@@ -136,7 +110,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return (stringKey, arrayKey);
         }
 
-        private static (List<int>, List<int>) VICTransKeys(List<int> keyStream, int num)
+        private (List<int>, List<int>) VICTransKeys(List<int> keyStream)
         {
             // Turn the first ten outputs into a unique list of integers
             var transKey = keyStream.GetRange(0, 10).ToArray().UniqueRank();
@@ -144,7 +118,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             keyStream.RemoveRange(0, 10);
 
             var rows = keyStream.Split(10);
-            var transLens = new List<int>() { num + keyStream[^2], num + keyStream[^1] };
+            var transLens = new List<int>() { TransKey + keyStream[^2], TransKey + keyStream[^1] };
             List<int> output = new();
             for (int col = 0; col < 10; col++)
             {
@@ -160,16 +134,16 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return (output.GetRange(0, transLens[0]), output.GetRange(transLens[0], output.Count - transLens[0]));
         }
 
-        private static List<int> VICKeyStream(string[] keys, string phrase)
+        private List<int> VICKeyStream()
         {
-            var agentIdentifier = keys[0].Select(i => int.Parse(i.ToString())).ToList();
-            var randomNumber = keys[1].Select(i => int.Parse(i.ToString())).ToList();
+            var agentIdentifier = Keys[0].Select(i => int.Parse(i.ToString())).ToList();
+            var randomNumber = Keys[1].Select(i => int.Parse(i.ToString())).ToList();
 
             var kstr = SubtractLists(agentIdentifier, randomNumber);
             ChainAddition(kstr, 5);
 
-            var n1 = phrase[..10].ToArray().UniqueRank();
-            var n2 = phrase[10..].ToArray().UniqueRank();
+            var n1 = Phrase[..10].ToArray().UniqueRank();
+            var n2 = Phrase[10..].ToArray().UniqueRank();
 
             kstr = AddLists(n1.ToList(), kstr);
             var nums = AppConstants.Digits.Select(i => int.Parse(i.ToString())).ToList();

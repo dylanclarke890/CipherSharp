@@ -14,9 +14,9 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             string[] keys = new string[2] { "123456", "123456" };
             string phrase = "ABCDEFGHIJKLMNOPQRST";
             int transKey = 5;
-
+            VIC vic = new(text, keys, phrase, transKey);
             // Act
-            var result = VIC.Encode(text, keys, phrase, transKey);
+            var result = vic.Encode();
 
             // Assert
             Assert.Equal("3873311043344384", result);
@@ -30,40 +30,40 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             string[] keys = new string[2] { "123456", "123456" };
             string phrase = "ABCDEFGHIJKLMNOPQRST";
             int transKey = 5;
-
+            VIC vic = new(text, keys, phrase, transKey);
             // Act
-            var result = VIC.Decode(text, keys, phrase, transKey);
+            var result = vic.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
         [Theory]
-        [InlineData(null, new string[1] { "test" }, "ABCDEFGHIJKLMNOPQRST")]
-        [InlineData("3873311043344384", null, "ABCDEFGHIJKLMNOPQRST")]
-        [InlineData("3873311043344384", new string[1] { "test" }, null)]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys, string phrase)
+        [InlineData(null, "ABCDEFGHIJKLMNOPQRST")]
+        [InlineData("3873311043344384", null)]
+        public void NewInstance_NullStrings_ThrowsArgumentException(string text, string phrase)
         {
             // Arrange
             int transKey = 5;
+            string[] keys = { "test", "key" };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => VIC.Encode(text, keys, phrase, transKey));
+            Assert.Throws<ArgumentException>(() => new VIC(text, keys, phrase, transKey));
         }
 
-        [Theory]
-        [InlineData(null, new string[1] { "test" }, "ABCDEFGHIJKLMNOPQRST")]
-        [InlineData("3873311043344384", null, "ABCDEFGHIJKLMNOPQRST")]
-        [InlineData("3873311043344384", new string[1] { "test" }, null)]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys, string phrase)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "3873311043344384";
+            string[] keys = null;
+            string phrase = "ABCDEFGHIJKLMNOPQRST";
             int transKey = 5;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => VIC.Decode(text, keys, phrase, transKey));
+            Assert.Throws<ArgumentNullException>(() => new VIC(text, keys, phrase, transKey));
         }
     }
 }
