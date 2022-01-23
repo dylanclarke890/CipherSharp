@@ -62,7 +62,8 @@ namespace CipherSharp.Ciphers.Other
                 output.Add(" ");
             }
 
-            return string.Join(string.Empty, output)[..^1]; // removes trailing whitespace
+            Message = string.Join(string.Empty, output)[..^1]; // removes trailing whitespace
+            return Message; 
         }
 
         /// <summary>
@@ -96,7 +97,8 @@ namespace CipherSharp.Ciphers.Other
                 }
             }
 
-            return string.Join(string.Empty, output);
+            Message = string.Join(string.Empty, output);
+            return Message;
         }
 
         /// <summary>

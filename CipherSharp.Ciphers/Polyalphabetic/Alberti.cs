@@ -71,7 +71,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            return string.Join(string.Empty, output);
+            Message = string.Join(string.Empty, output);
+            return Message;
         }
 
         /// <summary>
@@ -99,7 +100,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            return string.Join(string.Empty, output);
+            Message = string.Join(string.Empty, output);
+            return Message;
         }
 
         private void CheckPlainTextForDigit()

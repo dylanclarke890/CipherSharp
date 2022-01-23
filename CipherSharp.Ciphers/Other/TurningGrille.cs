@@ -60,7 +60,8 @@ namespace CipherSharp.Ciphers.Other
                 output.Append(string.Join(string.Empty, row));
             }
 
-            return output.ToString();
+            Message = output.ToString();
+            return Message;
         }
 
         /// <summary>
@@ -83,7 +84,8 @@ namespace CipherSharp.Ciphers.Other
             StringBuilder output = new();
             ReadThroughGrille(grille, groups, output);
 
-            return output.ToString();
+            Message = output.ToString();
+            return Message;
         }
 
         /// <summary>
