@@ -8,25 +8,27 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Chaocipher is a clever mechanical cipher that operates by creating a
     /// permutation of the alphabet rather than just shifting it.
     /// </summary>
-    public static class Chaocipher
+    public class Chaocipher : BaseCipher
     {
+        public string[] Keys { get; }
+
+        public Chaocipher(string message, string[] keys) : base(message)
+        {
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+        }
+
         /// <summary>
         /// Encipher some text using the Chaocipher cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="keys">The keys to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string[] keys)
+        public string Encode()
         {
-            CheckInput(text, keys);
-
-            text = text.ToUpper();
-            var leftRotor = (keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(keys[0]);
-            var rightRotor = (keys[1] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(keys[1]);
+            var leftRotor = (Keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[0]);
+            var rightRotor = (Keys[1] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[1]);
 
             StringBuilder output = new();
 
-            foreach (var ltr in text)
+            foreach (var ltr in Message)
             {
                 var pos = rightRotor.IndexOf(ltr);
                 output.Append(leftRotor[pos]);
@@ -40,20 +42,15 @@ namespace CipherSharp.Ciphers.Substitution
         /// <summary>
         /// Decipher some text using the Chaocipher cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="keys">The keys to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string[] keys)
+        public string Decode()
         {
-            CheckInput(text, keys);
-
-            text = text.ToUpper();
-            var leftRotor = (keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(keys[0]);
-            var rightRotor = (keys[1] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(keys[1]);
+            var leftRotor = (Keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[0]);
+            var rightRotor = (Keys[1] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[1]);
 
             StringBuilder output = new();
 
-            foreach (var ltr in text)
+            foreach (var ltr in Message)
             {
                 var pos = leftRotor.IndexOf(ltr);
                 output.Append(rightRotor[pos]);
@@ -62,24 +59,6 @@ namespace CipherSharp.Ciphers.Substitution
             }
 
             return output.ToString();
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="keys"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys == null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
-            }
         }
 
         private static string RotateNTimes(string key, int n)
