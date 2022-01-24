@@ -51,7 +51,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 symbols.Append(d1[ltr]);
             }
 
-            var transposed = Columnar.Encode(symbols.ToString(), ColumnarKey);
+            var transposed = new Columnar<int>(symbols.ToString(), ColumnarKey).Encode();
 
             var chunks = transposed.SplitIntoChunks(2);
             StringBuilder cipherText = new();
@@ -78,7 +78,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 symbols.Append(d1[ltr]);
             }
 
-            var transposed = Columnar.Decode(symbols.ToString(), ColumnarKey);
+            var transposed = new Columnar<int>(symbols.ToString(), ColumnarKey).Decode();
 
             var chunks = transposed.SplitIntoChunks(2);
             StringBuilder decodedText = new();

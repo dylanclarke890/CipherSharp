@@ -10,54 +10,54 @@ namespace CipherSharp.Tests.Ciphers.Transposition
         public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
-            string text = "helloworld";
+            string text = "HELLOWORLD";
             string[] initialKey = new string[2] { "ABC", "ABC" };
             bool complete = true;
-
+            DoubleColumnar columnar = new(text, initialKey);
             // Act
-            var result = DoubleColumnar.Encode(text, initialKey, complete);
+            var result = columnar.Encode(complete);
 
             // Assert
-            Assert.Equal("hdrwleXloolX", result);
+            Assert.Equal("HDRWLEXLOOLX", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "hdrwleXloolX";
+            string text = "HDRWLEXLOOLX";
             string[] initialKey = new string[2] { "ABC", "ABC" };
             bool complete = true;
-
+            DoubleColumnar columnar = new(text, initialKey);
             // Act
-            var result = DoubleColumnar.Decode(text, initialKey, complete);
+            var result = columnar.Decode(complete);
 
             // Assert
-            Assert.Equal("helloworldXX", result);
+            Assert.Equal("HELLOWORLDXX", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string message = null;
+            string[] keys = { "test" };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => DoubleColumnar.Encode(text, keys));
+            Assert.Throws<ArgumentException>(() => new DoubleColumnar(message, keys));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string message = "test";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => DoubleColumnar.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new DoubleColumnar(message, keys));
         }
     }
 }

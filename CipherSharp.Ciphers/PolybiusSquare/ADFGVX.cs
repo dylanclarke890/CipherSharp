@@ -90,7 +90,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 processed += d1[ltr];
             }
 
-            processed = encode ? Columnar.Encode(processed, ColumnarKeys) : Columnar.Decode(processed, ColumnarKeys);
+            processed = encode ? new Columnar<int>(processed, ColumnarKeys).Encode() : new Columnar<int>(processed, ColumnarKeys).Decode();
 
             var codeGroups = processed.SplitIntoChunks(2);
 

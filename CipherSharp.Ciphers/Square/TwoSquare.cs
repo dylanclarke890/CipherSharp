@@ -69,24 +69,6 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="keys"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys == null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
-            }
-        }
-
-        /// <summary>
         /// Prepares the input text for the cipher.
         /// </summary>
         /// <returns>The prepared text.</returns>

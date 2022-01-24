@@ -11,31 +11,34 @@ namespace CipherSharp.Ciphers.Transposition
     /// message into a matrix by rows, shuffling the matrix by columns, then reading the
     /// result out by columns.
     /// </summary>
-    public static class Columnar
+    public class Columnar<T> : BaseCipher
     {
+        public T[] Key { get; }
+
+        public Columnar(string message, T[] key) : base(message)
+        {
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+        }
+
         /// <summary>
         /// Enciphers the text using the Columnar transposition cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">An array of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode<T>(string text, T[] key, bool complete = false)
+        public string Encode(bool complete = false)
         {
-            CheckInput(text, key);
-
-            var internalKey = key.UniqueRank();
+            var internalKey = Key.UniqueRank();
             int numOfCols = internalKey.Length;
 
-            (int numOfRows, int remainder) = Utilities.DivMod(text.Length, numOfCols);
+            (int numOfRows, int remainder) = Utilities.DivMod(Message.Length, numOfCols);
 
             if (complete)
             {
                 numOfRows = remainder > 0 ? numOfRows + 1 : numOfRows;
-                text = text.Pad(numOfCols * numOfRows);
+                Message = Message.Pad(numOfCols * numOfRows);
             }
 
-            var pending = text.SplitIntoChunks(numOfCols);
+            var pending = Message.SplitIntoChunks(numOfCols);
             List<char> output = new();
 
             foreach (var col in internalKey.IndirectSort())
@@ -51,23 +54,19 @@ namespace CipherSharp.Ciphers.Transposition
         /// <summary>
         /// Decodes the text using the Columnar transposition cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="key">An array of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The decoded string.</returns>
-        public static string Decode<T>(string text, T[] key, bool complete = false)
+        public string Decode(bool complete = false)
         {
-            CheckInput(text, key);
-
-            var internalKey = key.UniqueRank();
+            var internalKey = Key.UniqueRank();
             int numOfCols = internalKey.Length;
 
-            (int numOfRows, int remainder) = Utilities.DivMod(text.Length, numOfCols);
+            (int numOfRows, int remainder) = Utilities.DivMod(Message.Length, numOfCols);
             var longCols = internalKey[..remainder];
 
             if (complete)
             {
-                text = text.Pad(numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
+                Message = Message.Pad(numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
             }
 
             int ctr = 0;
@@ -76,7 +75,7 @@ namespace CipherSharp.Ciphers.Transposition
             for (int i = 0; i < numOfCols; i++)
             {
                 int j = longCols.Contains(i) ? numOfRows + 1 : numOfRows;
-                pending.Add(text[ctr..(ctr + j)]);
+                pending.Add(Message[ctr..(ctr + j)]);
                 ctr += j;
             }
 
@@ -90,19 +89,6 @@ namespace CipherSharp.Ciphers.Transposition
             }
 
             return string.Join(string.Empty, output);
-        }
-
-        private static void CheckInput<T>(string text, T[] key)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (key is null)
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null.", nameof(key));
-            }
         }
     }
 }

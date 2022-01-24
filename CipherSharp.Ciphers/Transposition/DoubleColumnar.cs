@@ -5,25 +5,28 @@ namespace CipherSharp.Ciphers.Transposition
 {
     /// <summary>
     /// The Double Columnar transposition cipher is a more 
-    /// complex implementation of <see cref="Columnar"/>,
+    /// complex implementation of <see cref="Columnar<>"/>,
     /// and is achieved by running the text through a normal
     /// Columnar transposition twice.
     /// </summary>
-    public static class DoubleColumnar
+    public class DoubleColumnar : BaseCipher
     {
+        public string[] Key { get; }
+
+        public DoubleColumnar(string message, string[] key) : base(message)
+        {
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+        }
+
         /// <summary>
         /// Encrypts the text using the Double Columnar transposition cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="key">An array (length 2) of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The encrypted string.</returns>
-        public static string Encode(string text, string[] key, bool complete = true)
+        public string Encode(bool complete = true)
         {
-            CheckInput(text, key);
-            key = HandleInitialKey(key);
-
-            return Columnar.Encode(Columnar.Encode(text, key[0].ToArray(), complete), key[1].ToArray(), complete);
+            var key = HandleInitialKey(Key);
+            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray()).Encode(complete), key[1].ToArray()).Encode(complete);
         }
 
         /// <summary>
@@ -33,30 +36,10 @@ namespace CipherSharp.Ciphers.Transposition
         /// <param name="key">An array (length 2) of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The decoded string.</returns>
-        public static string Decode(string text, string[] key, bool complete = true)
+        public string Decode(bool complete = true)
         {
-            CheckInput(text, key);
-            key = HandleInitialKey(key);
-
-            return Columnar.Decode(Columnar.Decode(text, key[1].ToArray(), complete), key[0].ToArray(), complete);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="keys"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys == null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
-            }
+            var key = HandleInitialKey(Key);
+            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray()).Decode(complete), key[1].ToArray()).Decode(complete);
         }
 
         /// <summary>

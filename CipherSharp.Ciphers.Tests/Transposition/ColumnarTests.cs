@@ -10,84 +10,84 @@ namespace CipherSharp.Tests.Ciphers.Transposition
         public void Encode_IntArray_ReturnsCipherText()
         {
             // Arrange
-            string text = "helloworld";
-            int[] initialKey = new int[2] { 1, 2 };
+            string text = "HELLOWORLD";
+            int[] key = new int[2] { 1, 2 };
             bool complete = true;
-
+            Columnar<int> columnar = new(text, key);
             // Act
-            var result = Columnar.Encode(text, initialKey, complete);
+            var result = columnar.Encode(complete);
 
             // Assert
-            Assert.Equal("hloolelwrd", result);
+            Assert.Equal("HLOOLELWRD", result);
         }
 
         [Fact]
         public void Decode_IntArray_ReturnsPlainText()
         {
             // Arrange
-            string text = "hloolelwrd";
-            int[] initialKey = new int[2] { 1, 2 };
+            string text = "HLOOLELWRD";
+            int[] key = new int[2] { 1, 2 };
             bool complete = true;
-
+            Columnar<int> columnar = new(text, key);
             // Act
-            var result = Columnar.Decode(text, initialKey, complete);
+            var result = columnar.Decode(complete);
 
             // Assert
-            Assert.Equal("helloworld", result);
+            Assert.Equal("HELLOWORLD", result);
         }
 
         [Fact]
-        public void Encode_CharArray_ReturnsCipherText()
+        public void Encode_StringArray_ReturnsCipherText()
         {
             // Arrange
-            string text = "helloworld";
-            string[] initialKey = new string[2] { "ABC", "DEF" };
+            string text = "HELLOWORLD";
+            string[] key = new string[2] { "ABC", "DEF" };
             bool complete = true;
-
+            Columnar<string> columnar = new(text, key);
             // Act
-            var result = Columnar.Encode(text, initialKey, complete);
+            var result = columnar.Encode(complete);
 
             // Assert
-            Assert.Equal("hloolelwrd", result);
+            Assert.Equal("HLOOLELWRD", result);
         }
 
         [Fact]
-        public void Decode_CharArray_ReturnsPlainText()
+        public void Decode_StringArray_ReturnsPlainText()
         {
             // Arrange
-            string text = "hloolelwrd";
-            string[] initialKey = new string[2] { "ABC", "DEF" };
+            string text = "HLOOLELWRD";
+            string[] key = new string[2] { "ABC", "DEF" };
             bool complete = true;
-
+            Columnar<string> columnar = new(text, key);
             // Act
-            var result = Columnar.Decode(text, initialKey, complete);
+            var result = columnar.Decode(complete);
 
             // Assert
-            Assert.Equal("helloworld", result);
+            Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string message = null;
+            string[] keys = { "test" };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Columnar.Encode(text, keys));
+            Assert.Throws<ArgumentException>(() => new Columnar<string>(message, keys));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string message = "test";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Columnar.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new Columnar<string>(message, keys));
         }
     }
 }
