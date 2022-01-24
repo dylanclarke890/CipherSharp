@@ -14,9 +14,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string polybiusKey = "test";
             int[] columnarKey = new int[2] { 1, 2 };
             bool displaySquare = false;
-
+            ADFGX aDFGX = new(text, polybiusKey, columnarKey);
             // Act
-            var result = ADFGX.Encode(text, polybiusKey, columnarKey, displaySquare);
+            var result = aDFGX.Encode(displaySquare);
 
             // Assert
             Assert.Equal("CLURKWLEAK", result);
@@ -30,42 +30,38 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string polybiusKey = "test";
             int[] columnarKey = new int[2] { 1, 2 };
             bool displaySquare = false;
-
+            ADFGX aDFGX = new(text, polybiusKey, columnarKey);
             // Act
-            var result = ADFGX.Decode(text, polybiusKey, columnarKey, displaySquare);
+            var result = aDFGX.Decode(displaySquare);
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
         [Theory]
-        [InlineData("helloworld", "test", null)]
-        [InlineData(null, "test", new int[2] { 1, 2 })]
-        [InlineData("helloworld", null, new int[2] { 1, 2 })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key, int[] keys)
+        [InlineData("helloworld", null)]
+        [InlineData(null, "test")]
+        public void NewInstance_NullStrings_ThrowsArgumentException(string text, string key)
         {
             // Arrange
-            bool displaySquare = false;
-
+            int[] keys = { 1, 2 };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => ADFGX.Encode(text, key, keys, displaySquare));
+            Assert.Throws<ArgumentException>(() => new ADFGX(text, key, keys));
         }
 
-        [Theory]
-        [InlineData("helloworld", "test", null)]
-        [InlineData(null, "test", new int[2] { 1, 2 })]
-        [InlineData("helloworld", null, new int[2] { 1, 2 })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key, int[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
-            bool displaySquare = false;
-
+            string text = "CLURKWLEAK";
+            string polybiusKey = "test";
+            int[] columnarKey = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => ADFGX.Decode(text, key, keys, displaySquare));
+            Assert.Throws<ArgumentNullException>(() => new ADFGX(text, polybiusKey, columnarKey));
         }
     }
 }
