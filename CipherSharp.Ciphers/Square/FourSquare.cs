@@ -15,73 +15,54 @@ namespace CipherSharp.Ciphers.Square
     /// letters in the key squares. Because is using digraphs, it is much less
     /// susceptible to frequency analysis than monographic substitution ciphers.
     /// </summary>
-    public static class FourSquare
+    public class FourSquare : BaseCipher
     {
+        public string[] Keys { get; }
+        public AlphabetMode Mode { get; }
+
+        public FourSquare(string message, string[] keys, AlphabetMode mode) : base(message)
+        {
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+            Mode = mode;
+
+            PrepareMessage();
+        }
+
         /// <summary>
         /// Encrypt some text using the Four Square cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
+        public string Encode(bool displaySquare = true)
         {
-            return Process(text, keys, mode, displaySquare);
+            return Process(displaySquare);
         }
 
         /// <summary>
         /// Decrypt some text using the Four Square cipher.
         /// </summary>
-        /// <param name="text">The text to decrypt.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The decoded text.</returns>
-        public static string Decode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
+        public string Decode(bool displaySquare = true)
         {
-            return Process(text, keys, mode, displaySquare);
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="keys"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys == null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
-            }
+            return Process(displaySquare);
         }
 
         /// <summary>
         /// Processes the input through the cipher, and returns the result.
         /// </summary>
-        /// <param name="text">The text to process.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The resulting text.</returns>
-        private static string Process(string text, string[] keys, AlphabetMode mode, bool displaySquare)
+        private string Process(bool displaySquare)
         {
-            CheckInput(text, keys);
 
-            text = PrepareText(text, mode);
-
-            var (squareA, squareB, alphaSquare) = CreateMatrixes(keys, mode);
+            var (squareA, squareB, alphaSquare) = CreateMatrixes();
             if (displaySquare)
             {
-                PrintMatrixes(mode, squareA, squareB, alphaSquare);
+                PrintMatrixes(squareA, squareB, alphaSquare);
             }
 
-            var codeGroups = text.SplitIntoChunks(2);
+            var codeGroups = Message.SplitIntoChunks(2);
             string output = "";
 
             foreach (var group in codeGroups)
@@ -95,45 +76,36 @@ namespace CipherSharp.Ciphers.Square
         /// <summary>
         /// Prepares text for the cipher.
         /// </summary>
-        /// <param name="text">The text to prepare.</param>
-        /// <param name="mode">The mode to use.</param>
-        /// <returns>The prepared text.</returns>
-        private static string PrepareText(string text, AlphabetMode mode)
+        private void PrepareMessage()
         {
-            text = text.ToUpper();
-            text = mode switch
+            Message = Mode switch
             {
-                AlphabetMode.JI => text.Replace("J", "I"),
-                AlphabetMode.CK => text.Replace("C", "K"),
-                _ => throw new ArgumentException($"Invalid mode: {mode}"),
+                AlphabetMode.JI => Message.Replace("J", "I"),
+                AlphabetMode.CK => Message.Replace("C", "K"),
+                _ => throw new InvalidOperationException($"Could not determine the mode."),
             };
-            if (text.Length % 2 == 1)
+            if (Message.Length % 2 == 1)
             {
-                text += "X";
+                Message += "X";
             }
-
-            return text;
         }
 
         /// <summary>
         /// Creates the matrixes for the cipher.
         /// </summary>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="mode">The alphabet mode to use.</param>
         /// <returns>A tuple of three matrixes.</returns>
-        private static (IEnumerable<string>[], IEnumerable<string>[], IEnumerable<string>[]) CreateMatrixes(string[] keys, AlphabetMode mode)
+        private (IEnumerable<string>[], IEnumerable<string>[], IEnumerable<string>[]) CreateMatrixes()
         {
-            var squareA = Matrix.Create(keys[0], mode).ToArray();
-            var squareB = Matrix.Create(keys[1], mode).ToArray();
-            var alphaSquare = Matrix.Create(string.Empty, mode).ToArray();
+            var squareA = Matrix.Create(Keys[0], Mode).ToArray();
+            var squareB = Matrix.Create(Keys[1], Mode).ToArray();
+            var alphaSquare = Matrix.Create(string.Empty, Mode).ToArray();
 
             return (squareA, squareB, alphaSquare);
         }
 
-        private static void PrintMatrixes(AlphabetMode mode,
-            IEnumerable<string>[] squareA, IEnumerable<string>[] squareB, IEnumerable<string>[] alphaSquare)
+        private void PrintMatrixes(IEnumerable<string>[] squareA, IEnumerable<string>[] squareB, IEnumerable<string>[] alphaSquare)
         {
-            int size = mode is AlphabetMode.EX ? 6 : 5;
+            int size = Mode is AlphabetMode.EX ? 6 : 5;
 
             for (int i = 0; i < size; i++)
             {

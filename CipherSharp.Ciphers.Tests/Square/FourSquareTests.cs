@@ -14,10 +14,9 @@ namespace CipherSharp.Tests.Ciphers.Square
             string text = "helloworld";
             string[] keys = { "abc", "abc" };
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
-
+            FourSquare fourSquare = new(text, keys, mode);
             // Act
-            var result = FourSquare.Encode(text, keys, mode, displaySquare);
+            var result = fourSquare.Encode();
 
             // Assert
             Assert.Equal("KCLLMYMTOA", result);
@@ -30,41 +29,38 @@ namespace CipherSharp.Tests.Ciphers.Square
             string text = "KCLLMYMTOA";
             string[] keys = { "abc", "abc" };
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
-
+            FourSquare fourSquare = new(text, keys, mode);
             // Act
-            var result = FourSquare.Decode(text, keys, mode, displaySquare);
+            var result = fourSquare.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string text = null;
+            string[] keys = { "test", "key" };
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => FourSquare.Encode(text, keys, mode, displaySquare));
+            Assert.Throws<ArgumentException>(() => new FourSquare(text, keys, mode));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2]{ "abc", "abc" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "helloworld";
+            string[] keys = null;
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => FourSquare.Decode(text, keys, mode, displaySquare));
+            Assert.Throws<ArgumentNullException>(() => new FourSquare(text, keys, mode));
         }
     }
 }
