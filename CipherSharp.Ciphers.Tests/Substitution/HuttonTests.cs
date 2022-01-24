@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "helloworld";
             string[] keys = new string[2] { "test", "key" };
-
+            Hutton hutton = new(text, keys);
             // Act
-            var result = Hutton.Encode(text, keys);
+            var result = hutton.Encode();
 
             // Assert
             Assert.Equal("NQPUTMXMKR", result);
@@ -26,36 +26,36 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "NQPUTMXMKR";
             string[] keys = new string[2] { "test", "key" };
-
+            Hutton hutton = new(text, keys);
             // Act
-            var result = Hutton.Decode(text, keys);
+            var result = hutton.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string message = null;
+            string[] keys = { "test" };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Hutton.Encode(text, keys));
+            Assert.Throws<ArgumentException>(() => new Hutton(message, keys));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string message = "test";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Hutton.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new Hutton(message, keys));
         }
     }
 }

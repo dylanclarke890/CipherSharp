@@ -10,32 +10,35 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Hutton cipher is recently created cipher, and is mainly achieved through
     /// offsetting the alphabet.
     /// </summary>
-    public static class Hutton
+    public class Hutton : BaseCipher
     {
+        public string[] Keys { get; }
+
+        public Hutton(string message, string[] keys) : base(message)
+        {
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+            for (int i = 0; i < Keys.Length; i++)
+            {
+                Keys[i] = Keys[i].ToUpper();
+            }
+        }
+
         /// <summary>
         /// Encipher some text using the Hutton cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="keys">The key to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string[] keys)
+        public string Encode()
         {
-            CheckInput(text, keys);
-
-            text = text.ToUpper();
-            keys[0] = keys[0].ToUpper();
-            keys[1] = keys[1].ToUpper();
-
             string alphabet = AppConstants.Alphabet;
 
-            var k1 = keys[0].Select(ch => alphabet.IndexOf(ch) + 1).ToList();
-            var k2 = Alphabet.AlphabetPermutation(keys[1]).ToList();
+            var k1 = Keys[0].Select(ch => alphabet.IndexOf(ch) + 1).ToList();
+            var k2 = Alphabet.AlphabetPermutation(Keys[1]).ToList();
 
             StringBuilder output = new();
 
-            for (int ctr = 0; ctr < text.Length; ctr++)
+            for (int ctr = 0; ctr < Message.Length; ctr++)
             {
-                var letter = text[ctr];
+                var letter = Message[ctr];
                 var pos = k2.IndexOf(letter);
                 var inc1 = alphabet.IndexOf(k2[0]) + 1;
                 var inc2 = k1[ctr % k1.Count];
@@ -59,26 +62,19 @@ namespace CipherSharp.Ciphers.Substitution
         /// <summary>
         /// Decipher some text using the Hutton cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="keys">The key to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string[] keys)
+        public string Decode()
         {
-            CheckInput(text, keys);
-
-            text = text.ToUpper();
-            keys[0] = keys[0].ToUpper();
-            keys[1] = keys[1].ToUpper();
             string alphabet = AppConstants.Alphabet;
 
-            var k1 = keys[0].Select(ch => alphabet.IndexOf(ch) + 1).ToList();
-            var k2 = Alphabet.AlphabetPermutation(keys[1]).ToList();
+            var k1 = Keys[0].Select(ch => alphabet.IndexOf(ch) + 1).ToList();
+            var k2 = Alphabet.AlphabetPermutation(Keys[1]).ToList();
 
             StringBuilder output = new();
 
-            for (int ctr = 0; ctr < text.Length; ctr++)
+            for (int ctr = 0; ctr < Message.Length; ctr++)
             {
-                var letter = text[ctr];
+                var letter = Message[ctr];
                 var pos = k2.IndexOf(letter);
                 var inc1 = alphabet.IndexOf(k2[0]) + 1;
                 var inc2 = k1[ctr % k1.Count];
@@ -97,24 +93,6 @@ namespace CipherSharp.Ciphers.Substitution
 
 
             return output.ToString();
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="keys"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys == null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
-            }
         }
 
         private static void Swap(List<char> alphabet, char a, char b)
