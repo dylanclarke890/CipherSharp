@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "helloworld";
             int[] key = new int[2] { 3, 5 };
-
+            Affine affine = new(text, key);
             // Act
-            var result = Affine.Encode(text, key);
+            var result = affine.Encode();
 
             // Assert
             Assert.Equal("ARMMVTVEMO", result);
@@ -26,36 +26,36 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "ARMMVTVEMO";
             int[] key = new int[2] { 3, 5 };
-
+            Affine affine = new(text, key);
             // Act
-            var result = Affine.Decode(text, key);
+            var result = affine.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new int[2] { 1, 2 })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, int[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string text = null;
+            int[] keys = { 1, 2 };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Affine.Decode(text, keys));
+            Assert.Throws<ArgumentException>(() => new Affine(text, keys));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new int[2] { 1, 2 })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, int[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "test";
+            int[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Affine.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new Affine(text, keys));
         }
     }
 }
