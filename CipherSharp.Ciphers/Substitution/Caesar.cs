@@ -10,27 +10,35 @@ namespace CipherSharp.Ciphers.Substitution
     /// shifting the alphabet n number of positions. To decipher, shift the alphabet n positions
     /// in the opposite direction.
     /// </summary>
-    public static class Caesar
+    public class Caesar : BaseCipher
     {
+        public int Key { get; }
+        public string Alpha { get; }
+
+        public Caesar(string message, int key, string alphabet = AppConstants.Alphabet) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(alphabet))
+            {
+                throw new ArgumentException($"'{nameof(alphabet)}' cannot be null or whitespace.", nameof(alphabet));
+            }
+            Message = message;
+            Key = key;
+            Alpha = alphabet;
+        }
+
         /// <summary>
         /// Encipher some text using the Caesar cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, int key, string alphabet = AppConstants.Alphabet)
+        public string Encode()
         {
-            CheckText(text);
-
-            text = text.ToUpper();
-            List<int> textAsNumbers = text.Select(ch => alphabet.IndexOf(ch)).ToList();
+            List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();
 
             List<char> output = new();
 
             foreach (var num in textAsNumbers)
             {
-                output.Add(alphabet[(num + key) % alphabet.Length]);
+                output.Add(Alpha[(num + Key) % Alpha.Length]);
             }
 
             return string.Join(string.Empty, output);
@@ -39,33 +47,19 @@ namespace CipherSharp.Ciphers.Substitution
         /// <summary>
         /// Decipher some text using the Caesar cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, int key, string alphabet = AppConstants.Alphabet)
+        public string Decode()
         {
-            CheckText(text);
-
-            text = text.ToUpper();
-            List<int> textAsNumbers = text.Select(ch => alphabet.IndexOf(ch)).ToList();
+            List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();
 
             List<char> output = new();
-            key = alphabet.Length - key;
+            var key = Alpha.Length - Key;
             foreach (var num in textAsNumbers)
             {
-                output.Add(alphabet[(num + key) % alphabet.Length]);
+                output.Add(Alpha[(num + key) % Alpha.Length]);
             }
 
             return string.Join(string.Empty, output);
-        }
-
-        public static void CheckText(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
         }
     }
 }

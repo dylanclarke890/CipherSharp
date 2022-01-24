@@ -11,9 +11,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
         {
             // Arrange
             string text = "helloworld";
-
+            ROT13 rOT13 = new(text);
             // Act
-            var result = ROT13.Encode(text);
+            var result = rOT13.Encode();
 
             // Assert
             Assert.Equal("URYYBJBEYQ", result);
@@ -24,34 +24,23 @@ namespace CipherSharp.Tests.Ciphers.Substitution
         {
             // Arrange
             string text = "helloworld";
-
+            ROT13 rOT13 = new(text);
             // Act
-            var result = ROT13.Decode(text);
+            var result = rOT13.Decode();
 
             // Assert
             Assert.Equal("URYYBJBEYQ", result);
         }
 
         [Fact]
-        public void Encode_NullText_ThrowsArgumentException()
+        public void NewInstance_NullText_ThrowsArgumentException()
         {
             // Arrange
             string text = null;
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => ROT13.Encode(text));
-        }
-
-        [Fact]
-        public void Decode_NullText_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = null;
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => ROT13.Decode(text));
+            Assert.Throws<ArgumentException>(() => new ROT13(text));
         }
     }
 }

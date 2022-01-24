@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "helloworld";
             string key = "test";
-
+            Beaufort beaufort = new(text, key);
             // Act
-            var result = Beaufort.Encode(text, key);
+            var result = beaufort.Encode();
 
             // Assert
             Assert.Equal("MAHIFIECIQ", result);
@@ -26,9 +26,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "MAHIFIECIQ";
             string key = "test";
-
+            Beaufort beaufort = new(text, key);
             // Act
-            var result = Beaufort.Decode(text, key);
+            var result = beaufort.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -43,19 +43,7 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Beaufort.Encode(text, key));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => Beaufort.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new Beaufort(text, key));
         }
     }
 }

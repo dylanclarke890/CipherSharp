@@ -6,26 +6,30 @@
     /// involutive function, applying the function twice returns the input originally
     /// provided.
     /// </summary>
-    public static class ROT13
+    public class ROT13 : BaseCipher
     {
+        private readonly Caesar _caesar;
+        public ROT13(string message) : base(message)
+        {
+            _caesar = new(Message, 13);
+        }
+
         /// <summary>
         /// Encipher some text using the ROT13 cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text)
+        public string Encode()
         {
-            return Caesar.Encode(text, 13);
+            return _caesar.Encode();
         }
 
         /// <summary>
         /// Decipher some text using the ROT13 cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text)
+        public string Decode()
         {
-            return Caesar.Decode(text, 13);
+            return _caesar.Decode();
         }
     }
 }

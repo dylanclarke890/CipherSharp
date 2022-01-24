@@ -7,55 +7,56 @@ namespace CipherSharp.Tests.Ciphers.Substitution
     public class MultiBeaufortTests
     {
         [Fact]
-        public void Encode_StateUnderTest_ExpectedBehavior()
+        public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
             string text = "helloworld";
             string[] keys = new string[2] { "test", "key" };
-
+            MultiBeaufort multiBeaufort = new(text, keys);
             // Act
-            var result = MultiBeaufort.Encode(text, keys);
+            var result = multiBeaufort.Encode();
 
             // Assert
             Assert.Equal("YERCZQGIWI", result);
         }
 
         [Fact]
-        public void Decode_StateUnderTest_ExpectedBehavior()
+        public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
             string text = "YERCZQGIWI";
             string[] keys = new string[2] { "test", "key" };
+            MultiBeaufort multiBeaufort = new(text, keys);
 
             // Act
-            var result = MultiBeaufort.Decode(text, keys);
+            var result = multiBeaufort.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string message = null;
+            string[] keys = { "test" };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => MultiBeaufort.Encode(text, keys));
+            Assert.Throws<ArgumentException>(() => new MultiBeaufort(message, keys));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string message = "test";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => MultiBeaufort.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new MultiBeaufort(message, keys));
         }
     }
 }

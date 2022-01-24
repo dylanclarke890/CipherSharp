@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "HELLOWORLD";
             int key = 1;
-
+            Caesar caesar = new(text, key);
             // Act
-            var result = Caesar.Encode(text, key);
+            var result = caesar.Encode();
 
             // Assert
             Assert.Equal("IFMMPXPSME", result);
@@ -26,16 +26,17 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "IFMMPXPSME";
             int key = 1;
+            Caesar caesar = new(text, key);
 
             // Act
-            var result = Caesar.Decode(text, key);
+            var result = caesar.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
         [Fact]
-        public void Encode_NullText_ThrowsArgumentException()
+        public void NewInstance_NullText_ThrowsArgumentException()
         {
             // Arrange
             string text = null;
@@ -43,19 +44,7 @@ namespace CipherSharp.Tests.Ciphers.Substitution
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Caesar.Encode(text, key));
-        }
-
-        [Fact]
-        public void Decode_NullText_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = null;
-            int key = 1;
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Caesar.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new Caesar(text, key));
         }
     }
 }
