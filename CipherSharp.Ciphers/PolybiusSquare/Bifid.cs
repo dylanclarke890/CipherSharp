@@ -31,7 +31,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <returns>The enciphered text.</returns>
         public string Encode()
         {
-            string nums = Polybius.Encode(Message, Key);
+            string nums = new Polybius(Message, Key).Encode();
 
             StringBuilder a = new();
             StringBuilder b = new();
@@ -42,7 +42,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 b.Append(nums[i * 2 + 1]);
             }
 
-            return Polybius.Decode(a.Append(b).ToString(), Key);
+            return new Polybius(a.Append(b).ToString(), Key).Decode();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <returns>The deciphered text.</returns>
         public string Decode()
         {
-            string nums = Polybius.Encode(Message, Key);
+            string nums = new Polybius(Message, Key).Encode();
             int half = nums.Length / 2;
 
             string a = nums[..half];
@@ -63,7 +63,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 result.Append($"{i}{j}");
             }
 
-            return Polybius.Decode(result.ToString(), Key);
+            return new Polybius(result.ToString(), Key).Decode();
         }
     }
 }

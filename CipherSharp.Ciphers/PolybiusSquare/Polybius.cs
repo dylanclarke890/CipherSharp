@@ -18,24 +18,35 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// <item>Extend the alphabet with the digits 0-9 (to create a 36 character alphabet - six squared)</item>
     /// </list>
     /// </summary>
-    public static class Polybius
+    public class Polybius : BaseCipher
     {
+        public string Key { get; }
+        public string Sep { get; }
+        public AlphabetMode Mode { get; }
+
+        public Polybius(string message, string key, string sep = "", AlphabetMode mode = AlphabetMode.JI) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            Key = key;
+            Sep = sep ?? throw new ArgumentException($"'{nameof(sep)}' cannot be null.", nameof(sep));
+            Mode = mode;
+        }
+
         /// <summary>
         /// Encipher some text using the Polybius Square cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="sep">If specified, will separate encoded letters by sep.</param>
-        /// <param name="mode">Polybius alphabet mode (defaults to 'IJ' if unable to parse).</param>
-        /// <exception cref="ArgumentException"/>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string key, string sep = "", AlphabetMode mode = AlphabetMode.JI)
+        public string Encode()
         {
-            CheckInput(text, key, sep, true);
-            (key, text) = ProcessInput(key, text, mode);
-            string internalKey = GetKey(mode, key);
+            CheckText(true);
+            var (key, text) = ProcessInput();
+            string internalKey = GetKey(Mode, key);
 
-            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, mode is AlphabetMode.EX ? 6 : 5));
+            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, Mode is AlphabetMode.EX ? 6 : 5));
             var codeGroups = cartesianArray.CartesianProduct(cartesianArray);
 
             Dictionary<char, IEnumerable<string>> result = new();
@@ -50,25 +61,20 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 encoded.Add($"{string.Join(string.Empty, result[ltr])}");
             }
 
-            return string.Join(sep, encoded);
+            return string.Join(Sep, encoded);
         }
 
         /// <summary>
         /// Decipher some text using the Polybius Square cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="sep">If specified, will separate decrypted letters by sep.</param>
-        /// <param name="mode">Polybius alphabet mode (defaults to 'IJ' if unable to parse).</param>
-        /// <exception cref="ArgumentException"/>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string key, string sep = "", AlphabetMode mode = AlphabetMode.JI)
+        public string Decode()
         {
-            CheckInput(text, key, sep, false);
-            (key, text) = ProcessInput(key, text, mode);
-            string internalKey = GetKey(mode, key);
+            CheckText(false);
+            var (key, text) = ProcessInput();
+            string internalKey = GetKey(Mode, key);
 
-            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, mode is AlphabetMode.EX ? 6 : 5));
+            var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, Mode is AlphabetMode.EX ? 6 : 5));
             var codeGroups = cartesianArray.CartesianProduct(cartesianArray);
 
             Dictionary<string, char> result = new();
@@ -77,7 +83,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 result[string.Join(string.Empty, j)] = i;
             }
 
-            List<string> pendingDecode = PrepareTextForDeciphering(text, sep);
+            List<string> pendingDecode = PrepareTextForDeciphering(text, Sep);
 
             List<string> decoded = new();
             foreach (var pair in pendingDecode)
@@ -85,33 +91,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 decoded.Add($"{result[pair]}");
             }
 
-            return string.Join(sep, decoded);
-        }
-
-        /// <summary>
-        /// Checks the initial input and throws <see cref="ArgumentException"/>
-        /// if the <paramref name="text"/> or <paramref name="initialKey"/> is null or
-        /// whitespace, or <paramref name="sep"/> is null.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string initialKey, string sep, bool encipher)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(initialKey))
-            {
-                throw new ArgumentException($"'{nameof(initialKey)}' cannot be null or whitespace.", nameof(initialKey));
-            }
-
-            if (sep == null)
-            {
-                throw new ArgumentException($"'{nameof(sep)}' cannot be null.", nameof(sep));
-            }
-
-            CheckText(text, encipher);
+            return string.Join(Sep, decoded);
         }
 
         /// <summary>
@@ -122,21 +102,21 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <param name="text">The text to check.</param>
         /// <param name="encipher">If <c>True</c>, will check there are no digits. Will check
         /// for no letters otherwise.</param>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckText(string text, bool encipher)
+        /// <exception cref="InvalidOperationException"/>
+        private void CheckText(bool encipher)
         {
             if (encipher)
             {
-                if (text.Any(ch => char.IsDigit(ch)))
+                if (Message.Any(ch => char.IsDigit(ch)))
                 {
-                    throw new ArgumentException($"'{nameof(text)}' cannot contain digits when enciphering.", nameof(text));
+                    throw new InvalidOperationException($"'{nameof(Message)}' cannot contain digits when enciphering.");
                 }
                 return;
             }
 
-            if (text.Any(ch => char.IsLetter(ch)))
+            if (Message.Any(ch => char.IsLetter(ch)))
             {
-                throw new ArgumentException($"'{nameof(text)}' cannot contain letters when deciphering.", nameof(text));
+                throw new InvalidOperationException($"'{nameof(Message)}' cannot contain letters when deciphering.");
             }
         }
 
@@ -148,14 +128,14 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <param name="mode"></param>
         /// <returns>A tuple containing the processed input.</returns>
         /// <exception cref="ArgumentException"/>
-        private static (string, string) ProcessInput(string key, string text, AlphabetMode mode)
+        private (string, string) ProcessInput()
         {
-            return mode switch
+            return Mode switch
             {
-                AlphabetMode.JI => (key.Replace("J", "I").ToUpper(), text.Replace("J", "I").ToUpper()),
-                AlphabetMode.CK => (key.Replace("C", "K").ToUpper(), text.Replace("C", "K").ToUpper()),
-                AlphabetMode.EX => (key.ToUpper(), text.ToUpper()),
-                _ => throw new ArgumentException($"'{nameof(mode)}' was invalid.", nameof(mode))
+                AlphabetMode.JI => (Key.Replace("J", "I").ToUpper(), Message.Replace("J", "I").ToUpper()),
+                AlphabetMode.CK => (Key.Replace("C", "K").ToUpper(), Message.Replace("C", "K").ToUpper()),
+                AlphabetMode.EX => (Key.ToUpper(), Message.ToUpper()),
+                _ => throw new ArgumentException($"'{nameof(Mode)}' was invalid.", nameof(Mode))
             };
         }
 

@@ -30,12 +30,12 @@ namespace CipherSharp.Ciphers.Other
         public string Encode()
         {
             // Convert the vigenere key into numbers using the polybius square
-            var keynum = Polybius.Encode(Keys[1], Keys[0], " ", PolybiusMode);
+            var keynum = new Polybius(Keys[1], Keys[0], " ", PolybiusMode).Encode();
 
             var keyNums = keynum.Split(" ").Select(n => int.Parse(n)).ToList();
             var kLength = keyNums.Count;
 
-            var textnum = Polybius.Encode(Message, Keys[0], " ", PolybiusMode);
+            var textnum = new Polybius(Message, Keys[0], " ", PolybiusMode).Encode();
             var textNums = textnum.Split(" ").Select(n => int.Parse(n)).ToList();
 
             for (int i = 0; i < textNums.Count; i++)
@@ -55,7 +55,7 @@ namespace CipherSharp.Ciphers.Other
         public string Decode()
         {
             // Convert the vigenere key into numbers using the polybius square
-            var keynum = Polybius.Encode(Keys[1], Keys[0], " ", PolybiusMode);
+            var keynum = new Polybius(Keys[1], Keys[0], " ", PolybiusMode).Encode();
             var keyNums = keynum.Split(" ").Select(n => int.Parse(n)).ToList();
             var kLength = keyNums.Count;
 
@@ -68,7 +68,7 @@ namespace CipherSharp.Ciphers.Other
 
             var textnum = string.Join(" ", textNums);
             
-            Message = Polybius.Decode(textnum, Keys[0], " ", PolybiusMode);
+            Message = new Polybius(textnum, Keys[0], " ", PolybiusMode).Decode();
             return Message;
         }
     }

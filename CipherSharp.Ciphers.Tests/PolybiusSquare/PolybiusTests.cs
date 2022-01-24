@@ -15,9 +15,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string initialKey = "test";
             string sep = "";
             AlphabetMode mode = AlphabetMode.JI;
-
+            Polybius polybius = new(text, initialKey, sep, mode);
             // Act
-            var result = Polybius.Encode(text, initialKey, sep, mode);
+            var result = polybius.Encode();
 
             // Assert
             Assert.Equal("25123333415241443322", result);
@@ -31,9 +31,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string initialKey = "test";
             string sep = "";
             AlphabetMode mode = AlphabetMode.JI;
-
+            Polybius polybius = new(text, initialKey, sep, mode);
             // Act
-            var result = Polybius.Decode(text, initialKey, sep, mode);
+            var result = polybius.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -43,7 +43,7 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
         [InlineData(null, "test", "")]
         [InlineData("helloworld", null, "")]
         [InlineData("helloworld", "test", null)]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key, string sep)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key, string sep)
         {
             // Arrange
             AlphabetMode mode = AlphabetMode.JI;
@@ -51,26 +51,11 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             // Act - done as part of assert
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Polybius.Encode(text, key, sep, mode));
-        }
-
-        [Theory]
-        [InlineData(null, "test", "")]
-        [InlineData("25123333415241443322", null, "")]
-        [InlineData("25123333415241443322", "test", null)]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key, string sep)
-        {
-            // Arrange
-            AlphabetMode mode = AlphabetMode.JI;
-
-            // Act - done as part of assert
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => Polybius.Decode(text, key, sep, mode));
+            Assert.Throws<ArgumentException>(() => new Polybius(text, key, sep, mode));
         }
 
         [Fact]
-        public void Encode_PlainTextContainsDigits_ThrowsArgumentException()
+        public void Encode_PlainTextContainsDigits_ThrowsInvalidOperationException()
         {
             // Arrange
             string text = "helloworld1";
@@ -81,11 +66,11 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             // Act - done as part of assert
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Polybius.Encode(text, initialKey, sep, mode));
+            Assert.Throws<InvalidOperationException>(() => new Polybius (text, initialKey, sep, mode).Encode());
         }
 
         [Fact]
-        public void Decode_CipherTextContainsLetters_ThrowsArgumentException()
+        public void Decode_CipherTextContainsLetters_ThrowsInvalidOperationException()
         {
             // Arrange
             string text = "25123333415241443322h";
@@ -96,7 +81,7 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             // Act - done as part of assert
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Polybius.Decode(text, initialKey, sep, mode));
+            Assert.Throws<InvalidOperationException>(() => new Polybius(text, initialKey, sep, mode).Decode());
         }
     }
 }
