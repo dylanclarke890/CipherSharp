@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             // Arrange
             string text = "helloworld";
             string key = "test";
-
+            Trifid trifid = new(text, key);
             // Act
-            var result = Trifid.Encode(text, key);
+            var result = trifid.Encode();
 
             // Assert
             Assert.Equal("IMOTMNNLLK", result);
@@ -26,9 +26,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             // Arrange
             string text = "IMOTMNNLLK";
             string key = "test";
-
+            Trifid trifid = new(text, key);
             // Act
-            var result = Trifid.Decode(text, key);
+            var result = trifid.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -37,25 +37,13 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Trifid.Encode(text, key));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => Trifid.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new Trifid(text, key));
         }
     }
 }

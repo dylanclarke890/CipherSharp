@@ -12,26 +12,32 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// a much greater degree of diffusion is achieved by splitting each letter
     /// into three digits instead of two.
     /// </summary>
-    public static class Trifid
+    public class Trifid : BaseCipher
     {
+        public string Key { get; }
+
+        public Trifid(string message, string key) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+            Key = key.ToUpper();
+        }
+
         /// <summary>
         /// Encipher some text using the Trifid cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">The key to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string key)
+        public string Encode()
         {
-            CheckInput(text, key);
-
-            text = text.ToUpper();
-            var (d1, d2) = GetCipherDicts(key);
+            var (d1, d2) = GetCipherDicts();
 
             StringBuilder a = new();
             StringBuilder b = new();
             StringBuilder c = new();
 
-            foreach (var ltr in text)
+            foreach (var ltr in Message)
             {
                 EncodeLetter(d1, ltr, a, b, c);
             }
@@ -53,18 +59,13 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <summary>
         /// Decipher some text using the Trifid cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">The key to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string key)
+        public string Decode()
         {
-            CheckInput(text, key);
-
-            text = text.ToUpper();
-            var (d1, d2) = GetCipherDicts(key);
+            var (d1, d2) = GetCipherDicts();
 
             StringBuilder numbers = new();
-            foreach (var ltr in text)
+            foreach (var ltr in Message)
             {
                 numbers.Append(d1[ltr]);
             }
@@ -95,24 +96,6 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="key"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string key)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-        }
-
-        /// <summary>
         /// Encodes a letter using <paramref name="cipherDict"/>, and appends each
         /// char of the result to the stringbuilders.
         /// </summary>
@@ -134,12 +117,11 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// </summary>
         /// <param name="key"></param>
         /// <returns>A tuple containing the dicts to use.</returns>
-        private static (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts(string key)
+        private (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts()
         {
-            key = key.ToUpper();
             var triplets = "123".CartesianProduct("123", "123");
             string alphabet = $"{AppConstants.Alphabet}+";
-            alphabet = Alphabet.AlphabetPermutation(key, alphabet);
+            alphabet = Alphabet.AlphabetPermutation(Key, alphabet);
 
             Dictionary<char, string> d1 = new();
             Dictionary<string, char> d2 = new();
