@@ -16,28 +16,31 @@ namespace CipherSharp.Ciphers.Transposition
     /// to break than either cipher on it's own.
     /// </para>
     /// </summary>
-    public static class RailFence
+    public class RailFence : BaseCipher
     {
+        public int Key { get; }
+
+        public RailFence(string message, int key) : base(message)
+        {
+            Key = key;
+        }
+
         /// <summary>
         /// Encrypt some text using the Rail-fence cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="key">An integer representing the lines in the fence.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, int key)
+        public string Encode()
         {
-            CheckText(text);
-
-            List<string> fence = PrepareEmptyFence(key);
+            List<string> fence = PrepareEmptyFence(Key);
 
             int railNumber = 0;
             int increment = 1;
 
-            foreach (var letter in text)
+            foreach (var letter in Message)
             {
                 fence[railNumber] += letter;
 
-                IncrementRailNumber(key, ref railNumber, ref increment);
+                IncrementRailNumber(Key, ref railNumber, ref increment);
             }
 
             return string.Join(string.Empty, fence);
@@ -46,15 +49,11 @@ namespace CipherSharp.Ciphers.Transposition
         /// <summary>
         /// Decode some text using the Rail-fence cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="key">An integer representing the lines in the fence.</param>
         /// <returns>The decoded text.</returns>
-        public static string Decode(string text, int key)
+        public string Decode()
         {
-            CheckText(text);
-
             List<int> chunks = new();
-            for (int i = 0; i < key; i++)
+            for (int i = 0; i < Key; i++)
             {
                 chunks.Add(0);
             }
@@ -62,42 +61,34 @@ namespace CipherSharp.Ciphers.Transposition
             int railNumber = 0;
             int increment = 1;
 
-            foreach (var letter in text)
+            foreach (var letter in Message)
             {
                 chunks[railNumber] += 1;
 
-                IncrementRailNumber(key, ref railNumber, ref increment);
+                IncrementRailNumber(Key, ref railNumber, ref increment);
             }
 
-            List<string> fence = PrepareEmptyFence(key);
+            List<string> fence = PrepareEmptyFence(Key);
 
             int counter = 0;
             for (int i = 0; i < chunks.Count; i++)
             {
-                fence[i] = text[counter..(counter + chunks[i])];
+                fence[i] = Message[counter..(counter + chunks[i])];
                 counter += chunks[i];
             }
 
             railNumber = 0;
             increment = 1;
             List<string> output = new();
-            foreach (var letter in text)
+            foreach (var letter in Message)
             {
                 output.Add(fence[railNumber][0].ToString());
                 fence[railNumber] = fence[railNumber][1..];
 
-                IncrementRailNumber(key, ref railNumber, ref increment);
+                IncrementRailNumber(Key, ref railNumber, ref increment);
             }
 
             return string.Join(string.Empty, output);
-        }
-
-        public static void CheckText(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
         }
 
         /// <summary>

@@ -10,32 +10,32 @@ namespace CipherSharp.Tests.Ciphers.Transposition
         public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
-            string text = "helloworld";
+            string text = "HELLOWORLD";
             int key = 3;
-
+            RailFence railFence = new(text, key);
             // Act
-            var result = RailFence.Encode(text, key);
+            var result = railFence.Encode();
 
             // Assert
-            Assert.Equal("holelwrdlo", result);
+            Assert.Equal("HOLELWRDLO", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "holelwrdlo";
+            string text = "HOLELWRDLO";
             int key = 3;
-
+            RailFence railFence = new(text, key);
             // Act
-            var result = RailFence.Decode(text, key);
+            var result = railFence.Decode();
 
             // Assert
-            Assert.Equal("helloworld", result);
+            Assert.Equal("HELLOWORLD", result);
         }
 
         [Fact]
-        public void Encode_NullText_ThrowsArgumentException()
+        public void NewInstance_NullText_ThrowsArgumentException()
         {
             // Arrange
             string text = null;
@@ -43,19 +43,7 @@ namespace CipherSharp.Tests.Ciphers.Transposition
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => RailFence.Encode(text, key));
-        }
-
-        [Fact]
-        public void Decode_NullText_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = null;
-            int key = 1;
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => RailFence.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new RailFence(text, key));
         }
     }
 }
