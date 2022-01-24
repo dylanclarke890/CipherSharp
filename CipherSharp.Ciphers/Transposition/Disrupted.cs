@@ -13,43 +13,46 @@ namespace CipherSharp.Ciphers.Transposition
     /// of the rows of the matrix, i.e. with some spaces intentionally left blank, 
     /// or filled later with either another part of the plaintext or random letters.
     /// </summary>
-    public static class Disrupted
+    public class Disrupted<T> : BaseCipher
     {
+        public T[] Key { get; }
+
+        public Disrupted(string message, T[] key) : base(message)
+        {
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+        }
+
         /// <summary>
         /// Encrypt some text using the Disrupted Transposition cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="key">The key to use.</param>
         /// <param name="complete">If true, will pad the grid with extra letters.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode<T>(string text, T[] key, bool complete = false)
+        public string Encode(bool complete = false)
         {
-            CheckInput(text, key);
-
-            double gridSize = Math.Pow(key.Length, 2);
-            int keyLength = key.Length;
-            if (text.Length > gridSize)
+            double gridSize = Math.Pow(Key.Length, 2);
+            int keyLength = Key.Length;
+            if (Message.Length > gridSize)
             {
-                throw new ArgumentException($"{text.Length} characters cannot fit in transposition with grid size {Math.Pow(keyLength, 2)}");
+                throw new ArgumentException($"{Message.Length} characters cannot fit in transposition with grid size {Math.Pow(keyLength, 2)}");
             }
 
-            var rank = key.ToArray().UniqueRank();
-            List<string> grid = CreateEmptyGrid(key);
-            text = complete ? text.Pad((int)gridSize) : text.Pad((int)gridSize, string.Empty, " ");
+            var rank = Key.ToArray().UniqueRank();
+            List<string> grid = CreateEmptyGrid(Key);
+            Message = complete ? Message.Pad((int)gridSize) : Message.Pad((int)gridSize, string.Empty, " ");
 
             int rankLength = rank.Length;
             for (int num = 0; num < rankLength; num++)
             {
                 int rowNum = rank.IndexWhere(j => j == num)[0] + 1;
-                grid[num] = text[..rowNum];
-                text = text[rowNum..];
+                grid[num] = Message[..rowNum];
+                Message = Message[rowNum..];
             }
 
             for (int num = 0; num < rankLength; num++)
             {
                 int remainder = keyLength - grid[num].Length;
-                string chunk = text[..remainder];
-                text = text[remainder..];
+                string chunk = Message[..remainder];
+                Message = Message[remainder..];
                 grid[num] += chunk;
             }
 
@@ -68,25 +71,21 @@ namespace CipherSharp.Ciphers.Transposition
         /// <summary>
         /// Decode some text using the Disrupted Transposition cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="key">The key to use.</param>
         /// <param name="complete">If true, will pad the grid with extra letters.</param>
         /// <returns>The decoded text.</returns>
-        public static string Decode<T>(string text, T[] key, bool complete = false)
+        public string Decode(bool complete = false)
         {
-            CheckInput(text, key);
-
-            double gridSize = Math.Pow(key.Length, 2);
-            int keyLength = key.Length;
-            if (text.Length > gridSize)
+            double gridSize = Math.Pow(Key.Length, 2);
+            int keyLength = Key.Length;
+            if (Message.Length > gridSize)
             {
-                throw new ArgumentException($"{text.Length} characters cannot fit in transposition with grid size {Math.Pow(keyLength, 2)}");
+                throw new ArgumentException($"{Message.Length} characters cannot fit in transposition with grid size {Math.Pow(keyLength, 2)}");
             }
 
-            var rank = key.ToArray().UniqueRank();
-            List<string> grid = CreateEmptyGrid(key);
+            var rank = Key.ToArray().UniqueRank();
+            List<string> grid = CreateEmptyGrid(Key);
 
-            string text1 = text[..];
+            string text1 = Message[..];
             int rankLength = rank.Length;
             for (int num = 0; num < rankLength; num++)
             {
@@ -116,8 +115,8 @@ namespace CipherSharp.Ciphers.Transposition
                 rowLengths.Add(row.Length);
             }
 
-            List<List<string>> grid1 = key.Select(c => key.Select(d => " ").ToList()).ToList();
-            List<char> characters = text.ToList();
+            List<List<string>> grid1 = Key.Select(c => Key.Select(d => " ").ToList()).ToList();
+            List<char> characters = Message.ToList();
 
             foreach (var col in rank.IndirectSort())
             {
@@ -149,25 +148,12 @@ namespace CipherSharp.Ciphers.Transposition
             return output1.Append(output2).Replace(" ", string.Empty).ToString();
         }
 
-        private static void CheckInput<T>(string text, T[] key)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (key is null)
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null.", nameof(key));
-            }
-        }
-
         /// <summary>
         /// Creates a list of empty strings.
         /// </summary>
         /// <param name="key">Uses key length to generate items.</param>
         /// <returns>A list of empty strings.</returns>
-        private static List<string> CreateEmptyGrid<T>(T[] key)
+        private static List<string> CreateEmptyGrid(T[] key)
         {
             List<string> grid = new();
             for (int i = 0; i < key.Length; i++)

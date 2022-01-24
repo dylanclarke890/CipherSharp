@@ -10,54 +10,54 @@ namespace CipherSharp.Tests.Ciphers.Transposition
         public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
-            string text = "helloworld";
+            string text = "HELLOWORLD";
             string[] key = new string[4] { "test", "key", "test", "key" };
             bool complete = false;
-
+            Disrupted<string> disrupted = new(text, key);
             // Act
-            var result = Disrupted.Encode(text, key, complete);
+            var result = disrupted.Encode(complete);
 
             // Assert
-            Assert.Equal("ellwhlorod", result);
+            Assert.Equal("ELLWHLOROD", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "ellwhlorod";
+            string text = "ELLWHLOROD";
             string[] key = new string[4] { "test", "key", "test", "key" };
             bool complete = false;
-
+            Disrupted<string> disrupted = new(text, key);
             // Act
-            var result = Disrupted.Decode(text, key, complete);
+            var result = disrupted.Decode(complete);
 
             // Assert
-            Assert.Equal("helloworld", result);
+            Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string text = null;
+            string[] keys = { "test"};
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Disrupted.Encode(text, keys));
+            Assert.Throws<ArgumentException>(() => new Disrupted<string>(text, keys));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "test";
+            string[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Disrupted.Decode(text, keys));
+            Assert.Throws<ArgumentNullException>(() => new Disrupted<string>(text, keys));
         }
     }
 }

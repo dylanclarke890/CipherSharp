@@ -50,7 +50,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             var T = new StraddleCheckerboard(Message, boardString, boardKey.ToArray(), alphabet).Encode();
             T = new Columnar<int>(T, simpleK.ToArray()).Encode();
-            T = Disrupted.Encode(T, disruptedK.ToArray());
+            T = new Disrupted<int>(T, disruptedK.ToArray()).Encode();
 
             return T;
         }
@@ -71,7 +71,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             var (boardString, boardKey) = board;
 
-            var T = Disrupted.Decode(Message, disruptedK.ToArray());
+            var T = new Disrupted<int>(Message, disruptedK.ToArray()).Decode();
             T = new Columnar<int>(T, simpleK.ToArray()).Decode();
             T = new StraddleCheckerboard(T, boardString, boardKey.ToArray(), alphabet).Decode();
 
