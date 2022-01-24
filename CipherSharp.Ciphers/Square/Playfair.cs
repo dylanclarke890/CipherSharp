@@ -13,23 +13,32 @@ namespace CipherSharp.Ciphers.Square
     /// of single letters at a time, which makes cryptoanalysis much more
     /// difficult, as there are around 600 possible combinations instead of 26.
     /// </summary>
-    public static class Playfair
+    public class Playfair : BaseCipher
     {
+        public string Key { get; }
+        public AlphabetMode Mode { get; }
+
+        public Playfair(string message, string key, AlphabetMode mode) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            Key = key;
+            Mode = mode;
+        }
+
         /// <summary>
         /// Encrypt some text using the Playfair cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If <c>True</c>, will print the square to the console.</param>
         /// <returns>The encrypted string.</returns>
-        public static string Encode(string text, string key, AlphabetMode mode, bool displaySquare = true)
+        public string Encode(bool displaySquare = true)
         {
-            CheckInput(text, key);
+            ProcessMessage();
 
-            text = ProcessText(text, mode);
-
-            var square = Matrix.Create(key, mode).ToArray();
+            var square = Matrix.Create(Key, Mode).ToArray();
             var squareIndices = square.MatrixIndex();
 
             if (displaySquare)
@@ -37,8 +46,8 @@ namespace CipherSharp.Ciphers.Square
                 square.Print();
             }
 
-            var codeGroups = text.SplitIntoChunks(2);
-            int size = mode is AlphabetMode.EX ? 6 : 5;
+            var codeGroups = Message.SplitIntoChunks(2);
+            int size = Mode is AlphabetMode.EX ? 6 : 5;
 
 
             return EncodeCodeGroups(square, squareIndices, codeGroups, size);
@@ -47,18 +56,13 @@ namespace CipherSharp.Ciphers.Square
         /// <summary>
         /// Decode some text using the Playfair cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If <c>True</c>, will print the square to the console.</param>
         /// <returns>The decoded string.</returns>
-        public static string Decode(string text, string key, AlphabetMode mode, bool displaySquare = true)
+        public string Decode(bool displaySquare = true)
         {
-            CheckInput(text, key);
+            ProcessMessage();
 
-            text = ProcessText(text, mode);
-
-            var square = Matrix.Create(key, mode).ToArray();
+            var square = Matrix.Create(Key, Mode).ToArray();
             var squareIndices = square.MatrixIndex();
 
             if (displaySquare)
@@ -66,47 +70,25 @@ namespace CipherSharp.Ciphers.Square
                 square.Print();
             }
 
-            var codeGroups = text.SplitIntoChunks(2);
-            int size = mode is AlphabetMode.EX ? 6 : 5;
+            var codeGroups = Message.SplitIntoChunks(2);
+            int size = Mode is AlphabetMode.EX ? 6 : 5;
 
             return DecodeCodeGroups(square, squareIndices, codeGroups, size);
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="key"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string key)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-        }
-
-        /// <summary>
         /// Prepares the input text.
         /// </summary>
-        /// <param name="text">The text to prepare.</param>
-        /// <param name="mode">The mode to use.</param>
         /// <returns>The prepared text.</returns>
-        private static string ProcessText(string text, AlphabetMode mode)
+        private string ProcessMessage()
         {
-            text = text.ToUpper();
-
-            switch (mode)
+            switch (Mode)
             {
                 case AlphabetMode.JI:
-                    text = text.Replace("J", "I");
+                    Message = Message.Replace("J", "I");
                     break;
                 case AlphabetMode.CK:
-                    text = text.Replace("C", "K");
+                    Message = Message.Replace("C", "K");
                     break;
                 default:
                     break;
@@ -116,37 +98,36 @@ namespace CipherSharp.Ciphers.Square
 
             while (!completed)
             {
-                completed = CheckForDuplicates(ref text);
+                completed = CheckForDuplicates();
             }
 
-            if (text.Length % 2 == 1)
+            if (Message.Length % 2 == 1)
             {
-                char extraChar = text[^1] != 'X' ? 'X' : 'Z';
-                text += extraChar;
+                char extraChar = Message[^1] != 'X' ? 'X' : 'Z';
+                Message += extraChar;
             }
 
-            return text;
+            return Message;
         }
 
         /// <summary>
         /// Loops over the text, and replaces double occurences of
         /// letters (e.g "LL") with an uncommon letter ("LX").
         /// </summary>
-        /// <param name="text">The text to check</param>
         /// <returns>False if another iteration is needed.</returns>
-        private static bool CheckForDuplicates(ref string text)
+        private bool CheckForDuplicates()
         {
             bool completed = true;
-            for (int i = 0; i < text.Length / 2; i++)
+            for (int i = 0; i < Message.Length / 2; i++)
             {
-                string groupOfTwo = text[(i * 2)..(i * 2 + 2)];
+                string groupOfTwo = Message[(i * 2)..(i * 2 + 2)];
                 if (groupOfTwo[0] != groupOfTwo[1])
                 {
                     continue;
                 }
 
                 char replacementChar = groupOfTwo[0] != 'X' ? 'X' : 'Z';
-                text = $"{text[..(i * 2 + 1)]}{replacementChar}{text[(i * 2 + 1)..]}";
+                Message = $"{Message[..(i * 2 + 1)]}{replacementChar}{Message[(i * 2 + 1)..]}";
                 completed = false;
                 break;
             }

@@ -14,10 +14,9 @@ namespace CipherSharp.Tests.Ciphers.Square
             string text = "helloworld";
             string key = "abc";
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
-
+            Playfair playfair = new(text, key, mode);
             // Act
-            var result = Playfair.Encode(text, key, mode, displaySquare);
+            var result = playfair.Encode();
 
             // Assert
             Assert.Equal("KCNVMPYMQMCY", result);
@@ -30,10 +29,9 @@ namespace CipherSharp.Tests.Ciphers.Square
             string text = "KCNVMPYMQMCY";
             string key = "abc";
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
-
+            Playfair playfair = new(text, key, mode);
             // Act
-            var result = Playfair.Decode(text, key, mode, displaySquare);
+            var result = playfair.Decode();
 
             // Assert
             Assert.Equal("HELXLOWORLDX", result);
@@ -42,29 +40,14 @@ namespace CipherSharp.Tests.Ciphers.Square
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Playfair.Encode(text, key, mode, displaySquare));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => Playfair.Decode(text, key, mode, displaySquare));
+            Assert.Throws<ArgumentException>(() => new Playfair(text, key, mode));
         }
     }
 }
