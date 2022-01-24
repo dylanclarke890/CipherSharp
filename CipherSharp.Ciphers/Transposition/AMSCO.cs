@@ -12,20 +12,29 @@ namespace CipherSharp.Ciphers.Transposition
     /// which encrypts by permuting single and double letters of the 
     /// plaintext at a time.
     /// </summary>
-    public static class AMSCO
+    public class AMSCO : BaseCipher
     {
+        public string Key { get; }
+        public ParityMode Mode { get; }
+
+        public AMSCO(string message, string key, ParityMode mode) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            Key = key;
+            Mode = mode;
+        }
+
         /// <summary>
         /// Encrypt some text using the AMSCO cipher
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="mode">The mode to use.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, string key, ParityMode mode)
+        public string Encode()
         {
-            CheckInput(text, key);
-
-            var (internalKey, codeGroups) = ProcessInputData(text, key, mode);
+            var (internalKey, codeGroups) = ProcessInputData();
 
             List<string> output = new();
             foreach (var col in internalKey.IndirectSort())
@@ -41,15 +50,10 @@ namespace CipherSharp.Ciphers.Transposition
         /// <summary>
         /// Decode some text using the AMSCO cipher
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="mode">The mode to use.</param>
         /// <returns>The decpded text.</returns>
-        public static string Decode(string text, string key, ParityMode mode)
+        public string Decode()
         {
-            CheckInput(text, key);
-
-            var (internalKey, codeGroups) = ProcessInputData(text, key, mode);
+            var (internalKey, codeGroups) = ProcessInputData();
             int numRows = codeGroups.Count;
             int numCols = internalKey.Length;
 
@@ -71,7 +75,7 @@ namespace CipherSharp.Ciphers.Transposition
             List<List<string>> groupings = new();
             foreach (var col in numColRange)
             {
-                counter = SortTextIntoParityGroupings(text, internalKey, counter, colLengths, groupings, col);
+                counter = SortTextIntoParityGroupings(Message, internalKey, counter, colLengths, groupings, col);
             }
 
             foreach (var item in groupings)
@@ -94,34 +98,13 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="key"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string key)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
-        }
-
-        /// <summary>
         /// Creates the key to use and the splits the text into groups of one and two.
         /// </summary>
-        /// <param name="text">The text to split.</param>
-        /// <param name="initialKey">The input key.</param>
-        /// <param name="mode">The inital parity.</param>
         /// <returns>The processed input data.</returns>
-        private static (int[], List<List<string>>) ProcessInputData(string text, string initialKey, ParityMode mode)
+        private (int[], List<List<string>>) ProcessInputData()
         {
-            var key = initialKey.ToArray().UniqueRank();
-            var alternated = Alternating(text, mode);
+            var key = Key.ToArray().UniqueRank();
+            var alternated = Alternating(Message, Mode);
             var codeGroups = alternated.Split(key.Length);
 
             return (key, codeGroups);

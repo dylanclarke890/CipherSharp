@@ -14,9 +14,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             string text = "HELLOWORLD";
             string key = "TEST";
             ParityMode mode = ParityMode.Odd;
-
+            AMSCO aMSCO = new(text, key, mode);
             // Act
-            var result = AMSCO.Encode(text, key, mode);
+            var result = aMSCO.Encode();
 
             // Assert
             Assert.Equal("ELRLLDHOOW", result);
@@ -29,9 +29,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             string text = "ELRLLDHOOW";
             string key = "TEST";
             ParityMode mode = ParityMode.Odd;
-
+            AMSCO aMSCO = new(text, key, mode);
             // Act
-            var result = AMSCO.Decode(text, key, mode);
+            var result = aMSCO.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -40,27 +40,14 @@ namespace CipherSharp.Tests.Ciphers.Transposition
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             ParityMode mode = ParityMode.Odd;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => AMSCO.Decode(text, key, mode));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            ParityMode mode = ParityMode.Odd;
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => AMSCO.Decode(text, key, mode));
+            Assert.Throws<ArgumentException>(() => new AMSCO(text, key, mode));
         }
     }
 }
