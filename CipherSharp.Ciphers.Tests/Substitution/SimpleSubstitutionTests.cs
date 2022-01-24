@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "helloworld";
             string key = "test";
-
+            SimpleSubstitution simpleSubstitution = new(text, key);
             // Act
-            var result = SimpleSubstitution.Encode(text, key);
+            var result = simpleSubstitution.Encode();
 
             // Assert
             Assert.Equal("FBJJMWMPJA", result);
@@ -26,9 +26,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "FBJJMWMPJA";
             string key = "test";
-
+            SimpleSubstitution simpleSubstitution = new(text, key);
             // Act
-            var result = SimpleSubstitution.Decode(text, key);
+            var result = simpleSubstitution.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -37,25 +37,13 @@ namespace CipherSharp.Tests.Ciphers.Substitution
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => SimpleSubstitution.Encode(text, key));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => SimpleSubstitution.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new SimpleSubstitution(text, key));
         }
     }
 }

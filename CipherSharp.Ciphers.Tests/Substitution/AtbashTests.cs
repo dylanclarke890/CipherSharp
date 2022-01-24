@@ -11,9 +11,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
         {
             // Arrange
             string text = "helloworld";
-
+            Atbash atbash = new(text);
             // Act
-            var result = Atbash.Encode(text);
+            var result = atbash.Encode();
 
             // Assert
             Assert.Equal("SVOOLDLIOW", result);
@@ -24,9 +24,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
         {
             // Arrange
             string text = "SVOOLDLIOW";
-
+            Atbash atbash = new(text);
             // Act
-            var result = Atbash.Decode(text);
+            var result = atbash.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -40,18 +40,7 @@ namespace CipherSharp.Tests.Ciphers.Substitution
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Atbash.Encode(text));
-        }
-
-        [Fact]
-        public void Decode_NullText_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = null;
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Atbash.Decode(text));
+            Assert.Throws<ArgumentException>(() => new Atbash(text));
         }
     }
 }
