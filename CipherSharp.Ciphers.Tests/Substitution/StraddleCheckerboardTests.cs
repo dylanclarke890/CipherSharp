@@ -13,9 +13,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             string text = "helloworld";
             string initialKey = "test";
             int[] keys = new int[2] { 0, 1};
-
+            StraddleCheckerboard straddleCheckerboard = new(text, initialKey, keys);
             // Act
-            var result = StraddleCheckerboard.Encode(text, initialKey, keys);
+            var result = straddleCheckerboard.Encode();
 
             // Assert
             Assert.Equal("013050508140811058", result);
@@ -28,38 +28,38 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             string text = "013050508140811058";
             string initialKey = "test";
             int[] keys = new int[2] { 0, 1 };
-
+            StraddleCheckerboard straddleCheckerboard = new(text, initialKey, keys);
             // Act
-            var result = StraddleCheckerboard.Decode(text, initialKey, keys);
+            var result = straddleCheckerboard.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
         [Theory]
-        [InlineData("KCLLMYMTOA", null, new int[1] { 1 })]
-        [InlineData(null, "test", new int[1] { 1 })]
-        [InlineData("KCLLMYMTOA", "test", null)]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string initialKey, int[] keys)
+        [InlineData("KCLLMYMTOA", null)]
+        [InlineData(null, "test")]
+        public void Encode_NullStrings_ThrowsArgumentException(string text, string key)
         {
             // Arrange
+            int[] keys = { 1 };
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => StraddleCheckerboard.Encode(text, initialKey, keys));
+            Assert.Throws<ArgumentException>(() => new StraddleCheckerboard(text, key, keys));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null, new int[1] { 1 })]
-        [InlineData(null, "test", new int[1] { 1 })]
-        [InlineData("KCLLMYMTOA", "test", null)]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string initialKey, int[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "test";
+            string key = "test";
+            int[] keys = null;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => StraddleCheckerboard.Decode(text, initialKey, keys));
+            Assert.Throws<ArgumentNullException>(() => new StraddleCheckerboard(text, key, keys));
         }
     }
 }
