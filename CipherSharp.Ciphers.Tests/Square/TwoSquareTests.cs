@@ -14,10 +14,9 @@ namespace CipherSharp.Tests.Ciphers.Square
             string text = "helloworld";
             string[] keys = new string[2] { "test", "key" };
             AlphabetMode mode = AlphabetMode.JI;
-            bool printKey = false;
-
+            TwoSquare twoSquare = new(text, keys, mode);
             // Act
-            var result = TwoSquare.Encode(text, keys, mode, printKey);
+            var result = twoSquare.Encode();
 
             // Assert
             Assert.Equal("HEQQOWVWLD", result);
@@ -30,41 +29,38 @@ namespace CipherSharp.Tests.Ciphers.Square
             string text = "HEQQOWVWLD";
             string[] keys = new string[2] { "test", "key" };
             AlphabetMode mode = AlphabetMode.JI;
-            bool printKey = false;
-
+            TwoSquare twoSquare = new(text, keys, mode);
             // Act
-            var result = TwoSquare.Decode(text, keys, mode, printKey);
+            var result = twoSquare.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullMessage_ThrowsArgumentException()
         {
             // Arrange
+            string text = null;
+            string[] keys = { "test" };
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => TwoSquare.Encode(text, keys, mode, displaySquare));
+            Assert.Throws<ArgumentException>(() => new TwoSquare(text, keys, mode));
         }
 
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, new string[2] { "abc", "abc" })]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string[] keys)
+        [Fact]
+        public void NewInstance_NullKeys_ThrowsArgumentNullException()
         {
             // Arrange
+            string text = "helloworld";
+            string[] keys = null;
             AlphabetMode mode = AlphabetMode.JI;
-            bool displaySquare = false;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => TwoSquare.Decode(text, keys, mode, displaySquare));
+            Assert.Throws<ArgumentNullException>(() => new TwoSquare(text, keys, mode));
         }
     }
 }

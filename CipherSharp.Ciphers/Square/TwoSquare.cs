@@ -13,25 +13,30 @@ namespace CipherSharp.Ciphers.Square
     /// a polygraphic substitution cipher. It replaces each plaintext pair
     /// of letters with another two letters, based on two keyword tables.
     /// </summary>
-    public static class TwoSquare
+    public class TwoSquare : BaseCipher
     {
+        public string[] Keys { get; }
+        public AlphabetMode Mode { get; }
+
+        public TwoSquare(string message, string[] keys, AlphabetMode mode) : base(message)
+        {
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+            Mode = mode;
+
+            PrepareMessage();
+        }
+
         /// <summary>
         /// Encrypt some text using the Two Square cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, string[] keys, AlphabetMode mode, bool displaySquare = true)
+        public string Encode(bool displaySquare = true)
         {
-            CheckInput(text, keys);
+            var (squareA, squareB) = CreateMatrixes( displaySquare);
 
-            text = PrepareText(text, mode);
-            var (squareA, squareB) = CreateMatrixes(keys, mode, displaySquare);
-
-            int size = mode is AlphabetMode.EX ? 6 : 5;
-            var codeGroups = text.SplitIntoChunks(2);
+            int size = Mode is AlphabetMode.EX ? 6 : 5;
+            var codeGroups = Message.SplitIntoChunks(2);
 
             StringBuilder output = new();
             foreach (var group in codeGroups)
@@ -45,20 +50,14 @@ namespace CipherSharp.Ciphers.Square
         /// <summary>
         /// Decode some text using the Two Square cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="keys">The keys to use.</param>
-        /// <param name="mode">The alphabet mode to use.</param>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The decoded text.</returns>
-        public static string Decode(string text, string[] keys, AlphabetMode mode, bool displaySquare = false)
+        public string Decode(bool displaySquare = false)
         {
-            CheckInput(text, keys);
+            var (squareA, squareB) = CreateMatrixes(displaySquare);
 
-            text = PrepareText(text, mode);
-            var (squareA, squareB) = CreateMatrixes(keys, mode, displaySquare);
-
-            int size = mode is AlphabetMode.EX ? 6 : 5;
-            var codeGroups = text.SplitIntoChunks(2);
+            int size = Mode is AlphabetMode.EX ? 6 : 5;
+            var codeGroups = Message.SplitIntoChunks(2);
 
             StringBuilder output = new();
             foreach (var group in codeGroups)
@@ -90,37 +89,30 @@ namespace CipherSharp.Ciphers.Square
         /// <summary>
         /// Prepares the input text for the cipher.
         /// </summary>
-        /// <param name="text">The text to prepare.</param>
-        /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <returns>The prepared text.</returns>
-        private static string PrepareText(string text, AlphabetMode mode)
+        private void PrepareMessage()
         {
-            text = text.ToUpper();
-            text = mode switch
+            Message = Mode switch
             {
-                AlphabetMode.JI => text.Replace("J", "I"),
-                AlphabetMode.CK => text.Replace("C", "K"),
-                _ => throw new ArgumentException($"Invalid mode: {mode}"),
+                AlphabetMode.JI => Message.Replace("J", "I"),
+                AlphabetMode.CK => Message.Replace("C", "K"),
+                _ => throw new ArgumentException($"Invalid mode: {Mode}"),
             };
-            if (text.Length % 2 == 1)
+            if (Message.Length % 2 == 1)
             {
-                text += "X";
+                Message += "X";
             }
-
-            return text;
         }
 
         /// <summary>
         /// Creates the matrixes for the cipher.
         /// </summary>
-        /// <param name="keys">The keys to create the matrixes with.</param>
-        /// <param name="mode">The <see cref="AlphabetMode"/> to use.</param>
         /// <param name="displaySquare">If <c>True</c>, will print the matrixes to the console.</param>
         /// <returns></returns>
-        private static (IEnumerable<string>[], IEnumerable<string>[]) CreateMatrixes(string[] keys, AlphabetMode mode, bool displaySquare)
+        private (IEnumerable<string>[], IEnumerable<string>[]) CreateMatrixes(bool displaySquare)
         {
-            var squareA = Matrix.Create(keys[0], mode).ToArray();
-            var squareB = Matrix.Create(keys[1], mode).ToArray();
+            var squareA = Matrix.Create(Keys[0], Mode).ToArray();
+            var squareB = Matrix.Create(Keys[1], Mode).ToArray();
             if (displaySquare)
             {
                 squareA.Print();
