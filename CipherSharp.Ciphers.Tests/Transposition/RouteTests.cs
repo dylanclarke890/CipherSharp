@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace CipherSharp.Ciphers.Tests.Transposition
+namespace CipherSharp.Tests.Ciphers.Transposition
 {
     public class RouteTests
     {
@@ -10,32 +10,32 @@ namespace CipherSharp.Ciphers.Tests.Transposition
         public void Encode_BasicParameters_ReturnsCipherText()
         {
             // Arrange
-            string text = "helloworld";
+            string text = "HELLOWORLD";
             int key = 4;
-
+            Route route = new(text, key);
             // Act
-            var result = Route.Encode(text, key);
+            var result = route.Encode();
 
             // Assert
-            Assert.Equal("holdweloXXrl", result);
+            Assert.Equal("HOLDWELOXXRL", result);
         }
 
         [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
-            string text = "holdweloXXrl";
+            string text = "HOLDWELOXXRL";
             int key = 4;
-
+            Route route = new(text, key);
             // Act
-            var result = Route.Decode(text, key);
+            var result = route.Decode();
 
             // Assert
-            Assert.Equal("helloworldXX", result);
+            Assert.Equal("HELLOWORLDXX", result);
         }
 
         [Fact]
-        public void Encode_NullText_ThrowsArgumentException()
+        public void NewInstance_NullText_ThrowsArgumentException()
         {
             // Arrange
             string text = null;
@@ -43,19 +43,7 @@ namespace CipherSharp.Ciphers.Tests.Transposition
 
             // Act
             // Assert
-            Assert.Throws<ArgumentException>(() => Route.Encode(text, key));
-        }
-
-        [Fact]
-        public void Decode_NullText_ThrowsArgumentException()
-        {
-            // Arrange
-            string text = null;
-            int key = 4;
-
-            // Act
-            // Assert
-            Assert.Throws<ArgumentException>(() => Route.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new Route(text, key));
         }
     }
 }

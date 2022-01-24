@@ -1,5 +1,4 @@
 ﻿using CipherSharp.Utility.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,24 +10,28 @@ namespace CipherSharp.Ciphers.Transposition
     /// down then reading them off in some sort of order. This one works by reading the text 
     /// left to right into columns, then reading up and down the columns.
     /// </summary>
-    public static class Route
+    public class Route : BaseCipher
     {
+        public int Key { get; }
+
+        public Route(string message, int key) : base(message)
+{
+            Key = key;
+            PrepareMessage();
+        }
+
         /// <summary>
         /// Encrypt some text using the Route cipher.
         /// </summary>
-        /// <param name="text">The text to encrypt.</param>
-        /// <param name="key">The key to use.</param>
         /// <returns>The encrypted text.</returns>
-        public static string Encode(string text, int key)
+        public string Encode()
         {
-            text = PrepareText(text, key);
-
-            var codeGroups = text.SplitIntoChunks(key);
+            var codeGroups = Message.SplitIntoChunks(Key);
 
             StringBuilder output = new();
             int counter = 0;
 
-            while (counter < key)
+            while (counter < Key)
             {
                 List<char> gr = new();
 
@@ -51,15 +54,11 @@ namespace CipherSharp.Ciphers.Transposition
         /// <summary>
         /// Decode some text using the Route cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="key">The key to use.</param>
         /// <returns>The decoded text.</returns>
-        public static string Decode(string text, int key)
+        public string Decode()
         {
-            text = PrepareText(text, key);
-
-            key = text.Length / key;
-            var groups = text.SplitIntoChunks(key).ToList();
+            var key = Message.Length / Key;
+            var groups = Message.SplitIntoChunks(key).ToList();
 
             StringBuilder output = new();
             for (int i = 0; i < key; i++)
@@ -90,22 +89,13 @@ namespace CipherSharp.Ciphers.Transposition
         /// Adds uncommon letters to <paramref name="text"/> until it's big enough
         /// to divide by <paramref name="key"/> with zero remainder.
         /// </summary>
-        /// <param name="text">The text to prepare.</param>
-        /// <param name="key">The key to use.</param>
         /// <returns>The prepared text.</returns>
-        private static string PrepareText(string text, int key)
+        private void PrepareMessage()
         {
-            if (string.IsNullOrWhiteSpace(text))
+            while (Message.Length % Key != 0)
             {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
+                Message += 'X';
             }
-
-            while (text.Length % key != 0)
-            {
-                text += 'X';
-            }
-
-            return text;
         }
     }
 }
