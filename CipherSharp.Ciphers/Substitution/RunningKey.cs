@@ -10,32 +10,44 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Recursive Key cipher uses the key length to progressively
     /// generate the internal key.
     /// </summary>
-    public static class RunningKey
+    public class RunningKey : BaseCipher
     {
+        public string Key { get; }
+        public string Alpha { get; }
+
+        public RunningKey(string message, string key, string alphabet = AppConstants.Alphabet) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            if (string.IsNullOrWhiteSpace(alphabet))
+            {
+                throw new ArgumentException($"'{nameof(alphabet)}' cannot be null or whitespace.", nameof(alphabet));
+            }
+
+            Key = key.ToUpper();
+            Alpha = alphabet;
+        }
+
         /// <summary>
         /// Encipher some text using the Recursive Key cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string key, string alphabet = AppConstants.Alphabet)
+        public string Encode()
         {
-            CheckInput(text, key);
-
-            text = text.ToUpper();
-            key = key.ToUpper();
-            var K = key.ToNumber(alphabet);
+            var K = Key.ToNumber(Alpha);
             var P = new List<List<int>>() { K.ToList() };
-            var T = text.ToNumber(alphabet).ToList();
-            var M = alphabet.Length;
-            var nextKey = key.Length;
+            var T = Message.ToNumber(Alpha).ToList();
+            var M = Alpha.Length;
+            var nextKey = Key.Length;
             List<int> output = new();
             for (int i = 0; i < T.Count; i++)
             {
                 if (i == nextKey)
                 {
-                    P.AddRange(Stretch(K.Pad(text.Length), nextKey));
+                    P.AddRange(Stretch(K.Pad(Message.Length), nextKey));
                     nextKey *= 2;
                 }
                 int s = 0;
@@ -45,33 +57,26 @@ namespace CipherSharp.Ciphers.Substitution
                 }
                 output.Add((T[i] + s) % M);
             }
-            return string.Join(string.Empty, output.ToLetter(alphabet));
+            return string.Join(string.Empty, output.ToLetter(Alpha));
         }
 
         /// <summary>
         /// Decipher some text using the Recursive Key cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string key, string alphabet = AppConstants.Alphabet)
+        public string Decode()
         {
-            CheckInput(text, key);
-
-            text = text.ToUpper();
-            key = key.ToUpper();
-            var K = key.ToNumber(alphabet);
+            var K = Key.ToNumber(Alpha);
             var P = new List<List<int>>() { K.ToList() };
-            var T = text.ToNumber(alphabet).ToList();
-            var M = alphabet.Length;
-            var nextKey = key.Length;
+            var T = Message.ToNumber(Alpha).ToList();
+            var M = Alpha.Length;
+            var nextKey = Key.Length;
             List<int> output = new();
             for (int i = 0; i < T.Count; i++)
             {
                 if (i == nextKey)
                 {
-                    P.AddRange(Stretch(K.Pad(text.Length), nextKey));
+                    P.AddRange(Stretch(K.Pad(Message.Length), nextKey));
                     nextKey *= 2;
                 }
                 int s = 0;
@@ -81,7 +86,7 @@ namespace CipherSharp.Ciphers.Substitution
                 }
                 output.Add((T[i] - s) % M);
             }
-            return string.Join(string.Empty, output.ToLetter(alphabet));
+            return string.Join(string.Empty, output.ToLetter(Alpha));
         }
 
         /// <summary>

@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             // Arrange
             string text = "HELLOWORLD";
             string key = "test";
-
+            RunningKey running = new(text, key);
             // Act
-            var result = RunningKey.Encode(text, key);
+            var result = running.Encode();
 
             // Assert
             Assert.Equal("AXEEJRJMIA", result);
@@ -26,9 +26,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             // Arrange
             string text = "AXEEJRJMIA";
             string key = "test";
-
+            RunningKey running = new(text, key);
             // Act
-            var result = RunningKey.Decode(text, key);
+            var result = running.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -37,25 +37,13 @@ namespace CipherSharp.Tests.Ciphers.Transposition
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => RunningKey.Encode(text, key));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => RunningKey.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new RunningKey(text, key));
         }
     }
 }
