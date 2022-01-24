@@ -10,23 +10,25 @@ namespace CipherSharp.Ciphers.Substitution
     /// Variation on the <see cref="Vigenere"/> cipher.
     /// Needs two keys to generate internal keys.
     /// </summary>
-    public static class AffineVigenere
+    public class AffineVigenere : BaseCipher
     {
+        public string[] Keys { get; }
+
+        public AffineVigenere(string message, string[] keys) : base(message)
+        {
+            Keys = keys ?? throw new ArgumentNullException(nameof(keys));
+        }
+
         /// <summary>
         /// Encipher some text using the Affine Vigenere cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="keys">The keys to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string[] keys)
+        public string Encode()
         {
-            CheckInput(text, keys);
-
-            text = text.ToUpper();
-            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#";
-            var txtAsNums = text.ToNumber(alphabet);
-            var key1 = keys[0].ToUpper().ToNumber(alphabet).Pad(text.Length);
-            var key2 = keys[1].ToUpper().ToNumber(alphabet).Pad(text.Length);
+            string alphabet = AppConstants.AlphaNumeric + "#";
+            var txtAsNums = Message.ToNumber(alphabet);
+            var key1 = Keys[0].ToUpper().ToNumber(alphabet).Pad(Message.Length);
+            var key2 = Keys[1].ToUpper().ToNumber(alphabet).Pad(Message.Length);
 
             List<int> output = new();
 
@@ -44,18 +46,13 @@ namespace CipherSharp.Ciphers.Substitution
         /// <summary>
         /// Decipher some text using the Affine Vigenere cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="keys">The keys to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string[] keys)
+        public string Decode()
         {
-            CheckInput(text, keys);
-
-            text = text.ToUpper();
-            string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#";
-            var txtAsNums = text.ToNumber(alphabet);
-            var key1 = keys[0].ToUpper().ToNumber(alphabet).Pad(text.Length);
-            var key2 = keys[1].ToUpper().ToNumber(alphabet).Pad(text.Length);
+            string alphabet = AppConstants.AlphaNumeric + "#";
+            var txtAsNums = Message.ToNumber(alphabet);
+            var key1 = Keys[0].ToUpper().ToNumber(alphabet).Pad(Message.Length);
+            var key2 = Keys[1].ToUpper().ToNumber(alphabet).Pad(Message.Length);
 
             List<int> output = new();
 
@@ -69,24 +66,6 @@ namespace CipherSharp.Ciphers.Substitution
             }
 
             return string.Join(string.Empty, output.ToLetter(alphabet));
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="keys"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string[] keys)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (keys == null)
-            {
-                throw new ArgumentException($"'{nameof(keys)}' cannot be null or whitespace.", nameof(keys));
-            }
         }
     }
 }
