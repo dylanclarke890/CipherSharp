@@ -9,81 +9,73 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Progressive Key cipher is a cipher which uses both 
     /// a number and a string to generate a key.
     /// </summary>
-    public static class ProgressiveKey
+    public class ProgressiveKey : BaseCipher
     {
+        public int NumKey { get; }
+        public string TextKey { get; }
+        public string Alpha { get; }
+
+        public ProgressiveKey(string message, int numKey, string textKey, string alphabet = AppConstants.Alphabet) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(textKey))
+            {
+                throw new System.ArgumentException($"'{nameof(textKey)}' cannot be null or whitespace.", nameof(textKey));
+            }
+
+            if (string.IsNullOrWhiteSpace(alphabet))
+            {
+                throw new System.ArgumentException($"'{nameof(alphabet)}' cannot be null or whitespace.", nameof(alphabet));
+            }
+
+            NumKey = numKey;
+            TextKey = textKey.ToUpper();
+            Alpha = alphabet;
+        }
+
         /// <summary>
         /// Encipher some text using the Progressive Key cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name=textKey">The key to use.</param>
-        /// <param name=numKey">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, int numKey, string textKey, string alphabet = AppConstants.Alphabet)
+        public string Encode()
         {
-            CheckInput(text, textKey);
-
-            text = text.ToUpper();
-            textKey = textKey.ToUpper();
-            var K = textKey.ToNumber(alphabet);
+            var K = TextKey.ToNumber(Alpha);
             var P = 0;
-            var T = text.ToNumber(alphabet);
-            var M = alphabet.Length;
+            var T = Message.ToNumber(Alpha);
+            var M = Alpha.Length;
             List<int> output = new();
 
-            foreach (var (keyNum, textNum) in K.Pad(text.Length).Zip(T))
+            foreach (var (keyNum, textNum) in K.Pad(Message.Length).Zip(T))
             {
                 output.Add((textNum + keyNum + P) % M);
                 if (output.Count % K.Count() == 0)
                 {
-                    P += numKey;
+                    P += NumKey;
                 }
             }
-            return string.Join(string.Empty, output.ToLetter(alphabet));
+            return string.Join(string.Empty, output.ToLetter(Alpha));
         }
 
         /// <summary>
         /// Decipher some text using the Progressive Key cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name=textKey">The key to use.</param>
-        /// <param name=numKey">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, int numKey, string textKey, string alphabet = AppConstants.Alphabet)
+        public string Decode()
         {
-            CheckInput(text, textKey);
-
-            text = text.ToUpper();
-            textKey = textKey.ToUpper();
-            var K = textKey.ToNumber(alphabet);
+            var K = TextKey.ToNumber(Alpha);
             var P = 0;
-            var T = text.ToNumber(alphabet);
-            var M = alphabet.Length;
+            var T = Message.ToNumber(Alpha);
+            var M = Alpha.Length;
             List<int> output = new();
 
-            foreach (var (keyNum, textNum) in K.Pad(text.Length).Zip(T))
+            foreach (var (keyNum, textNum) in K.Pad(Message.Length).Zip(T))
             {
                 output.Add((textNum - keyNum - P) % M);
                 if (output.Count % K.Count() == 0)
                 {
-                    P += numKey;
+                    P += NumKey;
                 }
             }
-            return string.Join(string.Empty, output.ToLetter(alphabet));
-        }
-
-        private static void CheckInput(string text, string textKey)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new System.ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(textKey))
-            {
-                throw new System.ArgumentException($"'{nameof(textKey)}' cannot be null or whitespace.", nameof(textKey));
-            }
+            return string.Join(string.Empty, output.ToLetter(Alpha));
         }
     }
 }

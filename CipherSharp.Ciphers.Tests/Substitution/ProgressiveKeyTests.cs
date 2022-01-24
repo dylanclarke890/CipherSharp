@@ -13,9 +13,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             string text = "helloworld";
             int numKey = 2;
             string textKey = "test";
-
+            ProgressiveKey progressiveKey = new(text, numKey, textKey);
             // Act
-            var result = ProgressiveKey.Encode(text, numKey, textKey);
+            var result = progressiveKey.Encode();
 
             // Assert
             Assert.Equal("AIDEJCIMIA", result);
@@ -28,9 +28,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             string text = "AIDEJCIMIA";
             int numKey = 2;
             string textKey = "test";
-
+            ProgressiveKey progressiveKey = new(text, numKey, textKey);
             // Act
-            var result = ProgressiveKey.Decode(text, numKey, textKey);
+            var result = progressiveKey.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -39,27 +39,14 @@ namespace CipherSharp.Tests.Ciphers.Substitution
         [Theory]
         [InlineData("KCLLMYMTOA", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string textKey)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string textKey)
         {
             // Arrange
             int numKey = 2;
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => ProgressiveKey.Encode(text, numKey, textKey));
-        }
-
-        [Theory]
-        [InlineData("KCLLMYMTOA", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string textKey)
-        {
-            // Arrange
-            int numKey = 2;
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => ProgressiveKey.Decode(text, numKey, textKey));
+            Assert.Throws<ArgumentException>(() => new ProgressiveKey(text, numKey, textKey));
         }
     }
 }
