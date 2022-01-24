@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             // Arrange
             string text = "helloworld";
             string key = "test";
-
+            Bifid bifid = new(text, key);
             // Act
-            var result = Bifid.Encode(text, key);
+            var result = bifid.Encode();
 
             // Assert
             Assert.Equal("CLURKWLEAK", result);
@@ -26,9 +26,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             // Arrange
             string text = "CLURKWLEAK";
             string key = "test";
-
+            Bifid bifid = new(text, key);
             // Act
-            var result = Bifid.Decode(text, key);
+            var result = bifid.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -37,25 +37,13 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => Bifid.Encode(text, key));
-        }
-
-        [Theory]
-        [InlineData("CLURKWLEAK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => Bifid.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new Bifid(text, key));
         }
     }
 }

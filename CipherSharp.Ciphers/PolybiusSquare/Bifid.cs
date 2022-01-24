@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace CipherSharp.Ciphers.PolybiusSquare
@@ -11,39 +12,46 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// Polybius Square, followed by a transposition, followed by a Polybius Square in
     /// reverse.
     /// </summary>
-    public static class Bifid
+    public class Bifid : BaseCipher
     {
+        public string Key { get; }
+
+        public Bifid(string message, string key) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+            Key = key;
+        }
+
         /// <summary>
         /// Encipher some text using the Bifid cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">The key to use.</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string key)
+        public string Encode()
         {
-            string nums = Polybius.Encode(text, key);
+            string nums = Polybius.Encode(Message, Key);
 
             StringBuilder a = new();
             StringBuilder b = new();
 
-            for (int i = 0; i < text.Length; i++)
+            for (int i = 0; i < Message.Length; i++)
             {
                 a.Append(nums[i * 2]);
                 b.Append(nums[i * 2 + 1]);
             }
 
-            return Polybius.Decode(a.Append(b).ToString(), key);
+            return Polybius.Decode(a.Append(b).ToString(), Key);
         }
 
         /// <summary>
         /// Decipher some text using the Bifid cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">The key to use.</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string key)
+        public string Decode()
         {
-            string nums = Polybius.Encode(text, key);
+            string nums = Polybius.Encode(Message, Key);
             int half = nums.Length / 2;
 
             string a = nums[..half];
@@ -55,7 +63,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 result.Append($"{i}{j}");
             }
 
-            return Polybius.Decode(result.ToString(), key);
+            return Polybius.Decode(result.ToString(), Key);
         }
     }
 }
