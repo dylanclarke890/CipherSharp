@@ -12,9 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "helloworld";
             string key = "test";
-
+            AutoKey autoKey = new(text, key);
             // Act
-            var result = AutoKey.Encode(text, key);
+            var result = autoKey.Encode();
 
             // Assert
             Assert.Equal("AIDEVAZCZZ", result);
@@ -26,9 +26,9 @@ namespace CipherSharp.Tests.Ciphers.Substitution
             // Arrange
             string text = "AIDEVAZCZZ";
             string key = "test";
-
+            AutoKey autoKey = new(text, key);
             // Act
-            var result = AutoKey.Decode(text, key);
+            var result = autoKey.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -37,25 +37,13 @@ namespace CipherSharp.Tests.Ciphers.Substitution
         [Theory]
         [InlineData("helloworld", null)]
         [InlineData(null, "test")]
-        public void Encode_NullParameters_ThrowsArgumentException(string text, string key)
+        public void NewInstance_NullParameters_ThrowsArgumentException(string text, string key)
         {
             // Arrange
             // Act
 
             // Assert
-            Assert.Throws<ArgumentException>(() => AutoKey.Encode(text, key));
-        }
-
-        [Theory]
-        [InlineData("IMOTMNNLLK", null)]
-        [InlineData(null, "test")]
-        public void Decode_NullParameters_ThrowsArgumentException(string text, string key)
-        {
-            // Arrange
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentException>(() => AutoKey.Decode(text, key));
+            Assert.Throws<ArgumentException>(() => new AutoKey(text, key));
         }
     }
 }

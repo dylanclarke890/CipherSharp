@@ -26,7 +26,6 @@
         /// <summary>
         /// Decipher some text using the Atbash cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
         /// <returns>The deciphered text.</returns>
         public string Decode()
         {

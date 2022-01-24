@@ -13,38 +13,50 @@ namespace CipherSharp.Ciphers.Substitution
     /// to any cipher where the key is based on the original plaintext.
     /// Very similar to the <see cref="Vigenere"/> cipher.
     /// </summary>
-    public static class AutoKey
+    public class AutoKey : BaseCipher
     {
+        public string Key { get; }
+        public string Alpha { get; }
+        public AutoKeyMode Mode { get; }
+
+        public AutoKey(string message, string key, string alphabet = AppConstants.Alphabet, AutoKeyMode mode = AutoKeyMode.Vigenere) : base(message)
+        {
+            if (string.IsNullOrWhiteSpace(key))
+            {
+                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
+            }
+
+            if (string.IsNullOrWhiteSpace(alphabet))
+            {
+                throw new ArgumentException($"'{nameof(alphabet)}' cannot be null or whitespace.", nameof(alphabet));
+            }
+
+            Key = key.ToUpper();
+            Alpha = alphabet;
+            Mode = mode;
+        }
+
         /// <summary>
         /// Encipher some text using the AutoKey cipher.
         /// </summary>
-        /// <param name="text">The text to encipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
-        /// <param name="mode">The mode to use (vigenere/beaufort).</param>
         /// <returns>The enciphered text.</returns>
-        public static string Encode(string text, string key, string alphabet = AppConstants.Alphabet, AutoKeyMode mode = AutoKeyMode.Vigenere)
+        public string Encode()
         {
-            CheckInput(text, key);
-            alphabet ??= AppConstants.Alphabet;
-
-            text = text.ToUpper();
-            key = key.ToUpper();
-            var T = text.ToNumber(alphabet).ToList();
-            var K = key.ToNumber(alphabet).ToList();
-            var M = alphabet.Length;
+            var T = Message.ToNumber(Alpha).ToList();
+            var K = Key.ToNumber(Alpha).ToList();
+            var M = Alpha.Length;
             K.AddRange(T);
 
             List<int> output = new();
 
-            if (mode is AutoKeyMode.Vigenere)
+            if (Mode is AutoKeyMode.Vigenere)
             {
                 foreach (var (keyNum, textNum) in K.Zip(T))
                 {
                     output.Add((textNum + keyNum) % M);
                 }
             }
-            else if (mode is AutoKeyMode.Beaufort)
+            else if (Mode is AutoKeyMode.Beaufort)
             {
                 foreach (var (keyNum, textNum) in K.Zip(T))
                 {
@@ -52,31 +64,22 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
 
-            return string.Join(string.Empty, output.ToLetter(alphabet));
+            return string.Join(string.Empty, output.ToLetter(Alpha));
         }
 
         /// <summary>
         /// Decipher some text using the AutoKey cipher.
         /// </summary>
-        /// <param name="text">The text to decipher.</param>
-        /// <param name="key">The key to use.</param>
-        /// <param name="alphabet">The alphabet to use.</param>
-        /// <param name="mode">The mode to use (vigenere/beaufort).</param>
         /// <returns>The deciphered text.</returns>
-        public static string Decode(string text, string key, string alphabet = AppConstants.Alphabet, AutoKeyMode mode = AutoKeyMode.Vigenere)
+        public string Decode()
         {
-            CheckInput(text, key);
-            alphabet ??= AppConstants.Alphabet;
-
-            text = text.ToUpper();
-            key = key.ToUpper();
-            var T = text.ToNumber(alphabet).ToList();
-            var K = key.ToNumber(alphabet).ToList();
-            var M = alphabet.Length;
+            var T = Message.ToNumber(Alpha).ToList();
+            var K = Key.ToNumber(Alpha).ToList();
+            var M = Alpha.Length;
 
             List<int> output = new();
 
-            if (mode is AutoKeyMode.Vigenere)
+            if (Mode is AutoKeyMode.Vigenere)
             {
                 int currentCycle = 0;
                 while (K.Zip(T).Count() > currentCycle)
@@ -87,7 +90,7 @@ namespace CipherSharp.Ciphers.Substitution
                     currentCycle++;
                 }
             }
-            else if (mode is AutoKeyMode.Beaufort)
+            else if (Mode is AutoKeyMode.Beaufort)
             {
                 int currentCycle = 0;
                 while (K.Zip(T).Count() > currentCycle)
@@ -99,25 +102,7 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
 
-            return string.Join(string.Empty, output.ToLetter(alphabet));
-        }
-
-        /// <summary>
-        /// Throws an <see cref="ArgumentException"/> if <paramref name="text"/> or
-        /// <paramref name="key"/> is null or empty.
-        /// </summary>
-        /// <exception cref="ArgumentException"/>
-        private static void CheckInput(string text, string key)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentException($"'{nameof(text)}' cannot be null or whitespace.", nameof(text));
-            }
-
-            if (string.IsNullOrWhiteSpace(key))
-            {
-                throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
-            }
+            return string.Join(string.Empty, output.ToLetter(Alpha));
         }
     }
 }
