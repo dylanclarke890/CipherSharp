@@ -83,5 +83,39 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             // Assert
             Assert.Throws<ArgumentException>(() => new Alberti(text, key, letter, turn));
         }
+
+        [Fact]
+        public void Encode_LargerParameters_ReturnsCipherText()
+        {
+            // Arrange
+            string message = "Some random text to test that is lowercase and length so that I can properly measure the performance I think this should be enough";
+            string textKey = "Alongtestkeythatcanbeusedtoforthecipher";
+            char albertiStartingChar = 'M';
+            int turn = 9;
+            int[] albertiRange = new int[2] { 0, 0 };
+            Alberti alberti = new(message, textKey, albertiStartingChar, turn);
+            // Act
+            var result = alberti.Encode(albertiRange);
+
+            // Assert
+            var expected = "OSDFL3FD8TQFSBQZN7M4NAO42CUZE7JUMCEC76UF79QPOSQPMBHUMEI28KE25IDFMCV2XBYF97JR8HDC75EJNAHX4BYJOCYZGGTBX7FZG9Y";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void Decode_LargerParameters_ReturnsPlainText()
+        {
+            // Arrange
+            string message = "OSDFL3FD8TQFSBQZN7M4NAO42CUZE7JUMCEC76UF79QPOSQPMBHUMEI28KE25IDFMCV2XBYF97JR8HDC75EJNAHX4BYJOCYZGGTBX7FZG9Y";
+            string textKey = "Alongtestkeythatcanbeusedtoforthecipher";
+            char albertiStartingChar = 'M';
+            int turn = 9;
+            Alberti alberti = new(message, textKey, albertiStartingChar, turn);
+            // Act
+            var result = alberti.Decode();
+            // Assert
+            var expected = "SOMERANDOMTEXTTOTESTTHATISLOWERCASEANDLENGTHSOTHATICANPROPERLYMEASURETHEPERFORMANCEITHINKTHISSHOULDBEENOUGH";
+            Assert.Equal(expected, result);
+        }
     }
 }

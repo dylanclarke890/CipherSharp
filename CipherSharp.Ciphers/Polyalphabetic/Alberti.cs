@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
@@ -51,7 +52,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             {
                 throw new ArgumentNullException(nameof(range));
             }
-            CheckPlainTextForDigit();
+            CheckMessageForNonLetters();
 
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
@@ -76,8 +77,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return string.Join(string.Empty, output);
         }
 
         /// <summary>
@@ -105,17 +105,23 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return string.Join(string.Empty, output);
         }
 
-        private void CheckPlainTextForDigit()
+        /// <summary>
+        /// Throws an InvalidOperationException if any invalid chars in message.
+        /// Checks between the ranges of 64 and 90 for lowercase, 96 and 122 for lower.
+        /// </summary>
+        /// <exception cref="InvalidOperationException"/>
+        private void CheckMessageForNonLetters()
         {
-            foreach (var num in AppConstants.Digits)
+            for (int ch = 0; ch < Message.Length; ch++)
             {
-                if (Message.Any(ch => ch == num)) // numbers in plaintext will cause decoding errors.
+                if ((63 >= Message[ch] || 91 <= Message[ch]) && (95 >= Message[ch] || 123 <= Message[ch]))
                 {
-                    throw new ArgumentException("Cannot include numbers in the plaintext.");
+                    var result = Message.Where(ch => (63 < ch && 91 > ch) || (95 < ch && 123 > ch));
+                    var res = string.Join(" ", result);
+                    throw new InvalidOperationException($"Must only contain uppercase or lowercase letters. '{res}'");
                 }
             }
         }
@@ -134,24 +140,20 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         private string GetInnerRing(string outerRing)
         {
             string innerRing = Alphabet.AlphabetPermutation(Key, outerRing);
-            // Turn the inner ring until the correct symbol is in the first position
-            while (innerRing[0] != StartPosition)
-            {
-                innerRing = RotateNTimes(innerRing, 1);
-            }
+            innerRing = RotateNTimes(innerRing, innerRing.IndexOf(StartPosition));
 
             return innerRing;
         }
 
         private static string RotateNTimes(string key, int n)
-        {
-            var temp = key[..];
+{
+            var temp = key.AsSpan();
+            int amount = n % key.Length;
 
-            for (int i = 0; i < n; i++)
-            {
-                temp = temp[1..] + temp[0];
-            }
-            return temp;
+            var chunk = temp[..amount].ToArray();
+            var remainder = temp[amount..];
+            
+            return new string(remainder) + new string(chunk);
         }
     }
 }
