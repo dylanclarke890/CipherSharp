@@ -13,12 +13,12 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             string text = "HELLOWORLD";
             string key = "TEST";
             char startingLetter = 'H';
-            int[] range = new int[2] { 1, 2 };
+            int range = 1;
             int turn = 0;
-            Alberti alberti = new(text, key, startingLetter, turn);
+            Alberti alberti = new(text, key, startingLetter, turn, range);
 
             // Act
-            var result = alberti.Encode(range);
+            var result = alberti.Encode();
 
             // Assert
             Assert.Equal("OLUUX5X0UK", result);
@@ -38,21 +38,6 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
-        }
-
-        [Fact]
-        public void Encode_NullRange_ThrowsArgumentNullException()
-        {
-            // Arrange
-            string text = "OLUUX5X0UK";
-            string key = "TEST";
-            char startingLetter = 'H';
-            int turn = 0;
-            Alberti alberti = new(text, key, startingLetter, turn);
-            // Act
-
-            // Assert
-            Assert.Throws<ArgumentNullException>(() => alberti.Encode(null));
         }
 
         [Theory]
@@ -92,10 +77,9 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
             string textKey = "Alongtestkeythatcanbeusedtoforthecipher";
             char albertiStartingChar = 'M';
             int turn = 9;
-            int[] albertiRange = new int[2] { 0, 0 };
             Alberti alberti = new(message, textKey, albertiStartingChar, turn);
             // Act
-            var result = alberti.Encode(albertiRange);
+            var result = alberti.Encode();
 
             // Assert
             var expected = "OSDFL3FD8TQFSBQZN7M4NAO42CUZE7JUMCEC76UF79QPOSQPMBHUMEI28KE25IDFMCV2XBYF97JR8HDC75EJNAHX4BYJOCYZGGTBX7FZG9Y";

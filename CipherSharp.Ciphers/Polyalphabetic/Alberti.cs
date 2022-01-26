@@ -1,8 +1,7 @@
 ﻿using CipherSharp.Utility.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
@@ -19,13 +18,24 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// default the turning rate is zero. The inner ring only turns when a number is
     /// encrypted or a gap is selected.
     /// </summary>
-    public class Alberti : BaseCipher
+    public class Alberti : BaseCipher, ICipher
     {
         public string Key { get;}
         public char StartPosition { get;}
         public int Turn { get; }
-        public Alberti(string message, string key, char startPos, int turn = 0)
-            : base(message)
+        public int GapRange { get; }
+
+        /// <summary>
+        /// Create a new instance of the Alberti cipher.
+        /// </summary>
+        /// <param name="message">The message to encode/decode. Will be stripped of whitespace and converted to uppercase before processing.</param>
+        /// <param name="key">The key to use to permutate the alphabet. Repeated characters are ignored after the first occurence.</param>
+        /// <param name="startPos">The starting positiong for the inner ring. Must be a number or a digit.</param>
+        /// <param name="turn">The amount of times the inner ring should turn after encoding/decoding a letter.</param>
+        /// <param name="gapRange">If specified, will turn the wheel a random number of times</param>
+        /// <exception cref="ArgumentException"/>
+        public Alberti(string message, string key, char startPos, int turn = 0, int gapRange = 0)
+            : base(message.Replace(" ", ""))
         {
             if (string.IsNullOrWhiteSpace(key))
             {
@@ -34,84 +44,78 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             Key = key;
             Turn = turn;
-            StartPosition = char.IsLetter(startPos) ? startPos 
-                : throw new ArgumentException($"'{nameof(startPos)}' must be a letter.", nameof(startPos));
+            GapRange = gapRange;
+            StartPosition = char.IsLetterOrDigit(startPos) ? startPos 
+                : throw new ArgumentException($"'{nameof(startPos)}' must be a letter or digit.", nameof(startPos));
         }
 
         /// <summary>
-        /// Encipher some text using the Alberti cipher.
+        /// Encode a message using the Alberti cipher. The <see cref="GapRange"/> property can be used
+        /// to increase the security by turning the inner wheel a random number of times at random intervals.
         /// </summary>
-        /// <param name="range">Random gap to make encryption more secure.</param>
-        /// <returns>The enciphered text.</returns>
-        /// <exception cref="ArgumentException"/>
-        /// <exception cref="ArgumentNullException"/>
+        /// <returns>The encoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
-        public string Encode(int[] range)
+        public string Encode()
         {
-            if (range == null)
-            {
-                throw new ArgumentNullException(nameof(range));
-            }
             CheckMessageForNonLetters();
 
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
 
-            Random random = new();
-            int gap = random.Next(Math.Abs(range[0] - range[1]));
-            List<char> output = new();
+            Random random = new(Message.Length);
+            int gap = random.Next(Math.Abs(GapRange));
 
-            foreach (var ch in Message) // Encrypt one by one and count down to gap
+            StringBuilder output = new();
+            foreach (var ch in Message)
             {
-                output.Add(innerRing[outerRing.IndexOf(ch)]);
+                output.Append(innerRing[outerRing.IndexOf(ch)]);
                 gap--;
-                if (gap == 0) // encrypt 
+
+                if (gap == 0)
                 {
-                    // If we reached the gap encrypt a number, turn the wheel, and
-                    // choose the size of the next gap.
                     var randomDigit = AppConstants.Digits[random.Next(AppConstants.Digits.Length)];
-                    output.Add(outerRing[innerRing.IndexOf(randomDigit)]);
-                    innerRing = RotateNTimes(innerRing, int.Parse(randomDigit.ToString()));
-                    gap = random.Next(Math.Abs(range[0] - range[1]));
+                    output.Append(outerRing[innerRing.IndexOf(randomDigit)]);
+                    innerRing = RotateNTimes(innerRing, randomDigit - 48);
+
+                    gap = random.Next(Math.Abs(GapRange));
                 }
+                
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            return string.Join(string.Empty, output);
+            return output.ToString();
         }
 
         /// <summary>
-        /// Decipher some text using the Alberti cipher.
+        /// Decode a message using the Alberti cipher. If the message has been encoded with a 
+        /// random gap included, the encoded number will be used to turn the wheel before decoding continues.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
         public string Decode()
         {
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
 
-            List<char> output = new();
+            StringBuilder output = new();
             foreach (var ch in Message)
             {
                 var gapOrLetter = outerRing[innerRing.IndexOf(ch)];
-                if (AppConstants.Digits.Contains(gapOrLetter))
+                if (gapOrLetter >= 48 && gapOrLetter <= 57)
                 {
-                    innerRing = RotateNTimes(innerRing, int.Parse(gapOrLetter.ToString()));
+                    innerRing = RotateNTimes(innerRing, gapOrLetter - 48);
                 }
                 else
                 {
-                    output.Add(gapOrLetter);
+                    output.Append(gapOrLetter);
                 }
+
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            return string.Join(string.Empty, output);
+            return output.ToString();
         }
 
-        /// <summary>
-        /// Throws an InvalidOperationException if any invalid chars in message.
-        /// Checks between the ranges of 64 and 90 for lowercase, 96 and 122 for lower.
-        /// </summary>
         /// <exception cref="InvalidOperationException"/>
         private void CheckMessageForNonLetters()
         {
@@ -126,6 +130,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             }
         }
 
+        /// <exception cref="InvalidOperationException"/>
         private string GetOuterRing()
         {
             string outerRing = AppConstants.AlphaNumeric;
@@ -145,12 +150,18 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return innerRing;
         }
 
+        /// <summary>
+        /// Shifts the letters in <paramref name="key"/> left <paramref name="n"/> times.
+        /// </summary>
+        /// <param name="key">The key to shift.</param>
+        /// <param name="n">The amount of letters to turn by.</param>
+        /// <returns>The shifted key.</returns>
         private static string RotateNTimes(string key, int n)
 {
             var temp = key.AsSpan();
             int amount = n % key.Length;
 
-            var chunk = temp[..amount].ToArray();
+            var chunk = temp[..amount];
             var remainder = temp[amount..];
             
             return new string(remainder) + new string(chunk);
