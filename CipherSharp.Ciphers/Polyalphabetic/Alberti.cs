@@ -65,7 +65,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             Random random = new(Message.Length);
             int gap = random.Next(Math.Abs(GapRange));
 
-            StringBuilder output = new();
+            StringBuilder output = new(Message.Length);
             foreach (var ch in Message)
             {
                 output.Append(innerRing[outerRing.IndexOf(ch)]);
@@ -97,7 +97,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
 
-            StringBuilder output = new();
+            StringBuilder output = new(Message.Length);
             foreach (var ch in Message)
             {
                 var gapOrLetter = outerRing[innerRing.IndexOf(ch)];

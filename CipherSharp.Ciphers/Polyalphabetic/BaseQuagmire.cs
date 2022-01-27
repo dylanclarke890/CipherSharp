@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
@@ -25,7 +26,25 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             Keys = keys;
             Alpha = alphabet;
         }
+
+        /// <summary>
+        /// Encode a message using the Quagmire cipher.
+        /// </summary>
+        /// <returns>The encoded message.</returns>
         public abstract string Encode();
+
+        /// <summary>
+        /// Decode a message using the Quagmire cipher.
+        /// </summary>
+        /// <returns>The decoded message.</returns>
         public abstract string Decode();
+
+        /// <summary>
+        /// Create the cipher table for the Quagmire cipher.
+        /// </summary>
+        /// <param name="key">The permutated alphabet to use.</param>
+        /// <param name="indicator">The key to use to create the table.</param>
+        /// <returns>The cipher table</returns>
+        public abstract List<string> CreateTable(string key, string indicator);
     }
 }

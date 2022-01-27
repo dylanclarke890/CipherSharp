@@ -1,6 +1,6 @@
 ﻿using CipherSharp.Utility.Helpers;
-using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
@@ -12,80 +12,56 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// </summary>
     public class QuagmireFour : BaseQuagmire
     {
-        public QuagmireFour(string message, string[] keys, string alphabet = AppConstants.Alphabet) : base(message, keys, alphabet)
+        public QuagmireFour(string message, string[] keys, string alphabet = AppConstants.Alphabet) 
+            : base(message, keys, alphabet)
         {
         }
 
-        /// <summary>
-        /// Encipher some text using the Quagmire Four cipher.
-        /// </summary>
-        /// <returns>The enciphered text.</returns>
         public override string Encode()
         {
             var key1 = Alphabet.AlphabetPermutation(Keys[0], Alpha);
             var key2 = Alphabet.AlphabetPermutation(Keys[1], Alpha);
-            var alphabetLength = Alpha.Length;
             var indicator = Keys[2];
-            List<string> table = new();
+            List<string> table = CreateTable(key2, indicator);
 
-            foreach (var letter in indicator)
-            {
-                var sh = key2.IndexOf(letter) % alphabetLength;
-                if (sh < 0)
-                {
-                    table.Add(key2[^Math.Abs(sh)..] + key2[..^Math.Abs(sh)]);
-                }
-                else
-                {
-                    table.Add(key2[sh..] + key2[..sh]);
-                }
-            }
-
-            List<char> output = new();
+            StringBuilder output = new(Message.Length);
             for (int i = 0; i < Message.Length; i++)
             {
                 var t = table[i % indicator.Length];
-                output.Add(t[key1.IndexOf(Message[i])]);
+                output.Append(t[key1.IndexOf(Message[i])]);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return output.ToString();
         }
 
-        /// <summary>
-        /// Decipher some text using the Quagmire Four cipher.
-        /// </summary>
-        /// <returns>The deciphered text.</returns>
         public override string Decode()
         {
             var key1 = Alphabet.AlphabetPermutation(Keys[0], Alpha);
             var key2 = Alphabet.AlphabetPermutation(Keys[1], Alpha);
-            var alphabetLength = Alpha.Length;
             var indicator = Keys[2];
-            List<string> table = new();
+            List<string> table = CreateTable(key2, indicator);
 
-            foreach (var letter in indicator)
-            {
-                var sh = key2.IndexOf(letter) % alphabetLength;
-                if (sh < 0)
-                {
-                    table.Add(key2[^Math.Abs(sh)..] + key2[..^Math.Abs(sh)]);
-                }
-                else
-                {
-                    table.Add(key2[sh..] + key2[..sh]);
-                }
-            }
-
-            List<char> output = new();
+            StringBuilder output = new(Message.Length);
             for (int i = 0; i < Message.Length; i++)
             {
                 var t = table[i % indicator.Length];
-                output.Add(key1[t.IndexOf(Message[i])]);
+                output.Append(key1[t.IndexOf(Message[i])]);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return output.ToString();
+        }
+
+        public override List<string> CreateTable(string key, string indicator)
+        {
+            List<string> table = new(indicator.Length);
+
+            foreach (var letter in indicator)
+            {
+                var sh = key.IndexOf(letter) % Alpha.Length;
+                table.Add(key[sh..] + key[..sh]);
+            }
+
+            return table;
         }
     }
 }

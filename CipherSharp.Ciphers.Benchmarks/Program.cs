@@ -7,7 +7,7 @@ namespace CipherSharp.Ciphers.Benchmarks
     {
         static void Main()
         {
-            BenchmarkRunner.Run<QuagmireOneBenchmarks>();
+            BenchmarkRunner.Run<QuagmireFourBenchmarks>();
         }
     }
 }

@@ -17,10 +17,6 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         {
         }
 
-        /// <summary>
-        /// Encode some text using the Quagmire One cipher.
-        /// </summary>
-        /// <returns>The encoded text.</returns> 
         public override string Encode()
         {
             var key = Alphabet.AlphabetPermutation(Keys[0], Alpha);
@@ -38,10 +34,6 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return output.ToString();
         }
 
-        /// <summary>
-        /// Decode some text using the Quagmire One cipher.
-        /// </summary>
-        /// <returns>The decoded text.</returns>
         public override string Decode()
         {
             var key = Alphabet.AlphabetPermutation(Keys[0], Alpha);
@@ -58,13 +50,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return output.ToString();
         }
 
-        /// <summary>
-        /// Creates the table to use for encoding/decoding.
-        /// </summary>
-        /// <param name="key">The key to use as reference generate the table.</param>
-        /// <param name="indicator">Used to generate the table.</param>
-        /// <returns>The cipher table.</returns>
-        private List<string> CreateTable(string key, string indicator)
+        public override List<string> CreateTable(string key, string indicator)
         {
             var aIndex = key.IndexOf("A");
             List<string> table = new(indicator.Length);

@@ -1,6 +1,7 @@
 ﻿using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
@@ -16,74 +17,48 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         {
         }
 
-        /// <summary>
-        /// Encipher some text using the Quagmire Three cipher.
-        /// </summary>
-        /// <returns>The enciphered text.</returns>
         public override string Encode()
         {
             var key = Alphabet.AlphabetPermutation(Keys[0], Alpha);
-            var alphabetLength = Alpha.Length;
             var indicator = Keys[1];
-            List<string> table = new();
+            List<string> table = CreateTable(key, indicator);
 
-            foreach (var letter in indicator)
-            {
-                var sh = key.IndexOf(letter) % alphabetLength;
-                if (sh < 0)
-                {
-                    table.Add(key[^Math.Abs(sh)..] + key[..^Math.Abs(sh)]);
-                }
-                else
-                {
-                    table.Add(key[sh..] + key[..sh]);
-                }
-            }
-
-            List<char> output = new();
+            StringBuilder output = new(Message.Length);
             for (int i = 0; i < Message.Length; i++)
             {
                 var t = table[i % indicator.Length];
-                output.Add(t[key.IndexOf(Message[i])]);
+                output.Append(t[key.IndexOf(Message[i])]);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return output.ToString();
         }
 
-        /// <summary>
-        /// Decipher some text using the Quagmire Three cipher.
-        /// </summary>
-        /// <returns>The deciphered text.</returns>
         public override string Decode()
         {
             var key = Alphabet.AlphabetPermutation(Keys[0], Alpha);
-            var alphabetLength = Alpha.Length;
             var indicator = Keys[1];
-            List<string> table = new();
+            List<string> table = CreateTable(key, indicator);
 
-            foreach (var letter in indicator)
-            {
-                var sh = key.IndexOf(letter) % alphabetLength;
-                if (sh < 0)
-                {
-                    table.Add(key[^Math.Abs(sh)..] + key[..^Math.Abs(sh)]);
-                }
-                else
-                {
-                    table.Add(key[sh..] + key[..sh]);
-                }
-            }
-
-            List<char> output = new();
+            StringBuilder output = new();
             for (int i = 0; i < Message.Length; i++)
             {
-                var t = table[i % indicator.Length];
-                output.Add(key[t.IndexOf(Message[i])]);
+                var row = table[i % indicator.Length];
+                output.Append(key[row.IndexOf(Message[i])]);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return output.ToString();
+        }
+
+        public override List<string> CreateTable(string key, string indicator)
+        {
+            List<string> table = new(indicator.Length);
+            foreach (var letter in indicator)
+            {
+                var sh = key.IndexOf(letter) % Alpha.Length;
+                table.Add(key[sh..] + key[..sh]);
+            }
+
+            return table;
         }
     }
 }

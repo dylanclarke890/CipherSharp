@@ -11,7 +11,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         {
             // Arrange
             string text = "helloworld";
-            string[] keys = new string[3] { "test", "key", "hello" };
+            string[] keys = new string[2] { "test", "key" };
             QuagmireTwo quagmire = new(text, keys);
             // Act
             var result = quagmire.Encode();
@@ -25,7 +25,7 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         {
             // Arrange
             string text = "RCHXNUTQHN";
-            string[] keys = new string[3] { "test", "key", "hello" };
+            string[] keys = new string[2] { "test", "key" };
             QuagmireTwo quagmire = new(text, keys);
             // Act
             var result = quagmire.Decode();
