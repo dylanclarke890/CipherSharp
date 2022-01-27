@@ -18,8 +18,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         private const string Key = "KEYFORTESTING";
         private const char StartPosition = 'W';
         private const int Turns = 4;
-        private const string Message = "Some random text to test that is lowercase and length so that I can properly measure the performance I think this should be enough";
-        private const string MessageNoWS = "SOMERANDOMTEXTTOTESTTHATISLOWERCASEANDLENGTHSOTHATICANPROPERLYMEASURETHEPERFORMANCEITHINKTHISSHOULDBEENOUGH";
+        private const string Message = "SOMERANDOMTEXTTOTESTTHATISLOWERCASEANDLENGTHSOTHATICANPROPERLYMEASURETHEPERFORMANCEITHINKTHISSHOULDBEENOUGH";
         private const string CipherMessage = "OSDFL3FD8TQFSBQZN7M4NAO42CUZE7JUMCEC76UF79QPOSQPMBHUMEI28KE25IDFMCV2XBYF97JR8HDC75EJNAHX4BYJOCYZGGTBX7FZG9Y";
         private const int Range = 9;
 
@@ -58,11 +57,11 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #region CheckMessageForNonLetterBenchmarks
         public void CheckMessageForNonLetterInvertingBoolsAndForLoop()
         {
-            for (int ch = 0; ch < MessageNoWS.Length; ch++)
+            for (int ch = 0; ch < Message.Length; ch++)
             {
-                if ((63 >= MessageNoWS[ch] || 91 <= MessageNoWS[ch]) && (95 >= MessageNoWS[ch] || 123 <= MessageNoWS[ch]))
+                if ((63 >= Message[ch] || 91 <= Message[ch]) && (95 >= Message[ch] || 123 <= Message[ch]))
                 {
-                    var result = MessageNoWS.Where(ch => (63 < ch && 91 > ch) || (95 < ch && 123 > ch));
+                    var result = Message.Where(ch => (63 < ch && 91 > ch) || (95 < ch && 123 > ch));
                     var res = string.Join(" ", result);
                     throw new ArgumentException($"Must only contain uppercase or lowercase letters. '{res}'");
                 }
@@ -71,9 +70,9 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
 
         public void CheckMessageForNonLetterUsingASCIIAndInvertingBools()
         {
-            if (MessageNoWS.Any(ch => (63 >= ch || 91 <= ch) && (95 >= ch || 123 <= ch)))
+            if (Message.Any(ch => (63 >= ch || 91 <= ch) && (95 >= ch || 123 <= ch)))
             {
-                var result = MessageNoWS.Where(ch => (63 < ch && 91 > ch) || (95 < ch && 123 > ch));
+                var result = Message.Where(ch => (63 < ch && 91 > ch) || (95 < ch && 123 > ch));
                 var res = string.Join(" ", result);
                 throw new ArgumentException($"Must only contain uppercase or lowercase letters. '{res}'");
             }
@@ -81,7 +80,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
 
         public void CheckMessageForNonLetterUsingASCII()
         {
-            if (MessageNoWS.Any(ch => !((ch > 64 && ch <= 90) || (ch > 96 && ch <= 122))))
+            if (Message.Any(ch => !((ch > 64 && ch <= 90) || (ch > 96 && ch <= 122))))
             {
                 var result = Message.Where(ch => !((ch > 64 && ch <= 90) || (ch > 96 && ch <= 122)));
                 var res = string.Join(" ", result);
@@ -92,7 +91,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         public void CheckMessageForNonLetterOriginal()        {
             foreach (var num in AppConstants.Digits)
             {
-                if (MessageNoWS.Any(ch => ch == num))
+                if (Message.Any(ch => ch == num))
                 {
                     throw new ArgumentException("Must only contain uppercase or lowercase letters.");
                 }
@@ -123,7 +122,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             int gap = random.Next(Math.Abs(Range));
             List<char> output = new();
 
-            foreach (var ch in MessageNoWS)
+            foreach (var ch in Message)
             {
                 output.Add(innerRing[outerRing.IndexOf(ch)]);
                 gap--;
@@ -151,7 +150,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             int gap = random.Next(Math.Abs(Range));
             StringBuilder output = new();
 
-            foreach (var ch in MessageNoWS)
+            foreach (var ch in Message)
             {
                 output.Append(innerRing[outerRing.IndexOf(ch)]);
                 gap--;
@@ -179,7 +178,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             int gap = random.Next(Math.Abs(Range));
             StringBuilder output = new();
 
-            foreach (var ch in MessageNoWS)
+            foreach (var ch in Message)
             {
                 output.Append(innerRing[outerRing.IndexOf(ch)]);
                 gap--;
@@ -207,7 +206,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             int gap = random.Next(Math.Abs(Range));
             StringBuilder output = new();
 
-            foreach (var ch in MessageNoWS)
+            foreach (var ch in Message)
             {
                 output.Append(innerRing[outerRing.IndexOf(ch)]);
                 gap--;
@@ -232,7 +231,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             string innerRing = GetInnerRing(outerRing);
 
             StringBuilder output = new();
-            foreach (var ch in MessageNoWS)
+            foreach (var ch in Message)
             {
                 output.Append(innerRing[outerRing.IndexOf(ch)]);
                 innerRing = RotateNTimes(innerRing, Turns);
@@ -253,7 +252,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             int gap = random.Next(providedRange);
             StringBuilder output = new();
 
-            foreach (var ch in MessageNoWS)
+            foreach (var ch in Message)
             {
                 output.Append(innerRing[outerRing.IndexOf(ch)]);
                 gap--;
@@ -281,9 +280,9 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             int providedRange = Math.Abs(Range);
             int gap = random.Next(providedRange);
             StringBuilder output = new();
-            for (int i = 0; i < MessageNoWS.Length; i++)
+            for (int i = 0; i < Message.Length; i++)
             {
-                output.Append(innerRing[outerRing.IndexOf(MessageNoWS[i])]);
+                output.Append(innerRing[outerRing.IndexOf(Message[i])]);
                 gap--;
                 if (gap == 0)
                 {
@@ -399,16 +398,15 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         }
         #endregion
 
-
         #region HelperMethods
         // required for the encode/decode methods to run.
         private void CheckMessageForNonLetters()
         {
-            for (int ch = 0; ch < MessageNoWS.Length; ch++)
+            for (int ch = 0; ch < Message.Length; ch++)
             {
-                if ((63 >= MessageNoWS[ch] || 91 <= MessageNoWS[ch]) && (95 >= MessageNoWS[ch] || 123 <= MessageNoWS[ch]))
+                if ((63 >= Message[ch] || 91 <= Message[ch]) && (95 >= Message[ch] || 123 <= Message[ch]))
                 {
-                    var result = MessageNoWS.Where(ch => (63 < ch && 91 > ch) || (95 < ch && 123 > ch));
+                    var result = Message.Where(ch => (63 < ch && 91 > ch) || (95 < ch && 123 > ch));
                     var res = string.Join(" ", result);
                     throw new InvalidOperationException($"Must only contain uppercase or lowercase letters. '{res}'");
                 }

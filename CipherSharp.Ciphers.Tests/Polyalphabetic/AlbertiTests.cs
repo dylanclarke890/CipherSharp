@@ -55,7 +55,6 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Theory]
-        [InlineData('4')]
         [InlineData('!')]
         [InlineData('\0')]
         public void NewInstance_NonLetterStartingPos_ThrowsArgumentException(char letter)

@@ -1,6 +1,6 @@
 ﻿using CipherSharp.Utility.Helpers;
-using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
@@ -10,80 +10,75 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// The Quagmire One cipher is essentially a simple substitution cipher which then has
     /// Vigenere cipher applied to it.
     /// </summary>
-    public class QuagmireOne : BaseQuagmire
+    public class QuagmireOne : BaseQuagmire, ICipher
     {
-        public QuagmireOne(string message, string[] keys, string alphabet = AppConstants.Alphabet) : base(message, keys, alphabet)
+        public QuagmireOne(string message, string[] keys, string alphabet = AppConstants.Alphabet) 
+            : base(message, keys, alphabet)
         {
         }
 
         /// <summary>
-        /// Encipher some text using the Quagmire One cipher.
+        /// Encode some text using the Quagmire One cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded text.</returns> 
         public override string Encode()
         {
             var key = Alphabet.AlphabetPermutation(Keys[0], Alpha);
-            var alphabetLength = Alpha.Length;
             var indicator = Keys[1];
-            List<string> table = new();
 
-            foreach (var letter in indicator)
-            {
-                var sh = (Alpha.IndexOf(letter) - key.IndexOf("A")) % alphabetLength;
-                if (sh < 0)
-                {
-                    table.Add(Alpha[^Math.Abs(sh)..] + Alpha[..^Math.Abs(sh)]);
-                }
-                else
-                {
-                    table.Add(Alpha[sh..] + Alpha[..sh]);
-                }
-            }
+            List<string> table = CreateTable(key, indicator);
 
-            List<char> output = new();
+            StringBuilder output = new(Message.Length);
             for (int i = 0; i < Message.Length; i++)
             {
                 var t = table[i % indicator.Length];
-                output.Add(t[key.IndexOf(Message[i])]);
+                output.Append(t[key.IndexOf(Message[i])]);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return output.ToString();
         }
 
         /// <summary>
-        /// Decipher some text using the Quagmire One cipher.
+        /// Decode some text using the Quagmire One cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded text.</returns>
         public override string Decode()
         {
             var key = Alphabet.AlphabetPermutation(Keys[0], Alpha);
-            var alphabetLength = Alpha.Length;
             var indicator = Keys[1];
-            List<string> table = new();
+            List<string> table = CreateTable(key, indicator);
 
-            foreach (var letter in indicator)
-            {
-                var sh = (Alpha.IndexOf(letter) - key.IndexOf("A")) % alphabetLength;
-                if (sh < 0)
-                {
-                    table.Add(Alpha[^Math.Abs(sh)..] + Alpha[..^Math.Abs(sh)]);
-                }
-                else
-                {
-                    table.Add(Alpha[sh..] + Alpha[..sh]);
-                }
-            }
-
-            List<char> output = new();
+            StringBuilder output = new(Message.Length);
             for (int i = 0; i < Message.Length; i++)
             {
                 var t = table[i % indicator.Length];
-                output.Add(key[t.IndexOf(Message[i])]);
+                output.Append(key[t.IndexOf(Message[i])]);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return output.ToString();
+        }
+
+        /// <summary>
+        /// Creates the table to use for encoding/decoding.
+        /// </summary>
+        /// <param name="key">The key to use as reference generate the table.</param>
+        /// <param name="indicator">Used to generate the table.</param>
+        /// <returns>The cipher table.</returns>
+        private List<string> CreateTable(string key, string indicator)
+        {
+            var aIndex = key.IndexOf("A");
+            List<string> table = new(indicator.Length);
+            foreach (var letter in indicator)
+            {
+                var sh = (Alpha.IndexOf(letter) - aIndex) % Alpha.Length;
+                if (sh < 0)
+                {
+                    sh += Alpha.Length;
+                }
+                table.Add(Alpha[sh..] + Alpha[..sh]);
+            }
+
+            return table;
         }
     }
 }

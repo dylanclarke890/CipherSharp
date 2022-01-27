@@ -23,7 +23,7 @@ namespace CipherSharp.Ciphers.Other
     /// </summary>
     public class DRYAD : BaseCipher
     {
-        public DRYAD(string message, int key) : base(message)
+        public DRYAD(string message, int key) : base(message, false)
         {
             Key = key;
         }

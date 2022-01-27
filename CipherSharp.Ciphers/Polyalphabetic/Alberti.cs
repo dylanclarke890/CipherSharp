@@ -35,7 +35,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <param name="gapRange">If specified, will turn the wheel a random number of times</param>
         /// <exception cref="ArgumentException"/>
         public Alberti(string message, string key, char startPos, int turn = 0, int gapRange = 0)
-            : base(message.Replace(" ", ""))
+            : base(message)
         {
             if (string.IsNullOrWhiteSpace(key))
             {

@@ -2,7 +2,7 @@
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
-    public abstract class BaseQuagmire : BaseCipher
+    public abstract class BaseQuagmire : BaseCipher, ICipher
     {
         public string[] Keys { get; }
         public string Alpha { get; }
