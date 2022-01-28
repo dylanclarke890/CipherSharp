@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Polyalphabetic
 {
@@ -81,15 +82,10 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             return Process();
         }
 
-        /// <summary>
-        /// Processes the text.
-        /// </summary>
-        /// <returns>The processed text.</returns>
-        /// <exception cref="ArgumentException"/>
         private string Process()
         {
-            List<string> rotors = new();
-            List<int> notches = new();
+            List<string> rotors = new(_rotorSelections.Count);
+            List<int> notches = new(_rotorSelections.Count);
 
             foreach (var num in RotorKeys)
             {
@@ -101,13 +97,13 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             var reflector = _reflectorSelections[ReflectorKey];
             // Translate the letters of the rotor positions and ring positions to numbers
             string alphabet = AppConstants.Alphabet;
-            List<int> positions = new();
+            List<int> positions = new(PositionKeys.Count);
             foreach (var ltr in PositionKeys)
             {
                 positions.Add(alphabet.IndexOf(ltr.ToUpper()));
             }
 
-            List<int> rings = new();
+            List<int> rings = new(RingKeys.Count);
             foreach (var ltr in RingKeys)
             {
                 rings.Add(alphabet.IndexOf(ltr));
@@ -126,11 +122,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 positions[i] -= rings[i];
             }
 
-            Message = Plugboard(Message, Plugs);
-
-            List<char> output = new();
-
-            foreach (var ltr in Message)
+            string message = Plugboard(Message, Plugs);
+            StringBuilder output = new(message.Length);
+            foreach (var ltr in message)
             {
                 var T = ltr;
 
@@ -163,46 +157,36 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 T = Rotor(T, rotors[1], positions[1], true);
                 T = Rotor(T, rotors[0], positions[0], true);
 
-                output.Add(T);
+                output.Append(T);
             }
 
-            string finalText = string.Join(string.Empty, output);
-            Message = Plugboard(finalText, Plugs);
-
-            return Message;
+            string finalText = Plugboard(output.ToString(), Plugs);
+            return finalText;
         }
 
         /// <summary>
-        /// Puts the text through the plugboard.
+        /// Puts the text through the "plugboard" which just loops through the plugs and 
+        /// swaps the letters using the keys.
         /// </summary>
         /// <param name="text">The text to process.</param>
-        /// <param name="keys">The keys to use.</param>
+        /// <param name="plugs">The plugs to use.</param>
         /// <returns>The processed text.</returns>
-        /// <exception cref="ArgumentException"/>
-        private static string Plugboard(string text, List<string> keys)
+        private static string Plugboard(string text, List<string> plugs)
         {
-            if (!keys.Any())
+            if (plugs.Count == 0)
             {
                 return text;
             }
 
-            // makes sure only unique letters are swapped
-            for (int pos = 0; pos < keys.Count; pos++)
+            foreach (var ltr in plugs[0])
             {
-                foreach (var ltr in keys[pos])
+                if (plugs[1].Contains(ltr))
                 {
-                    for (int i = pos + 1; i < keys.Count; i++)
-                    {
-                        if (keys[i].Contains(ltr))
-                        {
-                            throw new ArgumentException("Pairs of letters cannot overlap");
-                        }
-                    }
+                    throw new ArgumentException("Pairs of letters cannot overlap");
                 }
             }
 
-            // swap letters
-            foreach (var key in keys)
+            foreach (var key in plugs)
             {
                 text = text.Replace(key[0], '*');
                 text = text.Replace(key[1], key[0]);
