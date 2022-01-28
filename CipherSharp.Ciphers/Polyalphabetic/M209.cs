@@ -65,39 +65,38 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <returns>The processed text.</returns>
         private string Process()
         {
-            for (int i = 0; i < 6; i++)
+            foreach (var wheel in _wheels)
             {
-                if (!_wheels[i].Contains(WheelKey[i]))
+                if (!WheelKey.Any(key => wheel.Contains(key)))
                 {
-                    throw new ArgumentException($"Wheel {i + 1} can only have letters in {_wheels[i]}");
+                    throw new ArgumentException($"Wheelkey can only have letters in the wheel", nameof(wheel));
                 }
             }
 
             var textAsNumbers = Message.ToNumber();
             var translatedPins = TranslatePins(Pins);
             var updatedLugs = LugPosition(Lugs);
-            var sh = new List<int>() { 15, 14, 13, 12, 11, 10 };
+            var sh = new int[6] { 15, 14, 13, 12, 11, 10 };
 
             // For each wheel add up the shift of the wheel and the position of the key
             // letter that is on it.
-            var activePins = new List<int>() { 0, 0, 0, 0, 0, 0 };
+            var activePins = new List<int>(6) { 0, 0, 0, 0, 0, 0 };
 
             for (int i = 0; i < _wheels.Count; i++)
             {
                 activePins[i] = sh[i] + _wheels[i].IndexOf(WheelKey[i]);
             }
-            var K = Keystream(Message.Length, updatedLugs, _wheels, translatedPins, activePins);
+            var keystream = Keystream(Message.Length, updatedLugs, _wheels, translatedPins, activePins);
 
-            List<int> output = new();
+            List<int> output = new(Message.Length);
 
-            foreach (var (ltr, k) in textAsNumbers.Zip(K))
+            foreach (var (ltr, k) in textAsNumbers.Zip(keystream))
             {
                 var s = (25 + k - ltr) % 26;
                 output.Add(s);
             }
 
-            Message = string.Join(string.Empty, output.ToLetter());
-            return Message;
+            return string.Join(string.Empty, output.ToLetter());
         }
 
         /// <summary>
@@ -107,11 +106,11 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <returns>The translated pins.</returns>
         private static List<List<int>> TranslatePins(List<string> pinList)
         {
-            List<List<int>> output = new();
+            List<List<int>> output = new(pinList.Count);
 
             foreach (var pins in pinList)
             {
-                List<int> pinRow = new();
+                List<int> pinRow = new(pins.Length);
                 foreach (var pin in pins)
                 {
                     pinRow.Add(pin == '-' ? 0 : 1);
@@ -124,7 +123,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <summary>
         /// Updates the lug position.
         /// </summary>
-        /// <returns>The updated position.</returns>
+        /// <returns>The updated positions.</returns>
         private static List<List<int>> LugPosition(List<List<int>> lug)
         {
             List<List<int>> lugs = new();
@@ -151,7 +150,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <param name="wheels">The wheels to use.</param>
         /// <param name="pins">The pins to use.</param>
         /// <param name="activePins">The active pins.</param>
-        /// <returns>Yields the keystream.</returns>
+        /// <returns>The keystream.</returns>
         private static IEnumerable<int> Keystream(int textLength, List<List<int>> lugs, List<string> wheels, List<List<int>> pins, List<int> activePins)
         {
             for (int i = 0; i < textLength; i++)
@@ -159,17 +158,13 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 int K = 0;
                 foreach (var aBar in lugs)
                 {
-                    bool aBarShifted = false;
                     for (int j = 0; j < wheels.Count; j++)
                     {
                         if (pins[j][activePins[j] % pins[j].Count] * lugs[lugs.IndexOf(aBar)][j] != 0)
                         {
-                            aBarShifted = true;
+                            K += 1;
+                            break;
                         }
-                    }
-                    if (aBarShifted)
-                    {
-                        K += 1;
                     }
                 }
                 yield return K;

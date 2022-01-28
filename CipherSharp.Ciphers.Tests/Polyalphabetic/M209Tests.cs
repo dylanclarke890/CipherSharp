@@ -25,6 +25,114 @@ namespace CipherSharp.Tests.Ciphers.Polyalphabetic
         }
 
         [Fact]
+        public void Encode_FullParameters_ReturnsCipherText()
+        {
+            // Arrange
+            string text = "HELLOWORLD";
+            string wheelKey = "ABCDEF";
+            List<string> pins = new()
+            {
+                "++-+---++-+-++----++-++---",
+                "+--++-+--+++--+--++-+-+--",
+                "++----++-+-+++---++++-+",
+                "--+-++-++---++-+--+++",
+                "-+-+++-++---++-+--+",
+                "++-+---+--+--++-+"
+            };
+            List<List<int>> lugs = new()
+            {
+                new() { 3, 6 },
+                new() { 0, 6 },
+                new() { 1, 6 },
+                new() { 1, 5 },
+                new() { 4, 5 },
+                new() { 0, 4 },
+                new() { 0, 4 },
+                new() { 0, 4 },
+                new() { 0, 4 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 5 },
+                new() { 2, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 }
+            };
+            M209 m209 = new(text, wheelKey, pins, lugs);
+
+            // Act
+            var result = m209.Encode();
+
+            // Assert
+            Assert.Equal("GYDPTENEDJ", result);
+        }
+
+        [Fact]
+        public void Decode_FullParameters_ReturnsCipherText()
+        {
+            // Arrange
+            string text = "GYDPTENEDJ";
+            string wheelKey = "ABCDEF";
+            List<string> pins = new()
+            {
+                "++-+---++-+-++----++-++---",
+                "+--++-+--+++--+--++-+-+--",
+                "++----++-+-+++---++++-+",
+                "--+-++-++---++-+--+++",
+                "-+-+++-++---++-+--+",
+                "++-+---+--+--++-+"
+            };
+            List<List<int>> lugs = new()
+            {
+                new() { 3, 6 },
+                new() { 0, 6 },
+                new() { 1, 6 },
+                new() { 1, 5 },
+                new() { 4, 5 },
+                new() { 0, 4 },
+                new() { 0, 4 },
+                new() { 0, 4 },
+                new() { 0, 4 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 0 },
+                new() { 2, 5 },
+                new() { 2, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 },
+                new() { 0, 5 }
+            };
+            M209 m209 = new(text, wheelKey, pins, lugs);
+
+            // Act
+            var result = m209.Decode();
+
+            // Assert
+            Assert.Equal("HELLOWORLD", result);
+        }
+
+        [Fact]
         public void Decode_BasicParameters_ReturnsPlainText()
         {
             // Arrange
