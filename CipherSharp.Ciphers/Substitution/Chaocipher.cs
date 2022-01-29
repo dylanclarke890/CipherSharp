@@ -23,11 +23,10 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The encoded message.</returns>
         public string Encode()
         {
-            var leftRotor = (Keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[0]);
-            var rightRotor = (Keys[1] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[1]);
+            var leftRotor = (Keys[0] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[0]);
+            var rightRotor = (Keys[1] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[1]);
 
-            StringBuilder output = new();
-
+            StringBuilder output = new(Message.Length);
             foreach (var ltr in Message)
             {
                 var pos = rightRotor.IndexOf(ltr);
@@ -45,11 +44,10 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The decoded message.</returns>
         public string Decode()
         {
-            var leftRotor = (Keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[0]);
-            var rightRotor = (Keys[1] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[1]);
+            var leftRotor = (Keys[0] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[0]);
+            var rightRotor = (Keys[1] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[1]);
 
-            StringBuilder output = new();
-
+            StringBuilder output = new(Message.Length);
             foreach (var ltr in Message)
             {
                 var pos = leftRotor.IndexOf(ltr);
@@ -63,14 +61,10 @@ namespace CipherSharp.Ciphers.Substitution
 
         private static string RotateNTimes(string key, int n)
         {
-            var x = key[..];
-
-            for (int i = 0; i < n; i++)
-            {
-                x = x[1..] + x[0];
-            }
-            return x;
+            var temp = key[n..] + key[..n];
+            return temp;
         }
+        
         private static string RotateRight(string key, char letter)
         {
             key = RotateNTimes(key, key.IndexOf(letter)+1);
