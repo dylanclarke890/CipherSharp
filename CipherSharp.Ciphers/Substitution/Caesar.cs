@@ -11,7 +11,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// shifting the alphabet n number of positions. To decipher, shift the alphabet n positions
     /// in the opposite direction.
     /// </summary>
-    public class Caesar : BaseCipher
+    public class Caesar : BaseCipher, ICipher
     {
         public int Key { get; }
         public string Alpha { get; }

@@ -10,7 +10,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// predecessor to the Vigenere cipher. Each letter is shifted by one more than
     /// the previous letter.
     /// </summary>
-    public class Trithemius : BaseCipher
+    public class Trithemius : BaseCipher, ICipher
     {
         private const int AlphabetLength = 26;
 

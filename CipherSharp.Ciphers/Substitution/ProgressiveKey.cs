@@ -9,7 +9,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Progressive Key cipher is a cipher which uses both 
     /// a number and a string to generate a key.
     /// </summary>
-    public class ProgressiveKey : BaseCipher
+    public class ProgressiveKey : BaseCipher, ICipher
     {
         public int NumKey { get; }
         public string TextKey { get; }

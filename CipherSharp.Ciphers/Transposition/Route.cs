@@ -10,7 +10,7 @@ namespace CipherSharp.Ciphers.Transposition
     /// down then reading them off in some sort of order. This one works by reading the text 
     /// left to right into columns, then reading up and down the columns.
     /// </summary>
-    public class Route : BaseCipher
+    public class Route : BaseCipher, ICipher
     {
         public int Key { get; }
 

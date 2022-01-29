@@ -11,7 +11,7 @@ namespace CipherSharp.Ciphers.Transposition
     /// message into a matrix by rows, shuffling the matrix by columns, then reading the
     /// result out by columns.
     /// </summary>
-    public class Columnar<T> : BaseCipher
+    public class Columnar<T> : BaseCipher, ICipher
     {
         public T[] Key { get; }
 

@@ -12,7 +12,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// a much greater degree of diffusion is achieved by splitting each letter
     /// into three digits instead of two.
     /// </summary>
-    public class Trifid : BaseCipher
+    public class Trifid : BaseCipher, ICipher
     {
         public string Key { get; }
 

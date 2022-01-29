@@ -12,7 +12,7 @@ namespace CipherSharp.Ciphers.Transposition
     /// which encrypts by permuting single and double letters of the 
     /// plaintext at a time.
     /// </summary>
-    public class AMSCO : BaseCipher
+    public class AMSCO : BaseCipher, ICipher
     {
         public string Key { get; }
         public ParityMode Mode { get; }

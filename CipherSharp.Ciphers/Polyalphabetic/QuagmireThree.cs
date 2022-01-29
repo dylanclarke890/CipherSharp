@@ -11,7 +11,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// The Quagmire Three is similar to the Quagmire Two but with the first key used to apply a
     /// simple substitution cipher to the text first.
     /// </summary>
-    public class QuagmireThree : BaseQuagmire
+    public class QuagmireThree : BaseQuagmire, ICipher
     {
         public QuagmireThree(string message, string[] keys, string alphabet = AppConstants.Alphabet) : base(message, keys, alphabet)
         {

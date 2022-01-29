@@ -14,7 +14,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// By the time it was disclosed as a result of betrayal, American counterintelligence hadn't managed
     /// to break the cipher.
     /// </summary>
-    public class VIC : BaseCipher
+    public class VIC : BaseCipher, ICipher
     {
         public string[] Keys { get; }
         public string Phrase { get; }

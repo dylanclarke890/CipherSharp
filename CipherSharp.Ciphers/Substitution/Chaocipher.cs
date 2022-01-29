@@ -8,7 +8,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Chaocipher is a clever mechanical cipher that operates by creating a
     /// permutation of the alphabet rather than just shifting it.
     /// </summary>
-    public class Chaocipher : BaseCipher
+    public class Chaocipher : BaseCipher, ICipher
     {
         public string[] Keys { get; }
 

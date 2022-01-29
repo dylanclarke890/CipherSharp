@@ -12,7 +12,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// Polybius Square, followed by a transposition, followed by a Polybius Square in
     /// reverse.
     /// </summary>
-    public class Bifid : BaseCipher
+    public class Bifid : BaseCipher, ICipher
     {
         public string Key { get; }
 

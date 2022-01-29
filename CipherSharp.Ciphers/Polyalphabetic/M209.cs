@@ -10,7 +10,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// Compact and portable, it used a series of rotors to encode and decode secret military messages. 
     /// The US Army widely used the machine during World War II.
     /// </summary>
-    public class M209 : BaseCipher
+    public class M209 : BaseCipher, ICipher
     {
         private readonly List<string> _wheels = new()
         {

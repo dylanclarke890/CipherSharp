@@ -10,7 +10,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// The Quagmire Four cipher is the same as the Quagmire Three cipher but with
     /// a different key used for the initial substitution.
     /// </summary>
-    public class QuagmireFour : BaseQuagmire
+    public class QuagmireFour : BaseQuagmire, ICipher
     {
         public QuagmireFour(string message, string[] keys, string alphabet = AppConstants.Alphabet) 
             : base(message, keys, alphabet)

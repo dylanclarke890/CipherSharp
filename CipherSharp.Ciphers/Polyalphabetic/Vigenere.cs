@@ -11,7 +11,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     ///  once considered to be unbreakable as it makes simple frequency analysis of the
     ///  ciphertext impossible. It operates as several Caesar ciphers.
     /// </summary>
-    public class Vigenere : BaseCipher
+    public class Vigenere : BaseCipher, ICipher
     {
         public string Key { get; }
         public string Alphabet { get; }

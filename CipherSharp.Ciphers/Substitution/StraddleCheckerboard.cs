@@ -11,7 +11,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// It has formed a component of several impotant field ciphers, the most notable being the VIC cipher used by
     /// russian spies during the cold war.
     /// </summary>
-    public class StraddleCheckerboard : BaseCipher
+    public class StraddleCheckerboard : BaseCipher, ICipher
     {
         public string Key { get; }
         public int[] Keys { get; }

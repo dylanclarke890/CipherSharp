@@ -19,7 +19,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// name) and then it uses columnar transposition to shuffle the symbols.
     /// Finally the symbols are converted back to letters.
     /// </summary>
-    public class ADFGX : BaseCipher
+    public class ADFGX : BaseCipher, ICipher
     {
         public string MatrixKey { get; }
         public int[] ColumnarKey { get; }

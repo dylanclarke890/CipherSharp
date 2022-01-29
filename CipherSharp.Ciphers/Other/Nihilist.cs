@@ -9,7 +9,7 @@ namespace CipherSharp.Ciphers.Other
     /// The Nihilist cipher is a composite cipher that uses the Polybius Square 
     /// along with a modified Vigenere cipher.
     /// </summary>
-    public class Nihilist : BaseCipher
+    public class Nihilist : BaseCipher, ICipher
     {
         public Nihilist(string message, string[] keys, AlphabetMode polybiusMode = AlphabetMode.EX)
             : base(message, false)

@@ -22,7 +22,7 @@ namespace CipherSharp.Ciphers.Other
     /// randomly. To allow the encryption of long messages rows may be reused, though
     /// this significantly weakens the cipher.
     /// </summary>
-    public class DRYAD : BaseCipher
+    public class DRYAD : BaseCipher, ICipher
     {
         public DRYAD(string message, int key) : base(message, false)
         {

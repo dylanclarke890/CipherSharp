@@ -13,7 +13,7 @@ namespace CipherSharp.Ciphers.Square
     /// a polygraphic substitution cipher. It replaces each plaintext pair
     /// of letters with another two letters, based on two keyword tables.
     /// </summary>
-    public class TwoSquare : BaseCipher
+    public class TwoSquare : BaseCipher, ICipher
     {
         public string[] Keys { get; }
         public AlphabetMode Mode { get; }

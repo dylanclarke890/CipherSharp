@@ -13,7 +13,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// to any cipher where the key is based on the original plaintext.
     /// Very similar to the <see cref="Vigenere"/> cipher.
     /// </summary>
-    public class AutoKey : BaseCipher
+    public class AutoKey : BaseCipher, ICipher
     {
         public string Key { get; }
         public string Alpha { get; }

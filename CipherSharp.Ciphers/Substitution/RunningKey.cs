@@ -10,7 +10,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Recursive Key cipher uses the key length to progressively
     /// generate the internal key.
     /// </summary>
-    public class RunningKey : BaseCipher
+    public class RunningKey : BaseCipher, ICipher
     {
         public string Key { get; }
         public string Alpha { get; }

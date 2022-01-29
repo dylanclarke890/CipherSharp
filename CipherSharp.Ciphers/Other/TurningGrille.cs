@@ -17,7 +17,7 @@ namespace CipherSharp.Ciphers.Other
     /// </para>
     /// This version allows the grille to have any width that is a multiple of four.
     /// </summary>
-    public class TurningGrille : BaseCipher
+    public class TurningGrille : BaseCipher, ICipher
     {
         public TurningGrille(string message, int[] keys, int grilleSize = 4) : base(message)
         {

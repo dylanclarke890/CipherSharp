@@ -10,7 +10,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// The key has a length equal to the least common multiple of the key lengths. However the 
     /// cipher is not longer an involution. The keys must be used in reverse to decode.
     /// </summary>
-    public class MultiBeaufort : BaseCipher
+    public class MultiBeaufort : BaseCipher, ICipher
     {
         public string[] Keys { get; }
         public string Alpha { get; }

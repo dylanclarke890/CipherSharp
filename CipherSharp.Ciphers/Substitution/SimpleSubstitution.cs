@@ -1,6 +1,5 @@
 ﻿using CipherSharp.Utility.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace CipherSharp.Ciphers.Substitution
@@ -12,7 +11,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// letter B is turned into the second letter etc. If the word repeats letters 
     /// those repetitions are skipped.
     /// </summary>
-    public class SimpleSubstitution : BaseCipher
+    public class SimpleSubstitution : BaseCipher, ICipher
     {
         public string Key { get; }
         public string Alpha { get; }

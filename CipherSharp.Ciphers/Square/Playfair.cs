@@ -14,7 +14,7 @@ namespace CipherSharp.Ciphers.Square
     /// of single letters at a time, which makes cryptoanalysis much more
     /// difficult, as there are around 600 possible combinations instead of 26.
     /// </summary>
-    public class Playfair : BaseCipher
+    public class Playfair : BaseCipher, ICipher
     {
         public string Key { get; }
         public AlphabetMode Mode { get; }

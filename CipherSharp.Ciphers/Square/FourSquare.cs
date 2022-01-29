@@ -15,7 +15,7 @@ namespace CipherSharp.Ciphers.Square
     /// letters in the key squares. Because is using digraphs, it is much less
     /// susceptible to frequency analysis than monographic substitution ciphers.
     /// </summary>
-    public class FourSquare : BaseCipher
+    public class FourSquare : BaseCipher, ICipher
     {
         public string[] Keys { get; }
         public AlphabetMode Mode { get; }

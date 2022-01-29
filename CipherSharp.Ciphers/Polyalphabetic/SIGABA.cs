@@ -26,7 +26,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// tactical information.
     /// </para>
     /// </summary>
-    public class SIGABA : BaseCipher
+    public class SIGABA : BaseCipher, ICipher
     {
         private readonly Dictionary<string, string> _largeRotors = new(10)
         {

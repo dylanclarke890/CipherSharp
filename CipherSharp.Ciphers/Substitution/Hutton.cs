@@ -10,7 +10,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// The Hutton cipher is recently created cipher, and is mainly achieved through
     /// offsetting the alphabet.
     /// </summary>
-    public class Hutton : BaseCipher
+    public class Hutton : BaseCipher, ICipher
     {
         public string[] Keys { get; }
 

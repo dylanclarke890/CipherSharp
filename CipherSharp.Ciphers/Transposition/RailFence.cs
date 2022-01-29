@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 
 namespace CipherSharp.Ciphers.Transposition
@@ -17,7 +16,7 @@ namespace CipherSharp.Ciphers.Transposition
     /// to break than either cipher on it's own.
     /// </para>
     /// </summary>
-    public class RailFence : BaseCipher
+    public class RailFence : BaseCipher, ICipher
     {
         public int Key { get; }
 

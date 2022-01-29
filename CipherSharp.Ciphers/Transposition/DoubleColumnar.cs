@@ -9,7 +9,7 @@ namespace CipherSharp.Ciphers.Transposition
     /// and is achieved by running the text through a normal
     /// Columnar transposition twice.
     /// </summary>
-    public class DoubleColumnar : BaseCipher
+    public class DoubleColumnar : BaseCipher, ICipher
     {
         public string[] Key { get; }
 

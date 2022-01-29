@@ -20,7 +20,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// for each message.The receiving station would have to know and use the exact settings employed
     /// by the transmitting station to successfully decrypt a message.
     /// </summary>
-    public class Enigma : BaseCipher
+    public class Enigma : BaseCipher, ICipher
     {
         /// <summary>
         /// Dictionary of rotors and notch positions.

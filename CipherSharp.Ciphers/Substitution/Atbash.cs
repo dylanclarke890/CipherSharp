@@ -6,7 +6,7 @@
     /// involutive function, applying the function twice returns the input originally
     /// provided.
     /// </summary>
-    public class Atbash : BaseCipher
+    public class Atbash : BaseCipher, ICipher
     {
         private readonly SimpleSubstitution simpleSubstitution;
 

@@ -15,7 +15,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// transposition cipher and is achieved by combining a Polybius Square
     /// with a Columnar transposition.
     /// </summary>
-    public class ADFGVX : BaseCipher
+    public class ADFGVX : BaseCipher, ICipher
     {
         public string MatrixKey { get; }
         public int[] ColumnarKeys { get; }

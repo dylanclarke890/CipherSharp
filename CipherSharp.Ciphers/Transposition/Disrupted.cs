@@ -13,7 +13,7 @@ namespace CipherSharp.Ciphers.Transposition
     /// of the rows of the matrix, i.e. with some spaces intentionally left blank, 
     /// or filled later with either another part of the plaintext or random letters.
     /// </summary>
-    public class Disrupted<T> : BaseCipher
+    public class Disrupted<T> : BaseCipher, ICipher
     {
         public T[] Key { get; }
 

@@ -6,7 +6,7 @@
     /// involutive function, applying the function twice returns the input originally
     /// provided.
     /// </summary>
-    public class ROT13 : BaseCipher
+    public class ROT13 : BaseCipher, ICipher
     {
         private readonly Caesar _caesar;
         public ROT13(string message) : base(message)

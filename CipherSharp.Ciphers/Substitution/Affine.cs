@@ -12,7 +12,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// modulo m (the length of the alphabet used). By performing a calculation on the plaintext letters,
     /// we encipher the plaintext.
     /// </summary>
-    public class Affine : BaseCipher
+    public class Affine : BaseCipher, ICipher
     {
         public int[] Key { get; }
         public string Alpha { get; }

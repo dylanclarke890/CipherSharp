@@ -12,7 +12,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// provides the same degree of security as the Vigenere but is also an involutive
     /// cipher.
     /// </summary>
-    public class Beaufort : BaseCipher
+    public class Beaufort : BaseCipher, ICipher
     {
         public string Key { get; }
         public string Alpha { get; }

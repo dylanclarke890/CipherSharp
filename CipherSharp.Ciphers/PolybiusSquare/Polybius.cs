@@ -19,7 +19,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
     /// <item>Extend the alphabet with the digits 0-9 (to create a 36 character alphabet - six squared)</item>
     /// </list>
     /// </summary>
-    public class Polybius : BaseCipher
+    public class Polybius : BaseCipher, ICipher
     {
         public string Key { get; }
         public string Sep { get; }

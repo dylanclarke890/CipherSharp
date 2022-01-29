@@ -12,7 +12,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// Vigenere cipher with a key equal to the product of their length but is much 
     /// easier to remember.
     /// </summary>
-    public class MultiVigenere : BaseCipher
+    public class MultiVigenere : BaseCipher, ICipher
     {
         public string[] Keys { get; }
         public string Alphabet { get; }

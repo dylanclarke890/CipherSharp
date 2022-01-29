@@ -11,7 +11,7 @@ namespace CipherSharp.Ciphers.Substitution
     /// Variation on the <see cref="Vigenere"/> cipher.
     /// Needs two keys to generate internal keys.
     /// </summary>
-    public class AffineVigenere : BaseCipher
+    public class AffineVigenere : BaseCipher, ICipher
     {
         public string[] Keys { get; }
 
