@@ -3,6 +3,7 @@ using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 
 namespace CipherSharp.Ciphers.Transposition
@@ -17,19 +18,21 @@ namespace CipherSharp.Ciphers.Transposition
     {
         public T[] Key { get; }
 
-        private readonly double gridSize;
+        private readonly double _gridSize;
+
+        private readonly bool _complete;
 
         public Disrupted(string message, T[] key, bool complete = false) : base(message)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
 
-            gridSize = Math.Pow(Key.Length, 2);
-            if (Message.Length > gridSize)
+            _gridSize = Math.Pow(Key.Length, 2);
+            if (Message.Length > _gridSize)
             {
                 throw new ArgumentException($"{Message.Length} characters cannot fit in transposition with grid size {Math.Pow(Key.Length, 2)}");
-}
-            Message = complete ? Message.Pad((int)gridSize) : Message.Pad((int)gridSize, string.Empty, " ");
+            }
 
+            _complete = complete;
         }
 
         /// <summary>
@@ -37,7 +40,8 @@ namespace CipherSharp.Ciphers.Transposition
         /// </summary>
         /// <returns>The encoded message.</returns>
         public string Encode()
-        {
+{
+            Message = _complete ? Message.Pad((int)_gridSize) : Message.Pad((int)_gridSize, string.Empty, " ");
             var rank = Key.ToArray().UniqueRank();
             List<string> grid = CreateEmptyGrid(Key);
 
