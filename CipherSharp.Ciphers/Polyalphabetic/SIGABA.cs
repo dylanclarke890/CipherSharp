@@ -28,7 +28,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// </summary>
     public class SIGABA : BaseCipher
     {
-        private readonly Dictionary<string, string> _largeRotors = new()
+        private readonly Dictionary<string, string> _largeRotors = new(10)
         {
             ["I"] = "PWJVDRGTMBHOLYXUZFQEAINKCS",
             ["II"] = "MKLWAIBXRUYGTNCSPDFQHZJVOE",
@@ -41,7 +41,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             ["IX"] = "HLEDCOTJMUAWFZQIGRBVYPSNKX",
             ["X"] = "QKCIYPWLZNHTJVFDURSXEBGMOA"
         };
-        private readonly Dictionary<string, string> _smallRotors = new()
+        private readonly Dictionary<string, string> _smallRotors = new(5)
         {
             ["I"] = "9438705162",
             ["II"] = "8135624097",
@@ -49,7 +49,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             ["IV"] = "1953742680",
             ["V"] = "6482359170",
         };
-        private readonly Dictionary<char, int> _indWirings = new()
+        private readonly Dictionary<char, int> _indWirings = new(26)
             {
                 ['A'] = 9, ['B'] = 1,
                 ['C'] = 2, ['D'] = 3, ['E'] = 3, ['F'] = 4, ['G'] = 4, ['H'] = 4,
@@ -58,7 +58,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 ['U'] = 8, ['V'] = 8, ['W'] = 8, ['X'] = 8, ['Y'] = 8, ['Z'] = 8
             };
 
-    public List<string> CipherKey { get; }
+        public List<string> CipherKey { get; }
         public List<string> ControlKey { get; }
         public List<string> IndexKey { get; }
         public string IndicatorKey { get; }
@@ -115,19 +115,19 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             var indicator2 = ControlPos;
             var indicator3 = IndexPos;
 
-            List<string> cipherRotors = new();
-            List<int> cipherPositions = new();
+            List<string> cipherRotors = new(ciphersRotorSet.Count);
+            List<int> cipherPositions = new(ciphersRotorSet.Count);
             int counter = AddCipherRotorsAndPositions(ciphersRotorSet, indicator1, _largeRotors, cipherRotors, cipherPositions);
 
-            List<string> controlRotors = new();
-            List<int> controlPositions = new();
+            List<string> controlRotors = new(controlRotorsSet.Count);
+            List<int> controlPositions = new(controlRotorsSet.Count);
             AddControlRotorsAndPositions(controlRotorsSet, indicator2, _largeRotors, counter, controlRotors, controlPositions);
 
-            List<string> indexRotors = new();
-            List<int> indexPositions = new();
+            List<string> indexRotors = new(indexRotorsSet.Count);
+            List<int> indexPositions = new(indexRotorsSet.Count);
             AddIndexRotorsAndPositions(indexRotorsSet, indicator3, _smallRotors, counter, indexRotors, indexPositions);
 
-            List<char> output = new();
+            List<char> output = new(message.Length);
             for (int ctr = 0; ctr < message.Length; ctr++)
             {
                 int count = ctr + 1;
@@ -139,7 +139,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 output.Add(T);
 
                 // Put F, G, H, and I through the control rotors, this is called the "step maze"
-                List<char> L = new() { 'F', 'G', 'H', 'I' };
+                List<char> L = new(4) { 'F', 'G', 'H', 'I' };
                 StepMaze(controlRotors, controlPositions, L);
 
                 AdvanceControlRotors(controlPositions, count);
@@ -167,23 +167,23 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             var indicator2 = ControlPos;
             var indicator3 = IndexPos;
 
-            List<string> cipherRotors = new();
-            List<int> cipherPositions = new();
+            List<string> cipherRotors = new(ciphersRotorSet.Count);
+            List<int> cipherPositions = new(ciphersRotorSet.Count);
             int counter = AddCipherRotorsAndPositions(ciphersRotorSet, indicator1, _largeRotors, cipherRotors, cipherPositions);
 
             // Decoding so reverse the rotors.
             var cipherRotorsRev = cipherRotors.ToList();
             cipherRotorsRev.Reverse();
 
-            List<string> controlRotors = new();
-            List<int> controlPositions = new();
+            List<string> controlRotors = new(controlRotorsSet.Count);
+            List<int> controlPositions = new(controlRotorsSet.Count);
             AddControlRotorsAndPositions(controlRotorsSet, indicator2, _largeRotors, counter, controlRotors, controlPositions);
 
-            List<string> indexRotors = new();
-            List<int> indexPositions = new();
+            List<string> indexRotors = new(indexRotorsSet.Count);
+            List<int> indexPositions = new(indexRotorsSet.Count);
             AddIndexRotorsAndPositions(indexRotorsSet, indicator3, _smallRotors, counter, indexRotors, indexPositions);
 
-            List<char> output = new();
+            List<char> output = new(Message.Length);
 
             for (int ctr = 0; ctr < Message.Length; ctr++)
             {
@@ -202,7 +202,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 output.Add(T);
 
                 // Put F, G, H, and I through the control rotors, this is called the "step maze"
-                List<char> L = new() { 'F', 'G', 'H', 'I' };
+                List<char> L = new(4) { 'F', 'G', 'H', 'I' };
                 StepMaze(controlRotors, controlPositions, L);
 
                 AdvanceControlRotors(controlPositions, count);

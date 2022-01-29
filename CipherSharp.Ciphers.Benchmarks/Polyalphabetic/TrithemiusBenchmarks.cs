@@ -13,7 +13,6 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
     [MinColumn, MaxColumn]
     public class TrithemiusBenchmarks
     {
-        private const string Alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string Message = "SOMERANDOMTEXTTOTESTTHATISLOWERCASEANDLENGTHSOTHATICANPROPERLYMEASURETHEPERFORMANCEITHINKTHISSHOULDBEENOUGH";
         private const int AlphabetLength = 26;
 
