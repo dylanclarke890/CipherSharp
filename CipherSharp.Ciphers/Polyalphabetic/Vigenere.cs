@@ -33,43 +33,45 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Encipher some text using the Vigenere cipher.
+        /// Encode some text using the Vigenere cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded text.</returns>
         public string Encode()
         {
-            var keyAsNum = Key.ToNumber(Alphabet);
-            var textAsNum = Message.ToNumber(Alphabet);
-            var length = Alphabet.Length;
-
-            List<int> output = new();
-            foreach (var (keyNum, textNum) in keyAsNum.Pad(textAsNum.Count()).Zip(textAsNum))
-            {
-                output.Add((textNum + keyNum) % length);
-            }
-
-            Message = string.Join(string.Empty, output.ToLetter());
-            return Message;
+            return Process(true);
         }
 
         /// <summary>
-        /// Decipher some text using the Vigenere cipher.
+        /// Decode some text using the Vigenere cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded text.</returns>
         public string Decode()
+        {
+            return Process(false);
+        }
+
+        public string Process(bool encode)
         {
             var keyAsNum = Key.ToNumber(Alphabet);
             var textAsNum = Message.ToNumber(Alphabet);
             var length = Alphabet.Length;
 
-            List<int> output = new();
-            foreach (var (keyNum, textNum) in keyAsNum.Pad(textAsNum.Count()).Zip(textAsNum))
+            List<int> output = new(Message.Length);
+            if (encode)
             {
-                output.Add((textNum - keyNum) % length);
+                foreach (var (keyNum, textNum) in keyAsNum.Pad(textAsNum.Count()).Zip(textAsNum))
+                {
+                    output.Add((textNum + keyNum) % length);
+                }
             }
-
-            Message = string.Join(string.Empty, output.ToLetter());
-            return Message;
+            else
+            {
+                foreach (var (keyNum, textNum) in keyAsNum.Pad(textAsNum.Count()).Zip(textAsNum))
+                {
+                    output.Add((textNum - keyNum) % length);
+                }
+            }
+            return string.Join(string.Empty, output.ToLetter());
         }
     }
 }
