@@ -26,15 +26,15 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Encipher some text using the Bifid cipher.
+        /// Encode a message using the Bifid cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             string nums = new Polybius(Message, Key).Encode();
 
-            StringBuilder a = new();
-            StringBuilder b = new();
+            StringBuilder a = new(Message.Length);
+            StringBuilder b = new(Message.Length);
 
             for (int i = 0; i < Message.Length; i++)
             {
@@ -46,9 +46,9 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Decipher some text using the Bifid cipher.
+        /// Decode a message using the Bifid cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             string nums = new Polybius(Message, Key).Encode();
@@ -57,7 +57,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             string a = nums[..half];
             string b = nums[half..];
 
-            StringBuilder result = new();
+            StringBuilder result = new(a.Length);
             foreach (var (i, j) in a.Zip(b))
             {
                 result.Append($"{i}{j}");
