@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Substitution
 {
@@ -34,14 +35,13 @@ namespace CipherSharp.Ciphers.Substitution
         {
             List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();
 
-            List<char> output = new();
-
+            StringBuilder output = new(textAsNumbers.Count);
             foreach (var num in textAsNumbers)
             {
-                output.Add(Alpha[(num + Key) % Alpha.Length]);
+                output.Append(Alpha[(num + Key) % Alpha.Length]);
             }
 
-            return string.Join(string.Empty, output);
+            return output.ToString();
         }
 
         /// <summary>
@@ -52,14 +52,14 @@ namespace CipherSharp.Ciphers.Substitution
         {
             List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();
 
-            List<char> output = new();
+            StringBuilder output = new(textAsNumbers.Count);
             var key = Alpha.Length - Key;
             foreach (var num in textAsNumbers)
             {
-                output.Add(Alpha[(num + key) % Alpha.Length]);
+                output.Append(Alpha[(num + key) % Alpha.Length]);
             }
 
-            return string.Join(string.Empty, output);
+            return output.ToString();
         }
     }
 }

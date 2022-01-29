@@ -54,10 +54,10 @@ namespace CipherSharp.Ciphers.Substitution
         private string Process()
         {
             var M = Alpha.Length;
-            var K = Key.ToNumber(Alpha).Pad(Message.Length);
+            var K = Key.ToNumber(Alpha).Pad(Message.Length).ToList();
             var T = Message.ToNumber(Alpha);
 
-            List<int> output = new();
+            List<int> output = new(K.Count);
             foreach (var (keyNum, textNum) in K.Zip(T))
             {
                 output.Add((keyNum - textNum) % M);

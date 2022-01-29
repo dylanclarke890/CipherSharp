@@ -42,13 +42,12 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The encoded message.</returns>
         public string Encode()
         {
-            var T = Message.ToNumber(Alpha).ToList();
             var K = Key.ToNumber(Alpha).ToList();
+            var T = Message.ToNumber(Alpha);
             var M = Alpha.Length;
             K.AddRange(T);
 
-            List<int> output = new();
-
+            List<int> output = new(K.Count);
             if (Mode is AutoKeyMode.Vigenere)
             {
                 foreach (var (keyNum, textNum) in K.Zip(T))
@@ -78,7 +77,6 @@ namespace CipherSharp.Ciphers.Substitution
             var M = Alpha.Length;
 
             List<int> output = new();
-
             if (Mode is AutoKeyMode.Vigenere)
             {
                 int currentCycle = 0;
