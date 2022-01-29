@@ -3,6 +3,7 @@ using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Other
 {
@@ -31,11 +32,10 @@ namespace CipherSharp.Ciphers.Other
         public int Key { get; set; }
 
         /// <summary>
-        /// Encipher some text using the DRYAD cipher.
+        /// Encode a message using the DRYAD cipher.
         /// </summary>
-        /// <param name="printPage">If true will display the generated page.</param>
-        /// <returns>The enciphered text.</returns>
-        public string Encode(bool printPage = false)
+        /// <returns>The encoded message.</returns>
+        public string Encode()
         {
             if (Message.Any(ch => char.IsLetter(ch)))
             {
@@ -44,42 +44,39 @@ namespace CipherSharp.Ciphers.Other
             PadMessageWithZeroes();
 
             Random random = new(Key);
-            List<List<string>> page = GenerateDRYADPage(random, printPage);
+            List<List<string>> page = GenerateDRYADPage(random);
             random = new(); // reset seed 
 
-            List<string> output = new();
+            StringBuilder output = new(Message.Length + 10);
             foreach (var group in Message.SplitIntoChunks(5))
             {
                 var row = random.Next(26);
-                output.Add(((char)(row + 65)).ToString()); // write down the letter indicating the row we are using
+                output.Append(((char)(row + 65))); // write down the letter indicating the row we are using
 
                 // Pick a random letter from the options to represent that digit
                 foreach (var digit in group)
                 {
-                    var x = page[row][int.Parse(digit.ToString())];
-                    output.Add(x[random.Next(x.Length)].ToString());
+                    var x = page[row][digit - 48];
+                    output.Append(x[random.Next(x.Length)]);
                 }
-                output.Add(" ");
+                output.Append(' ');
             }
 
-            Message = string.Join(string.Empty, output)[..^1]; // removes trailing whitespace
-            return Message; 
+            return output.ToString()[..^1]; 
         }
 
         /// <summary>
-        /// Decipher some text using the DRYAD cipher.
+        /// Decode a message using the DRYAD cipher.
         /// </summary>
-        /// <param name="printPage">If true will display the generated page.</param>
-        /// <returns>The deciphered text.</returns>
-        public string Decode(bool printPage = false)
+        /// <returns>The decoded message.</returns>
+        public string Decode()
         {
             PadMessageWithZeroes();
 
             Random random = new(Key);
-            List<List<string>> page = GenerateDRYADPage(random, printPage);
+            List<List<string>> page = GenerateDRYADPage(random);
 
-            List<string> output = new();
-
+            StringBuilder output = new();
             string[] split = Message.Split(" ");
             foreach (string section in split)
             {
@@ -91,14 +88,26 @@ namespace CipherSharp.Ciphers.Other
                         string y = code[x];
                         if (y.Contains(ltr))
                         {
-                            output.Add(x.ToString());
+                            output.Append(x.ToString());
                         }
                     }
                 }
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return output.ToString();
+        }
+
+        /// <summary>
+        /// Print a page using the s
+        /// </summary>
+        public void PrintPage(int key)
+        {
+            if (key == 0)
+            {
+                key = Key;
+            }
+            Random random = new(key);
+            GenerateDRYADPage(random, true);
         }
 
         /// <summary>
@@ -118,15 +127,15 @@ namespace CipherSharp.Ciphers.Other
         /// <param name="random">The seed to use.</param>
         /// <param name="print">If true will print the page to console.</param>
         /// <returns>The generated page.</returns>
-        private static List<List<string>> GenerateDRYADPage(Random random, bool print)
+        private static List<List<string>> GenerateDRYADPage(Random random, bool print = false)
         {
-            List<List<string>> page = new();
+            List<List<string>> page = new(26);
             for (int i = 0; i < 26; i++)
             {
-                var letters = AppConstants.Alphabet.ToList().OrderBy(item => random.Next()).ToList();
+                var letters = AppConstants.Alphabet.OrderBy(item => random.Next()).ToList();
                 int pos = 0;
-                List<string> row = new();
-                foreach (var chunk in new int[] { 4, 3, 3, 2, 2, 3, 2, 2, 2, 2 })
+                List<string> row = new(10);
+                foreach (var chunk in new int[10] { 4, 3, 3, 2, 2, 3, 2, 2, 2, 2 })
                 {
                     row.Add(string.Join(string.Empty, letters.GetRange(pos, chunk)));
                     pos += chunk;
@@ -142,10 +151,6 @@ namespace CipherSharp.Ciphers.Other
             return page;
         }
 
-        /// <summary>
-        /// Prints <paramref name="page"/> to the console.
-        /// </summary>
-        /// <param name="page">The page to print.</param>
         private static void PrintDRYADPage(List<List<string>> page)
         {
             int ctr = 0;
