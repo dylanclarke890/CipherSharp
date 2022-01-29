@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Transposition
 {
@@ -52,7 +53,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// <returns>The decoded text.</returns>
         public string Decode()
         {
-            List<int> chunks = new();
+            List<int> chunks = new(Key);
             for (int i = 0; i < Key; i++)
             {
                 chunks.Add(0);
@@ -79,16 +80,16 @@ namespace CipherSharp.Ciphers.Transposition
 
             railNumber = 0;
             increment = 1;
-            List<string> output = new();
-            foreach (var letter in Message)
+            StringBuilder output = new(Message.Length);
+            foreach (var _ in Message)
             {
-                output.Add(fence[railNumber][0].ToString());
+                output.Append(fence[railNumber][0]);
                 fence[railNumber] = fence[railNumber][1..];
 
                 IncrementRailNumber(Key, ref railNumber, ref increment);
             }
 
-            return string.Join(string.Empty, output);
+            return output.ToString();
         }
 
         /// <summary>
@@ -98,7 +99,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// <returns>An empty list of strings with a size of <paramref name="key"/>.</returns>
         private static List<string> PrepareEmptyFence(int key)
         {
-            List<string> fence = new();
+            List<string> fence = new(key);
             for (int i = 0; i < key; i++)
             {
                 fence.Add(string.Empty);

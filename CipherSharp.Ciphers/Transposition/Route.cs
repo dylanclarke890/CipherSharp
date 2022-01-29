@@ -30,7 +30,6 @@ namespace CipherSharp.Ciphers.Transposition
 
             StringBuilder output = new();
             int counter = 0;
-
             while (counter < Key)
             {
                 List<char> gr = new();
@@ -60,7 +59,7 @@ namespace CipherSharp.Ciphers.Transposition
             var key = Message.Length / Key;
             var groups = Message.SplitIntoChunks(key).ToList();
 
-            StringBuilder output = new();
+            StringBuilder output = new(key * groups.Count);
             for (int i = 0; i < key; i++)
             {
                 for (int j = 0; j < groups.Count; j++)
@@ -86,8 +85,8 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Adds uncommon letters to <paramref name="text"/> until it's big enough
-        /// to divide by <paramref name="key"/> with zero remainder.
+        /// Adds uncommon letters to message until it's big enough
+        /// to divide by the key with zero remainder.
         /// </summary>
         /// <returns>The prepared text.</returns>
         private void PrepareMessage()

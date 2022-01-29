@@ -13,33 +13,33 @@ namespace CipherSharp.Ciphers.Transposition
     {
         public string[] Key { get; }
 
-        public DoubleColumnar(string message, string[] key) : base(message)
+        private readonly bool _complete;
+
+        public DoubleColumnar(string message, string[] key, bool complete = true) : base(message)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
+
+            _complete = complete;
         }
 
         /// <summary>
-        /// Encodes a message using the Double Columnar transposition cipher.
+        /// Encode a message using the Double Columnar transposition cipher.
         /// </summary>
-        /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The encoded message.</returns>
-        public string Encode(bool complete = true)
+        public string Encode()
         {
             var key = HandleInitialKey(Key);
-            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray()).Encode(complete), key[1].ToArray()).Encode(complete);
+            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Encode(), key[1].ToArray(), _complete).Encode();
         }
 
         /// <summary>
-        /// Decodes a message using the Double Columnar transposition cipher.
+        /// Decode a message using the Double Columnar transposition cipher.
         /// </summary>
-        /// <param name="text">The text to decode.</param>
-        /// <param name="key">An array (length 2) of keys to use.</param>
-        /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The decoded message.</returns>
-        public string Decode(bool complete = true)
+        public string Decode()
         {
             var key = HandleInitialKey(Key);
-            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray()).Decode(complete), key[1].ToArray()).Decode(complete);
+            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Decode(), key[1].ToArray(), _complete).Decode();
         }
 
         /// <summary>
