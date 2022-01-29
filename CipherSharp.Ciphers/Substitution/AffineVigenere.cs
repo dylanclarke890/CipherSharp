@@ -3,6 +3,7 @@ using CipherSharp.Utility.Extensions;
 using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CipherSharp.Ciphers.Substitution
 {
@@ -27,11 +28,10 @@ namespace CipherSharp.Ciphers.Substitution
         {
             string alphabet = AppConstants.AlphaNumeric + "#";
             var txtAsNums = Message.ToNumber(alphabet);
-            var key1 = Keys[0].ToUpper().ToNumber(alphabet).Pad(Message.Length);
+            var key1 = Keys[0].ToUpper().ToNumber(alphabet).Pad(Message.Length).ToList();
             var key2 = Keys[1].ToUpper().ToNumber(alphabet).Pad(Message.Length);
 
-            List<int> output = new();
-
+            List<int> output = new(key1.Count);
             foreach (var (keyNum1, keyNum2, textNum) in key1.ZipThree(key2, txtAsNums))
             {
                 var n = textNum; // multiply and then add
@@ -51,11 +51,10 @@ namespace CipherSharp.Ciphers.Substitution
         {
             string alphabet = AppConstants.AlphaNumeric + "#";
             var txtAsNums = Message.ToNumber(alphabet);
-            var key1 = Keys[0].ToUpper().ToNumber(alphabet).Pad(Message.Length);
+            var key1 = Keys[0].ToUpper().ToNumber(alphabet).Pad(Message.Length).ToList();
             var key2 = Keys[1].ToUpper().ToNumber(alphabet).Pad(Message.Length);
 
-            List<int> output = new();
-
+            List<int> output = new(key1.Count);
             foreach (var (keyNum1, keyNum2, textNum) in key1.ZipThree(key2, txtAsNums))
             {
                 var n = textNum; // multiply by the inverse then subtract

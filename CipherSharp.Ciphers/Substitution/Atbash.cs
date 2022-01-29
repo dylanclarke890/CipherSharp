@@ -9,6 +9,7 @@
     public class Atbash : BaseCipher
     {
         private readonly SimpleSubstitution simpleSubstitution;
+
         public Atbash(string message) : base(message)
         {
             simpleSubstitution = new(message, "ZYXWVUTSRQPONMLKJIHGFEDCBA");
