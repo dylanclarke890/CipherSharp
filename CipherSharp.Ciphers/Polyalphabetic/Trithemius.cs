@@ -12,25 +12,25 @@ namespace CipherSharp.Ciphers.Polyalphabetic
     /// </summary>
     public class Trithemius : BaseCipher
     {
-        private static readonly int AlphabetLength = 26;
+        private const int AlphabetLength = 26;
 
         public Trithemius(string message) : base(message)
         {
         }
 
         /// <summary>
-        /// Encipher some text using the Trithemius cipher.
+        /// Encode some text using the Trithemius cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded text.</returns>
         public string Encode()
         {
             return Process(true);
         }
 
         /// <summary>
-        /// Decipher some text using the Trithemius cipher.
+        /// Decode some text using the Trithemius cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded text.</returns>
         public string Decode()
         {
             return Process(false);
@@ -42,24 +42,19 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 .Pad(Message.Length);
             var nums = Message.ToNumber();
 
-            List<int> output = new();
-            if (encode)
+            List<int> output = new(Message.Length);
+            foreach (var (keyNum, textNum) in indices.Zip(nums))
             {
-                foreach (var (keyNum, textNum) in indices.Zip(nums))
+                if (encode)
                 {
                     output.Add((textNum + keyNum) % AlphabetLength);
                 }
-            }
-            else
-            {
-                foreach (var (keyNum, textNum) in indices.Zip(nums))
+                else
                 {
                     output.Add((textNum - keyNum) % AlphabetLength);
                 }
             }
-
-            Message = string.Join(string.Empty, output.ToLetter());
-            return Message;
+            return string.Join(string.Empty, output.ToLetter());
         }
     }
 }

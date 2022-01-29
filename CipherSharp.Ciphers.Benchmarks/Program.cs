@@ -7,7 +7,7 @@ namespace CipherSharp.Ciphers.Benchmarks
     {
         static void Main()
         {
-            BenchmarkRunner.Run<M209Benchmarks>();
+            BenchmarkRunner.Run<TrithemiusBenchmarks>();
         }
     }
 }

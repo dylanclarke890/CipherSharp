@@ -72,7 +72,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <param name="controlPos">Current position of control rotor.</param>
         /// <param name="indexPos">Current position of index rotor.</param>
         public SIGABA(string message, List<string> cipherKey, List<string> controlKey,
-            List<string> indexKey, string indicatorKey, string controlPos, string indexPos) : base(message)
+            List<string> indexKey, string indicatorKey, string controlPos, string indexPos) : base(message, false)
         {
             if (string.IsNullOrWhiteSpace(indicatorKey))
             {
@@ -97,13 +97,14 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Encipher some text using the SIGABA cipher.
+        /// Encode a message using the SIGABA cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
-            Message = Message.Replace("Z", "X"); // SIGABA turned 'Z' into 'X'
-            Message = Message.Replace(" ", "Z"); // and turned ' ' (spaces) into 'Z'
+            var message = Message
+                .Replace("Z", "X") // SIGABA turned 'Z' into 'X'
+                .Replace(" ", "Z"); // and turned ' ' (spaces) into 'Z'
 
             // Save a copy of the settings for each rotor group.
             var ciphersRotorSet = CipherKey.ToList();
@@ -127,10 +128,10 @@ namespace CipherSharp.Ciphers.Polyalphabetic
             AddIndexRotorsAndPositions(indexRotorsSet, indicator3, _smallRotors, counter, indexRotors, indexPositions);
 
             List<char> output = new();
-            for (int ctr = 0; ctr < Message.Length; ctr++)
+            for (int ctr = 0; ctr < message.Length; ctr++)
             {
                 int count = ctr + 1;
-                var T = Message[ctr];
+                var T = message[ctr];
                 foreach (var (r, p) in cipherRotors.Zip(cipherPositions))
                 {
                     T = ControlRotor(T, r, p);
@@ -150,17 +151,15 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 UpdateCipherPositions(cipherPositions, L);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return string.Join(string.Empty, output);
         }
 
         /// <summary>
-        /// Decipher some text using the SIGABA cipher.
+        /// Decode a message using the SIGABA cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
-            Message = Message.ToUpper();
             var ciphersRotorSet = CipherKey.ToList();
             var controlRotorsSet = ControlKey.ToList();
             var indexRotorsSet = IndexKey.ToList();
@@ -215,8 +214,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 UpdateCipherPositions(cipherPositions, L);
             }
 
-            Message = string.Join(string.Empty, output);
-            return Message;
+            return string.Join(string.Empty, output);
         }
 
         private static int AddCipherRotorsAndPositions(List<string> ciphersRotorSet, string indicator1, Dictionary<string, string> largeRotors, List<string> cipherRotors, List<int> cipherPositions)
