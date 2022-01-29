@@ -36,25 +36,24 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Encipher some text using the ADFGX cipher.
+        /// Encode a message using the ADFGX cipher.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The enciphered text.</returns>
-        public string Encode(bool displaySquare = true)
+        /// <returns>The encoded message.</returns>
+        public string Encode()
         {
             Message = ProcessText(Message);
-            var (d1, d2) = GetCipherDicts(Message, MatrixKey, displaySquare);
+            var (d1, d2) = GetCipherDicts(Message, MatrixKey);
 
-            StringBuilder symbols = new();
+            StringBuilder symbols = new(Message.Length);
             foreach (var ltr in Message)
             {
                 symbols.Append(d1[ltr]);
             }
 
             var transposed = new Columnar<int>(symbols.ToString(), ColumnarKey).Encode();
+            var chunks = transposed.SplitIntoChunks(2).ToList();
 
-            var chunks = transposed.SplitIntoChunks(2);
-            StringBuilder cipherText = new();
+            StringBuilder cipherText = new(chunks.Count);
             foreach (var chunk in chunks)
             {
                 cipherText.Append(d2[chunk]);
@@ -64,24 +63,24 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Decipher some text using the ADFGX cipher.
+        /// Decode a message using the ADFGX cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
-        public string Decode(bool displaySquare = false)
+        /// <returns>The decoded message.</returns>
+        public string Decode()
         {
             Message = ProcessText(Message);
-            var (d1, d2) = GetCipherDicts(Message, MatrixKey, displaySquare);
+            var (d1, d2) = GetCipherDicts(Message, MatrixKey);
 
-            StringBuilder symbols = new();
+            StringBuilder symbols = new(Message.Length);
             foreach (var ltr in Message)
             {
                 symbols.Append(d1[ltr]);
             }
 
             var transposed = new Columnar<int>(symbols.ToString(), ColumnarKey).Decode();
-
-            var chunks = transposed.SplitIntoChunks(2);
-            StringBuilder decodedText = new();
+            var chunks = transposed.SplitIntoChunks(2).ToList();
+            
+            StringBuilder decodedText = new(chunks.Count);
             foreach (var chunk in chunks)
             {
                 decodedText.Append(d2[chunk]);
@@ -90,24 +89,24 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             return decodedText.ToString();
         }
 
-        private static (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts(string text, string key, bool displaySquare)
+        public void DisplaySquare()
+        {
+            var square = Matrix.Create(MatrixKey, AlphabetMode.EX);
+            foreach (var sq in square)
+            {
+                Console.WriteLine(string.Join(string.Empty, sq));
+            }
+        }
+
+        private static (Dictionary<char, string>, Dictionary<string, char>) GetCipherDicts(string text, string key)
         {
             string alphabet = AppConstants.Alphabet.Replace("J", "");
             alphabet = Alphabet.AlphabetPermutation(key, alphabet);
 
-            if (displaySquare)
-            {
-                var square = Matrix.Create(key, AlphabetMode.EX);
-                foreach (var sq in square)
-                {
-                    Console.WriteLine(string.Join(string.Empty, sq));
-                }
-            }
-
             var pairs = nameof(ADFGX).CartesianProduct(nameof(ADFGX));
 
-            Dictionary<char, string> d1 = new();
-            Dictionary<string, char> d2 = new();
+            Dictionary<char, string> d1 = new(alphabet.Length);
+            Dictionary<string, char> d2 = new(alphabet.Length);
 
             foreach (var (ltr, pair) in alphabet.Zip(pairs))
             {
