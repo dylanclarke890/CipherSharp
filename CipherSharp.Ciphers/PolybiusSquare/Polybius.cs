@@ -59,10 +59,10 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             StringBuilder encoded = new(text.Length);
             foreach (char ltr in text)
             {
-                encoded.Append($"{string.Join(string.Empty, result[ltr].Append(" "))}");
+                encoded.Append($"{string.Join(string.Empty, result[ltr].Append(Sep))}");
             }
 
-            return encoded.ToString()[..^1];
+            return encoded.ToString();
         }
 
         /// <summary>
