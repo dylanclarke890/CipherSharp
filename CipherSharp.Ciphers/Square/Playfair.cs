@@ -4,6 +4,7 @@ using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Square
 {
@@ -32,19 +33,13 @@ namespace CipherSharp.Ciphers.Square
         /// <summary>
         /// Encode a message using the Playfair cipher.
         /// </summary>
-        /// <param name="displaySquare">If <c>True</c>, will print the square to the console.</param>
         /// <returns>The encoded message.</returns>
-        public string Encode(bool displaySquare = true)
+        public string Encode()
         {
             ProcessMessage();
 
             var square = Matrix.Create(Key, Mode).ToArray();
             var squareIndices = square.MatrixIndex();
-
-            if (displaySquare)
-            {
-                square.Print();
-            }
 
             var codeGroups = Message.SplitIntoChunks(2);
             int size = Mode is AlphabetMode.EX ? 6 : 5;
@@ -54,33 +49,33 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Decode some text using the Playfair cipher.
+        /// Decode a message using the Playfair cipher.
         /// </summary>
-        /// <param name="displaySquare">If <c>True</c>, will print the square to the console.</param>
         /// <returns>The decoded message.</returns>
-        public string Decode(bool displaySquare = true)
+        public string Decode()
         {
             ProcessMessage();
 
             var square = Matrix.Create(Key, Mode).ToArray();
             var squareIndices = square.MatrixIndex();
 
-            if (displaySquare)
-            {
-                square.Print();
-            }
-
-            var codeGroups = Message.SplitIntoChunks(2);
+            var codeGroups = Message.SplitIntoChunks(2).ToList();
             int size = Mode is AlphabetMode.EX ? 6 : 5;
 
             return DecodeCodeGroups(square, squareIndices, codeGroups, size);
+        }
+
+        public void DisplaySquare()
+        {
+            var square = Matrix.Create(Key, Mode).ToArray();
+            square.Print();
         }
 
         /// <summary>
         /// Prepares the input text.
         /// </summary>
         /// <returns>The prepared text.</returns>
-        private string ProcessMessage()
+        private void ProcessMessage()
         {
             switch (Mode)
             {
@@ -106,8 +101,6 @@ namespace CipherSharp.Ciphers.Square
                 char extraChar = Message[^1] != 'X' ? 'X' : 'Z';
                 Message += extraChar;
             }
-
-            return Message;
         }
 
         /// <summary>
@@ -118,9 +111,10 @@ namespace CipherSharp.Ciphers.Square
         private bool CheckForDuplicates()
         {
             bool completed = true;
+            var msgAsSpan = Message.AsSpan();
             for (int i = 0; i < Message.Length / 2; i++)
             {
-                string groupOfTwo = Message[(i * 2)..(i * 2 + 2)];
+                var groupOfTwo = msgAsSpan[(i * 2)..(i * 2 + 2)];
                 if (groupOfTwo[0] != groupOfTwo[1])
                 {
                     continue;
@@ -181,9 +175,9 @@ namespace CipherSharp.Ciphers.Square
         /// <param name="size">Used to prevent IndexOutOfRangeExceptions.</param>
         /// <returns>The decoded text.</returns>
         private static string DecodeCodeGroups(IEnumerable<string>[] square, Dictionary<char, (int, int, int)> squareIndices,
-            IEnumerable<string> codeGroups, int size)
+            List<string> codeGroups, int size)
         {
-            string output = "";
+            StringBuilder output = new(codeGroups.Count * 2);
             foreach (var group in codeGroups)
             {
                 var firstCharPos = squareIndices[group[0]];
@@ -191,23 +185,23 @@ namespace CipherSharp.Ciphers.Square
 
                 if (firstCharPos.Item1 == secondCharPos.Item1)
                 {
-                    output += square[firstCharPos.Item1].ToArray()[firstCharPos.Item2][(firstCharPos.Item3 - 1) % size];
-                    output += square[secondCharPos.Item1].ToArray()[secondCharPos.Item2][(secondCharPos.Item3 - 1) % size];
+                    output.Append(square[firstCharPos.Item1].ToArray()[firstCharPos.Item2][(firstCharPos.Item3 - 1) % size]);
+                    output.Append(square[secondCharPos.Item1].ToArray()[secondCharPos.Item2][(secondCharPos.Item3 - 1) % size]);
                 }
                 else if (firstCharPos.Item3 == secondCharPos.Item3)
                 {
-                    output += square[(firstCharPos.Item1 - 1) % size].ToArray()[firstCharPos.Item2][firstCharPos.Item3];
+                    output.Append(square[(firstCharPos.Item1 - 1) % size].ToArray()[firstCharPos.Item2][firstCharPos.Item3]);
                     int index = (secondCharPos.Item1 - 1) % size;
-                    output += square[index].ToArray()[secondCharPos.Item2][secondCharPos.Item3];
+                    output.Append(square[index].ToArray()[secondCharPos.Item2][secondCharPos.Item3]);
                 }
                 else
                 {
-                    output += square[firstCharPos.Item1].ToArray()[secondCharPos.Item2][secondCharPos.Item3];
-                    output += square[secondCharPos.Item1].ToArray()[secondCharPos.Item2][firstCharPos.Item3];
+                    output.Append(square[firstCharPos.Item1].ToArray()[secondCharPos.Item2][secondCharPos.Item3]);
+                    output.Append(square[secondCharPos.Item1].ToArray()[secondCharPos.Item2][firstCharPos.Item3]);
                 }
             }
 
-            return output;
+            return output.ToString();
         }
     }
 }
