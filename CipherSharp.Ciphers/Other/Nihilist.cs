@@ -12,7 +12,7 @@ namespace CipherSharp.Ciphers.Other
     public class Nihilist : BaseCipher
     {
         public Nihilist(string message, string[] keys, AlphabetMode polybiusMode = AlphabetMode.EX)
-            : base(message)
+            : base(message, false)
         {
             Keys = keys ?? throw new ArgumentNullException(nameof(keys));
             PolybiusMode = polybiusMode;
@@ -23,10 +23,9 @@ namespace CipherSharp.Ciphers.Other
         public AlphabetMode PolybiusMode { get; set; }
 
         /// <summary>
-        /// Encipher some text using the Nihilist cipher.
+        /// Encode a message using the Nihilist cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
-        /// <exception cref="ArgumentException"/>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             // Convert the vigenere key into numbers using the polybius square
@@ -43,15 +42,13 @@ namespace CipherSharp.Ciphers.Other
                 textNums[i] = textNums[i] + keyNums[i % kLength];
             }
 
-            Message = string.Join(" ", textNums);
-            return Message;
+            return string.Join(" ", textNums);
         }
 
         /// <summary>
-        /// Decipher some text using the Nihilist cipher.
+        /// Decode a message using the Nihilist cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
-        /// <exception cref="ArgumentException"/>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             // Convert the vigenere key into numbers using the polybius square
@@ -67,9 +64,9 @@ namespace CipherSharp.Ciphers.Other
             }
 
             var textnum = string.Join(" ", textNums);
-            
-            Message = new Polybius(textnum, Keys[0], " ", PolybiusMode).Decode();
-            return Message;
+
+            textnum = new Polybius(textnum, Keys[0], " ", PolybiusMode).Decode();
+            return textnum;
         }
     }
 }

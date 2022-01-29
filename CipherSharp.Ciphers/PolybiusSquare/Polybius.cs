@@ -24,7 +24,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         public string Sep { get; }
         public AlphabetMode Mode { get; }
 
-        public Polybius(string message, string key, string sep = "", AlphabetMode mode = AlphabetMode.JI) : base(message)
+        public Polybius(string message, string key, string sep = "", AlphabetMode mode = AlphabetMode.JI) : base(message, false)
         {
             if (string.IsNullOrWhiteSpace(key))
             {
