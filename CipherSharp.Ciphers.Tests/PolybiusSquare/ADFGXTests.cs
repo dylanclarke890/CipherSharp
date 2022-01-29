@@ -13,10 +13,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string text = "helloworld";
             string polybiusKey = "test";
             int[] columnarKey = new int[2] { 1, 2 };
-            bool displaySquare = false;
             ADFGX aDFGX = new(text, polybiusKey, columnarKey);
             // Act
-            var result = aDFGX.Encode(displaySquare);
+            var result = aDFGX.Encode();
 
             // Assert
             Assert.Equal("CLURKWLEAK", result);
@@ -29,10 +28,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string text = "CLURKWLEAK";
             string polybiusKey = "test";
             int[] columnarKey = new int[2] { 1, 2 };
-            bool displaySquare = false;
             ADFGX aDFGX = new(text, polybiusKey, columnarKey);
             // Act
-            var result = aDFGX.Decode(displaySquare);
+            var result = aDFGX.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);

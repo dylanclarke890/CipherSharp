@@ -4,6 +4,7 @@ using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CipherSharp.Ciphers.PolybiusSquare
 {
@@ -31,7 +32,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 throw new ArgumentException($"'{nameof(key)}' cannot be null or whitespace.", nameof(key));
             }
 
-            Key = key;
+            Key = key.ToUpper();
             Sep = sep ?? throw new ArgumentException($"'{nameof(sep)}' cannot be null.", nameof(sep));
             Mode = mode;
         }
@@ -49,19 +50,19 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, Mode is AlphabetMode.EX ? 6 : 5));
             var codeGroups = cartesianArray.CartesianProduct(cartesianArray);
 
-            Dictionary<char, IEnumerable<string>> result = new();
+            Dictionary<char, IEnumerable<string>> result = new(internalKey.Length);
             foreach (var (i, j) in internalKey.Zip(codeGroups))
             {
                 result[i] = j;
             }
 
-            List<string> encoded = new();
+            StringBuilder encoded = new(text.Length);
             foreach (char ltr in text)
             {
-                encoded.Add($"{string.Join(string.Empty, result[ltr])}");
+                encoded.Append($"{string.Join(Sep, result[ltr])}");
             }
 
-            return string.Join(Sep, encoded);
+            return encoded.ToString();
         }
 
         /// <summary>
@@ -77,35 +78,34 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             var cartesianArray = string.Join(string.Empty, Enumerable.Range(1, Mode is AlphabetMode.EX ? 6 : 5));
             var codeGroups = cartesianArray.CartesianProduct(cartesianArray);
 
-            Dictionary<string, char> result = new();
+            Dictionary<string, char> result = new(internalKey.Length);
             foreach (var (i, j) in internalKey.Zip(codeGroups))
             {
                 result[string.Join(string.Empty, j)] = i;
             }
 
-            List<string> pendingDecode = PrepareTextForDeciphering(text, Sep);
+            List<string> pendingDecode = PrepareTextForDecoding(text, Sep);
 
-            List<string> decoded = new();
+            StringBuilder decoded = new(pendingDecode.Count);
             foreach (var pair in pendingDecode)
             {
-                decoded.Add($"{result[pair]}");
+                decoded.Append($"{result[pair]}");
             }
 
             return string.Join(Sep, decoded);
         }
 
         /// <summary>
-        /// Depending on <paramref name="encipher"/>,
+        /// Depending on <paramref name="encode"/>,
         /// will check whether the text contains any numbers or letters, 
         /// and will throw an <see cref="ArgumentException"/> if so.
         /// </summary>
-        /// <param name="text">The text to check.</param>
-        /// <param name="encipher">If <c>True</c>, will check there are no digits. Will check
+        /// <param name="encode">If <c>True</c>, will check there are no digits. Will check
         /// for no letters otherwise.</param>
         /// <exception cref="InvalidOperationException"/>
-        private void CheckText(bool encipher)
+        private void CheckText(bool encode)
         {
-            if (encipher)
+            if (encode)
             {
                 if (Message.Any(ch => char.IsDigit(ch)))
                 {
@@ -123,18 +123,15 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <summary>
         /// Processes the input data.
         /// </summary>
-        /// <param name="key">The </param>
-        /// <param name="text"></param>
-        /// <param name="mode"></param>
         /// <returns>A tuple containing the processed input.</returns>
         /// <exception cref="ArgumentException"/>
         private (string, string) ProcessInput()
         {
             return Mode switch
             {
-                AlphabetMode.JI => (Key.Replace("J", "I").ToUpper(), Message.Replace("J", "I").ToUpper()),
-                AlphabetMode.CK => (Key.Replace("C", "K").ToUpper(), Message.Replace("C", "K").ToUpper()),
-                AlphabetMode.EX => (Key.ToUpper(), Message.ToUpper()),
+                AlphabetMode.JI => (Key.Replace("J", "I"), Message.Replace("J", "I")),
+                AlphabetMode.CK => (Key.Replace("C", "K"), Message.Replace("C", "K")),
+                AlphabetMode.EX => (Key, Message),
                 _ => throw new ArgumentException($"'{nameof(Mode)}' was invalid.", nameof(Mode))
             };
         }
@@ -157,7 +154,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <param name="text">The text to prepare.</param>
         /// <param name="sep">The seperator to split the text with.</param>
         /// <returns>A list of strings pending deciphering.</returns>
-        private static List<string> PrepareTextForDeciphering(string text, string sep)
+        private static List<string> PrepareTextForDecoding(string text, string sep)
         {
             List<string> pendingDecipher;
             if (sep != string.Empty)
@@ -166,8 +163,9 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 return pendingDecipher;
             }
 
-            pendingDecipher = new();
-            for (int i = 0; i < text.Length / 2; i++)
+            int iterations = text.Length / 2;
+            pendingDecipher = new(iterations);
+            for (int i = 0; i < iterations; i++)
             {
                 pendingDecipher.Add(text[(i * 2)..(i * 2 + 2)]);
             }

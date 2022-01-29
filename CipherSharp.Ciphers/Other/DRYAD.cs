@@ -88,7 +88,7 @@ namespace CipherSharp.Ciphers.Other
                         string y = code[x];
                         if (y.Contains(ltr))
                         {
-                            output.Append(x.ToString());
+                            output.Append(x);
                         }
                     }
                 }
