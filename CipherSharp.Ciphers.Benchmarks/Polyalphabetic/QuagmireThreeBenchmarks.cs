@@ -124,7 +124,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #endregion
 
         #region CreateTableBenchmarks
-        public List<string> CreateTableOriginal()
+        public static List<string> CreateTableOriginal()
         {
             List<string> table = new();
 
@@ -144,7 +144,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return table;
         }
 
-        public List<string> CreateTableAddingCurrentBest()
+        public static List<string> CreateTableAddingCurrentBest()
         {
             List<string> table = new();
 
@@ -163,7 +163,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #endregion
 
         #region HelperMethods
-        public List<string> CreateTable(string key, string indicator)
+        public static List<string> CreateTable(string key, string indicator)
         {
             List<string> table = new(indicator.Length);
             foreach (var letter in indicator)

@@ -170,7 +170,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
 
         #region CreateTableBenchmarks
 
-        public void CreateTableOriginal()
+        public static void CreateTableOriginal()
         {
             List<string> table = new();
             foreach (var letter in Indicator)
@@ -187,7 +187,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CreateTableAdding()
+        public static void CreateTableAdding()
         {
             List<string> table = new();
             foreach (var letter in Indicator)
@@ -201,7 +201,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CreateTableAddingSavingIndex()
+        public static void CreateTableAddingSavingIndex()
         {
             var aIndex = Alpha.IndexOf("A");
             List<string> table = new();
@@ -216,7 +216,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CreateTableAddingSavingIndexAndLength()
+        public static void CreateTableAddingSavingIndexAndLength()
         {
             var aIndex = Alpha.IndexOf("A");
             var alphabetLength = Alpha.Length;
@@ -232,7 +232,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CreateTableFixedCapacityCurrentBest()
+        public static void CreateTableFixedCapacityCurrentBest()
         {
             var aIndex = Alpha.IndexOf("A");
             var alphabetLength = Alpha.Length;
@@ -248,7 +248,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CreateTableForLoopAdding()
+        public static void CreateTableForLoopAdding()
         {
             List<string> table = new();
             for (int i = 0; i < Indicator.Length; i++)
@@ -262,7 +262,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CreateTableForLoopAddingSavingIndex()
+        public static void CreateTableForLoopAddingSavingIndex()
         {
             var aIndex = Alpha.IndexOf("A");
             List<string> table = new();
@@ -280,7 +280,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #endregion
 
         #region HelperMethods
-        private List<string> CreateTable(string key, int alphabetLength, string indicator)
+        private static List<string> CreateTable(string key, int alphabetLength, string indicator)
         {
             List<string> table = new();
 

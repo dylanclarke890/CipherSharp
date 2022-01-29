@@ -13,25 +13,25 @@ namespace CipherSharp.Utility.Benchmarks.Helpers
         private const string Alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         [Benchmark(Baseline = true)]
-        public void AlphabetPermutation()
+        public static void AlphabetPermutation()
         {
             Alphabet.AlphabetPermutation(Key, Alpha);
         }
 
         [Benchmark]
-        public void AlphabetPermutationWithHashSet()
+        public static void AlphabetPermutationWithHashSet()
         {
             AlphabetAlternatives.AlphabetPermutationWithHashSet(Key, Alpha);
         }
 
         [Benchmark]
-        public void AlphabetPermutationWithForLoop()
+        public static void AlphabetPermutationWithForLoop()
         {
             AlphabetAlternatives.AlphabetPermutationWithForLoop(Key, Alpha);
         }
 
         [Benchmark]
-        public void AlphabetPermutationWithForLoopAndLinq()
+        public static void AlphabetPermutationWithForLoopAndLinq()
         {
             AlphabetAlternatives.AlphabetPermutationWithForLoopAndLinq(Key, Alpha);
         }

@@ -160,7 +160,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
 
         #region CreateTableBenchmarks
 
-        public List<string> CreateTableOriginal()
+        public static List<string> CreateTableOriginal()
         {
             List<string> table = new();
             foreach (var letter in Indicator)
@@ -178,7 +178,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return table;
         }
 
-        public List<string> CreateTableFixedCapacityCurrentBest() // lowest memory allocation
+        public static List<string> CreateTableFixedCapacityCurrentBest() // lowest memory allocation
         {
             List<string> table = new(Indicator.Length);
             foreach (var letter in Indicator)
@@ -196,7 +196,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return table;
         }
 
-        public List<string> CreateTableAdding()
+        public static List<string> CreateTableAdding()
         {
             List<string> table = new();
             foreach (var letter in Indicator)
@@ -211,7 +211,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return table;
         }
 
-        public List<string> CreateTableStringConcat()
+        public static List<string> CreateTableStringConcat()
         {
             List<string> table = new();
             foreach (var letter in Indicator)
@@ -226,7 +226,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return table;
         }
 
-        public List<string> CreateTableForLoop()
+        public static List<string> CreateTableForLoop()
         {
             List<string> table = new();
             for (int i = 0; i < Indicator.Length; i++)
@@ -245,7 +245,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #endregion
 
         #region HelperMethods
-        private List<string> CreateTable(string key, string indicator)
+        private static List<string> CreateTable(string key, string indicator)
         {
             List<string> table = new(indicator.Length);
             foreach (var letter in indicator)

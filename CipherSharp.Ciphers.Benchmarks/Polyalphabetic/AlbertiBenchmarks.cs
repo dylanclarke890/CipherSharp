@@ -24,7 +24,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
 
         #region RotateNTimesBenchmarks
 
-        public string RotateNTimesOriginal()
+        public static string RotateNTimesOriginal()
         {
             var temp = Ring[..];
 
@@ -35,14 +35,14 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return temp;
         }
 
-        public string RotateNTimesWithoutDirectLoop()
+        public static string RotateNTimesWithoutDirectLoop()
         {
             int amount = Turns % Ring.Length;
             var chunk = Ring[amount..];
             return chunk + Ring[..amount];
         }
 
-        public string RotateNTimesWithSpan()
+        public static string RotateNTimesWithSpan()
         {
             var temp = Ring.AsSpan();
 
@@ -55,7 +55,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #endregion
 
         #region CheckMessageForNonLetterBenchmarks
-        public void CheckMessageForNonLetterInvertingBoolsAndForLoop()
+        public static void CheckMessageForNonLetterInvertingBoolsAndForLoop()
         {
             for (int ch = 0; ch < Message.Length; ch++)
             {
@@ -68,7 +68,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CheckMessageForNonLetterUsingASCIIAndInvertingBools()
+        public static void CheckMessageForNonLetterUsingASCIIAndInvertingBools()
         {
             if (Message.Any(ch => (63 >= ch || 91 <= ch) && (95 >= ch || 123 <= ch)))
             {
@@ -78,7 +78,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CheckMessageForNonLetterUsingASCII()
+        public static void CheckMessageForNonLetterUsingASCII()
         {
             if (Message.Any(ch => !((ch > 64 && ch <= 90) || (ch > 96 && ch <= 122))))
             {
@@ -88,7 +88,8 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        public void CheckMessageForNonLetterOriginal()        {
+        public static void CheckMessageForNonLetterOriginal()
+        {
             foreach (var num in AppConstants.Digits)
             {
                 if (Message.Any(ch => ch == num))
@@ -100,7 +101,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #endregion
 
         #region GetInnerRingBenchmarks
-        public string GetInnerRingWithIndex()
+        public static string GetInnerRingWithIndex()
         {
             string innerRing = Alphabet.AlphabetPermutation(Key, Ring);
             innerRing = RotateNTimes(innerRing, innerRing.IndexOf(StartPosition));
@@ -111,7 +112,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
 
         #region EncodeBenchmarks
         
-        public string EncodeOriginal()
+        public static string EncodeOriginal()
         {
             CheckMessageForNonLetters();
 
@@ -139,7 +140,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return string.Join(string.Empty, output);
         }
 
-        public string EncodeWithSpanForOuterRing()
+        public static string EncodeWithSpanForOuterRing()
         {
             CheckMessageForNonLetters();
 
@@ -167,7 +168,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return output.ToString();
         }
 
-        public string EncodeWithSpanForInnerRing()
+        public static string EncodeWithSpanForInnerRing()
         {
             CheckMessageForNonLetters();
 
@@ -195,7 +196,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return output.ToString();
         }
 
-        public string EncodeStringBuilderCurrentBest()
+        public static string EncodeStringBuilderCurrentBest()
         {
             CheckMessageForNonLetters();
 
@@ -223,7 +224,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return output.ToString();
         }
 
-        public string EncodeWithoutGap()
+        public static string EncodeWithoutGap()
         {
             CheckMessageForNonLetters();
 
@@ -240,7 +241,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return output.ToString();
         }
 
-        public string EncodeStoringCalcs()
+        public static string EncodeStoringCalcs()
         {
             CheckMessageForNonLetters();
 
@@ -269,7 +270,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return output.ToString();
         }
         
-        public string EncodeStoringCalcsAndForLoop()
+        public static string EncodeStoringCalcsAndForLoop()
         {
             CheckMessageForNonLetters();
 
@@ -302,7 +303,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         #region DecodeBenchmarks        
         
         [Benchmark(Baseline = true)]
-        public string DecodeOriginal()
+        public static string DecodeOriginal()
         {
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
@@ -326,7 +327,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         }
 
         [Benchmark]
-        public string DecodeStringBuilder()
+        public static string DecodeStringBuilder()
         {
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
@@ -350,7 +351,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         }
 
         [Benchmark]
-        public string DecodeUsingASCII()
+        public static string DecodeUsingASCII()
         {
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
@@ -374,7 +375,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
         }
 
         [Benchmark]
-        public string DecodeUsingASCIIAndForLoop()
+        public static string DecodeUsingASCIIAndForLoop()
         {
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);
@@ -400,7 +401,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
 
         #region HelperMethods
         // required for the encode/decode methods to run.
-        private void CheckMessageForNonLetters()
+        private static void CheckMessageForNonLetters()
         {
             for (int ch = 0; ch < Message.Length; ch++)
             {
@@ -413,7 +414,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             }
         }
 
-        private string GetOuterRing()
+        private static string GetOuterRing()
         {
             string outerRing = AppConstants.AlphaNumeric;
             if (!outerRing.Contains(StartPosition))
@@ -424,7 +425,7 @@ namespace CipherSharp.Ciphers.Benchmarks.Polyalphabetic
             return outerRing;
         }
 
-        private string GetInnerRing(string outerRing)
+        private static string GetInnerRing(string outerRing)
         {
             string innerRing = Alphabet.AlphabetPermutation(Key, outerRing);
             innerRing = RotateNTimes(innerRing, innerRing.IndexOf(StartPosition));
