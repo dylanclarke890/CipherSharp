@@ -13,10 +13,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string text = "helloworld";
             string matrixKey = "test";
             int[] columnarKeys = new int[2] { 0, 2 };
-            bool printKey = false;
             ADFGVX aDFGVX = new(text, matrixKey, columnarKeys);
             // Act
-            var result = aDFGVX.Encode(printKey);
+            var result = aDFGVX.Encode();
 
             // Assert
             Assert.Equal("DMNNLRF2ZD", result);
@@ -29,10 +28,9 @@ namespace CipherSharp.Tests.Ciphers.PolybiusSquare
             string text = "DMNNLRF2ZD";
             string matrixKey = "test";
             int[] columnarKeys = new int[2] { 0, 2 };
-            bool printKey = false;
             ADFGVX aDFGVX = new(text, matrixKey, columnarKeys);
             // Act
-            var result = aDFGVX.Decode(printKey);
+            var result = aDFGVX.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);

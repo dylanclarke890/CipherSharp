@@ -5,6 +5,7 @@ using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CipherSharp.Ciphers.PolybiusSquare
 {
@@ -33,23 +34,27 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Encipher some text using the ADFGVX cipher.
+        /// Encode a message using the ADFGVX cipher.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The enciphered text.</returns>
-        public string Encode(bool displaySquare = true)
+        /// <returns>The encoded message.</returns>
+        public string Encode()
         {
-            return Process(displaySquare, true);
+            return Process(true);
         }
 
         /// <summary>
-        /// Decipher some text using the ADFGVX cipher.
+        /// Decode a message using the ADFGVX cipher.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The deciphered text.</returns>
-        public string Decode(bool displaySquare = false)
+        /// <returns>The decoded message.</returns>
+        public string Decode()
         {
-            return Process(displaySquare, false);
+            return Process(false);
+        }
+
+        public void DisplaySquare()
+        {
+            var square = Matrix.Create(MatrixKey, AlphabetMode.EX);
+            square.Print();
         }
 
         /// <summary>
@@ -57,7 +62,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// decoding if <c>False</c>.
         /// </summary>
         /// <returns>The processed text.</returns>
-        private string Process(bool displaySquare, bool encode)
+        private string Process(bool encode)
         {
             while (Message.Length < ColumnarKeys.Length)
             {
@@ -67,15 +72,10 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             string alphabet = Alphabet.AlphabetPermutation(MatrixKey, AppConstants.AlphaNumeric);
             var square = Matrix.Create(MatrixKey, AlphabetMode.EX);
 
-            if (displaySquare)
-            {
-                square.Print();
-            }
-
             var pairs = nameof(ADFGVX).CartesianProduct(nameof(ADFGVX));
 
-            Dictionary<char, string> d1 = new();
-            Dictionary<string, char> d2 = new();
+            Dictionary<char, string> d1 = new(alphabet.Length);
+            Dictionary<string, char> d2 = new(alphabet.Length);
 
             foreach (var (letter, pair) in alphabet.Zip(pairs))
             {
@@ -84,24 +84,23 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 d2[joinedPair] = letter;
             }
 
-            string processed = "";
+            StringBuilder processed = new(Message.Length);
             foreach (var ltr in Message)
             {
-                processed += d1[ltr];
+                processed.Append(d1[ltr]);
             }
 
-            processed = encode ? new Columnar<int>(processed, ColumnarKeys).Encode() : new Columnar<int>(processed, ColumnarKeys).Decode();
+            var columnar = new Columnar<int>(processed.ToString(), ColumnarKeys);
+            var afterColumnar = encode ? columnar.Encode() : columnar.Decode();
+            var codeGroups = afterColumnar.SplitIntoChunks(2).ToList();
 
-            var codeGroups = processed.SplitIntoChunks(2);
-
-            string result = "";
-
+            StringBuilder result = new(codeGroups.Count);
             foreach (var group in codeGroups)
             {
-                result += d2[group];
+                result.Append(d2[group]);
             }
 
-            return result;
+            return result.ToString();
         }
     }
 }
