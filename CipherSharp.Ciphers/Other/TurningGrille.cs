@@ -37,9 +37,9 @@ namespace CipherSharp.Ciphers.Other
         private double TotalSize { get; }
 
         /// <summary>
-        /// Encipher some text using the Turning Grille cipher.
+        /// Encode a message using the Turning Grille cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
         public string Encode()
         {
@@ -54,20 +54,19 @@ namespace CipherSharp.Ciphers.Other
             var outMat = Matrix.Create(size, "");
             AddTextToCipherGrille(Message, grille, outMat);
 
-            StringBuilder output = new();
+            StringBuilder output = new(outMat.Length);
             foreach (var row in outMat)
             {
                 output.Append(string.Join(string.Empty, row));
             }
 
-            Message = output.ToString();
-            return Message;
+            return output.ToString();
         }
 
         /// <summary>
-        /// Decipher some text using the Turning Grille cipher.
+        /// Decode a message using the Turning Grille cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
         public string Decode()
         {
@@ -84,8 +83,7 @@ namespace CipherSharp.Ciphers.Other
             StringBuilder output = new();
             ReadThroughGrille(grille, groups, output);
 
-            Message = output.ToString();
-            return Message;
+            return output.ToString();
         }
 
         /// <summary>
@@ -119,19 +117,18 @@ namespace CipherSharp.Ciphers.Other
         /// If text is smaller than <paramref name="totalSize"/>,
         /// adds 'X's initially, then appends random letters from alphabet.
         /// </summary>
-        /// <param name="text">The text to modify.</param>
         /// <param name="totalSize">The total/minimum allowed size.</param>
         /// <returns>The modified text.</returns>
         private void PadMessageWithRandomChars(double totalSize)
         {
             int counter = 0;
             Random random = new();
-            List<char> alphabet = AppConstants.Alphabet.ToList();
+            var alphabet = AppConstants.Alphabet;
             while (Message.Length < totalSize)
             {
                 if (counter > 3)
                 {
-                    Message += alphabet[random.Next(alphabet.Count)];
+                    Message += alphabet[random.Next(alphabet.Length)];
                 }
                 else
                 {
