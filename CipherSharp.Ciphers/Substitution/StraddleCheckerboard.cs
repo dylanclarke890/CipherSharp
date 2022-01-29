@@ -70,7 +70,7 @@ namespace CipherSharp.Ciphers.Substitution
                 key.RemoveAt(0);
             }
 
-            StringBuilder output = new();
+            StringBuilder output = new(Message.Length);
             foreach (var ltr in Message)
             {
                 output.Append(D[ltr]);

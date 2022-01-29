@@ -15,32 +15,36 @@ namespace CipherSharp.Ciphers.Transposition
     {
         public T[] Key { get; }
 
-        public Columnar(string message, T[] key) : base(message)
+        private readonly int[] internalKey;
+        private readonly int numOfCols;
+        private readonly int numOfRows;
+
+
+        /// <param name="complete">If true, will pad the text with extra characters.</param>
+        public Columnar(string message, T[] key, bool complete = false) : base(message, false)
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
-        }
+            internalKey = Key.UniqueRank();
+            numOfCols = internalKey.Length;
 
-        /// <summary>
-        /// Enciphers the text using the Columnar transposition cipher.
-        /// </summary>
-        /// <param name="complete">If true, will pad the text with extra characters.</param>
-        /// <returns>The encoded message.</returns>
-        public string Encode(bool complete = false)
-        {
-            var internalKey = Key.UniqueRank();
-            int numOfCols = internalKey.Length;
-
-            (int numOfRows, int remainder) = Utilities.DivMod(Message.Length, numOfCols);
+            (int rowNums, int remainder) = Utilities.DivMod(Message.Length, numOfCols);
 
             if (complete)
             {
-                numOfRows = remainder > 0 ? numOfRows + 1 : numOfRows;
+                numOfRows = remainder > 0 ? rowNums + 1 : rowNums;
                 Message = Message.Pad(numOfCols * numOfRows);
             }
+        }
 
+        /// <summary>
+        /// Encode a message using the Columnar transposition cipher.
+        /// </summary>
+        /// <returns>The encoded message.</returns>
+        public string Encode()
+        {
             var pending = Message.SplitIntoChunks(numOfCols);
-            List<char> output = new();
 
+            List<char> output = new(internalKey.Length);
             foreach (var col in internalKey.IndirectSort())
             {
                 output.AddRange(
@@ -54,24 +58,14 @@ namespace CipherSharp.Ciphers.Transposition
         /// <summary>
         /// Decodes a message using the Columnar transposition cipher.
         /// </summary>
-        /// <param name="complete">If true, will pad the text with extra characters.</param>
         /// <returns>The decoded message.</returns>
-        public string Decode(bool complete = false)
+        public string Decode()
         {
-            var internalKey = Key.UniqueRank();
-            int numOfCols = internalKey.Length;
-
             (int numOfRows, int remainder) = Utilities.DivMod(Message.Length, numOfCols);
-            var longCols = internalKey[..remainder];
-
-            if (complete)
-            {
-                Message = Message.Pad(numOfCols * (remainder > 0 ? numOfRows + 1 : numOfRows));
-            }
+            var longCols = internalKey[..(Message.Length % numOfCols)];
 
             int ctr = 0;
-            List<string> pending = new();
-
+            List<string> pending = new(numOfCols);
             for (int i = 0; i < numOfCols; i++)
             {
                 int j = longCols.Contains(i) ? numOfRows + 1 : numOfRows;
@@ -79,8 +73,7 @@ namespace CipherSharp.Ciphers.Transposition
                 ctr += j;
             }
 
-            List<string> output = new();
-
+            List<string> output = new(numOfRows);
             for (int row = 0; row < numOfRows + 1; row++)
             {
                 output.AddRange(

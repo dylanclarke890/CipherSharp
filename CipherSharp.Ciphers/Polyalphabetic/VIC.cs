@@ -27,7 +27,6 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 throw new ArgumentException($"'{nameof(phrase)}' cannot be null or whitespace.", nameof(phrase));
             }
 
-            Message = message;
             Keys = keys ?? throw new ArgumentNullException(nameof(keys));
             Phrase = phrase;
             TransKey = transKey;

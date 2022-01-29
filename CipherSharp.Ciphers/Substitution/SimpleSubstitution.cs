@@ -1,6 +1,7 @@
 ﻿using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace CipherSharp.Ciphers.Substitution
 {
@@ -40,14 +41,13 @@ namespace CipherSharp.Ciphers.Substitution
         {
             var internalKey = Alphabet.AlphabetPermutation(Key);
 
-            List<char> output = new();
-
+            StringBuilder output = new(Message.Length);
             foreach (var ltr in Message)
             {
-                output.Add(internalKey[Alpha.IndexOf(ltr)]);
+                output.Append(internalKey[Alpha.IndexOf(ltr)]);
             }
 
-            return string.Join(string.Empty, output);
+            return output.ToString();
         }
 
         /// <summary>
@@ -58,14 +58,13 @@ namespace CipherSharp.Ciphers.Substitution
         {
             var internalKey = Alphabet.AlphabetPermutation(Key);
 
-            List<char> output = new();
-
+            StringBuilder output = new(Message.Length);
             foreach (var ltr in Message)
             {
-                output.Add(Alpha[internalKey.IndexOf(ltr)]);
+                output.Append(Alpha[internalKey.IndexOf(ltr)]);
             }
 
-            return string.Join(string.Empty, output);
+            return output.ToString();
         }
     }
 }
