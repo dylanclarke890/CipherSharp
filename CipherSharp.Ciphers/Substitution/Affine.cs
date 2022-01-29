@@ -34,9 +34,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Affine cipher.
+        /// Encode a message using the Affine cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var factors = Alpha.Length.Factors();
@@ -65,9 +65,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Affine cipher.
+        /// Decode a message using the Affine cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var factors = Alpha.Length.Factors();

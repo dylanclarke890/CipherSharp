@@ -27,9 +27,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Caesar cipher.
+        /// Encode a message using the Caesar cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();
@@ -45,9 +45,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Caesar cipher.
+        /// Decode a message using the Caesar cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();

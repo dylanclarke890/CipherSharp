@@ -18,9 +18,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Chaocipher cipher.
+        /// Encode a message using the Chaocipher cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var leftRotor = (Keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[0]);
@@ -40,9 +40,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Chaocipher cipher.
+        /// Decode a message using the Chaocipher cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var leftRotor = (Keys[0] == "") ? "ABCDEFGHIJKLMONPQRSTUVWXYZ" : Alphabet.AlphabetPermutation(Keys[0]);

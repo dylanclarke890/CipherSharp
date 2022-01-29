@@ -34,9 +34,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Encipher some text using the VIC cipher.
+        /// Encode a message using the VIC cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             // create keystream
@@ -56,9 +56,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Decipher some text using the VIC cipher.
+        /// Decode a message using the VIC cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             // create keystream

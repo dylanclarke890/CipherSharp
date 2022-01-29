@@ -20,9 +20,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Affine Vigenere cipher.
+        /// Encode a message using the Affine Vigenere cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             string alphabet = AppConstants.AlphaNumeric + "#";
@@ -44,9 +44,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Affine Vigenere cipher.
+        /// Decode a message using the Affine Vigenere cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             string alphabet = AppConstants.AlphaNumeric + "#";

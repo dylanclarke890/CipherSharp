@@ -37,9 +37,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the AutoKey cipher.
+        /// Encode a message using the AutoKey cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var T = Message.ToNumber(Alpha).ToList();
@@ -68,9 +68,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the AutoKey cipher.
+        /// Decode a message using the AutoKey cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var T = Message.ToNumber(Alpha).ToList();

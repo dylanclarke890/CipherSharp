@@ -19,10 +19,10 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Encrypts the text using the Double Columnar transposition cipher.
+        /// Encodes a message using the Double Columnar transposition cipher.
         /// </summary>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
-        /// <returns>The encrypted string.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode(bool complete = true)
         {
             var key = HandleInitialKey(Key);
@@ -30,12 +30,12 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Decodes the text using the Double Columnar transposition cipher.
+        /// Decodes a message using the Double Columnar transposition cipher.
         /// </summary>
         /// <param name="text">The text to decode.</param>
         /// <param name="key">An array (length 2) of keys to use.</param>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
-        /// <returns>The decoded string.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode(bool complete = true)
         {
             var key = HandleInitialKey(Key);

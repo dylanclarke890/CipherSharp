@@ -33,9 +33,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Progressive Key cipher.
+        /// Encode a message using the Progressive Key cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var K = TextKey.ToNumber(Alpha);
@@ -56,9 +56,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Progressive Key cipher.
+        /// Decode a message using the Progressive Key cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var K = TextKey.ToNumber(Alpha);

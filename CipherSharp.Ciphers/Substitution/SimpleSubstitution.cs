@@ -33,9 +33,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Substitution cipher.
+        /// Encode a message using the Substitution cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var internalKey = Alphabet.AlphabetPermutation(Key);
@@ -51,9 +51,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Substitution cipher.
+        /// Decode a message using the Substitution cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var internalKey = Alphabet.AlphabetPermutation(Key);

@@ -32,9 +32,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Recursive Key cipher.
+        /// Encode a message using the Recursive Key cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var K = Key.ToNumber(Alpha);
@@ -61,9 +61,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Recursive Key cipher.
+        /// Decode a message using the Recursive Key cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var K = Key.ToNumber(Alpha);

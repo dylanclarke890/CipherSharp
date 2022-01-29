@@ -37,9 +37,9 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Encipher some text using the Polybius Square cipher.
+        /// Encode a message using the Polybius Square cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             CheckText(true);
@@ -65,9 +65,9 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Decipher some text using the Polybius Square cipher.
+        /// Decode a message using the Polybius Square cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             CheckText(false);

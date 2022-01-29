@@ -42,18 +42,18 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Encipher some text using the M209 cipher.
+        /// Encode a message using the M209 cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             return Process();
         }
 
         /// <summary>
-        /// Decipher some text using the M209 cipher.
+        /// Decode a message using the M209 cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             return Process();

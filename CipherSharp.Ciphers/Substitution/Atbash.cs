@@ -15,18 +15,18 @@
         }
 
         /// <summary>
-        /// Encipher some text using the Atbash cipher.
+        /// Encode a message using the Atbash cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             return simpleSubstitution.Encode();
         }
 
         /// <summary>
-        /// Decipher some text using the Atbash cipher.
+        /// Decode a message using the Atbash cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             return simpleSubstitution.Decode();

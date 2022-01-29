@@ -15,18 +15,18 @@
         }
 
         /// <summary>
-        /// Encipher some text using the ROT13 cipher.
+        /// Encode a message using the ROT13 cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             return _caesar.Encode();
         }
 
         /// <summary>
-        /// Decipher some text using the ROT13 cipher.
+        /// Decode a message using the ROT13 cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             return _caesar.Decode();

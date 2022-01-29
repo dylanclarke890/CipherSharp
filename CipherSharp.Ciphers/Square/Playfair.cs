@@ -33,7 +33,7 @@ namespace CipherSharp.Ciphers.Square
         /// Encrypt some text using the Playfair cipher.
         /// </summary>
         /// <param name="displaySquare">If <c>True</c>, will print the square to the console.</param>
-        /// <returns>The encrypted string.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode(bool displaySquare = true)
         {
             ProcessMessage();
@@ -57,7 +57,7 @@ namespace CipherSharp.Ciphers.Square
         /// Decode some text using the Playfair cipher.
         /// </summary>
         /// <param name="displaySquare">If <c>True</c>, will print the square to the console.</param>
-        /// <returns>The decoded string.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode(bool displaySquare = true)
         {
             ProcessMessage();
@@ -136,7 +136,7 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Encrypts the text, as specified by the square and size.
+        /// Encodes a message, as specified by the square and size.
         /// </summary>
         /// <param name="square">The matrix to use.</param>
         /// <param name="squareIndices">The location of letters in the matrix.</param>
@@ -173,7 +173,7 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Decodes the text, as specified by the square and size.
+        /// Decodes a message, as specified by the square and size.
         /// </summary>
         /// <param name="square">The matrix to use.</param>
         /// <param name="squareIndices">The location of letters in the matrix.</param>

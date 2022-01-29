@@ -24,7 +24,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Enciphers the text using the Columnar transposition cipher.
         /// </summary>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode(bool complete = false)
         {
             var internalKey = Key.UniqueRank();
@@ -52,10 +52,10 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Decodes the text using the Columnar transposition cipher.
+        /// Decodes a message using the Columnar transposition cipher.
         /// </summary>
         /// <param name="complete">If true, will pad the text with extra characters.</param>
-        /// <returns>The decoded string.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode(bool complete = false)
         {
             var internalKey = Key.UniqueRank();

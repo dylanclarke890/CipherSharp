@@ -26,16 +26,16 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Encipher some text using the Trifid cipher.
+        /// Encode a message using the Trifid cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var (d1, d2) = GetCipherDicts();
 
-            StringBuilder a = new();
-            StringBuilder b = new();
-            StringBuilder c = new();
+            StringBuilder a = new(Message.Length);
+            StringBuilder b = new(Message.Length);
+            StringBuilder c = new(Message.Length);
 
             foreach (var ltr in Message)
             {
@@ -45,9 +45,9 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             var pending = a
                 .Append(b).Append(c)
                 .ToString()
-                .SplitIntoChunks(3);
+                .SplitIntoChunks(3).ToList();
 
-            StringBuilder cipherText = new();
+            StringBuilder cipherText = new(pending.Count);
             foreach (var ltrGroup in pending)
             {
                 cipherText.Append(d2[ltrGroup]);
@@ -57,14 +57,14 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         }
 
         /// <summary>
-        /// Decipher some text using the Trifid cipher.
+        /// Decode a message using the Trifid cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var (d1, d2) = GetCipherDicts();
 
-            StringBuilder numbers = new();
+            StringBuilder numbers = new(Message.Length);
             foreach (var ltr in Message)
             {
                 numbers.Append(d1[ltr]);
@@ -80,13 +80,13 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 .Select<int, (char, char, char)>(i => new(a[i], b[i], c[i]))
                 .ToList();
 
-            List<string> pendingDecode = new();
+            List<string> pendingDecode = new(zipped.Count);
             foreach (var (i, j, k) in zipped)
             {
                 pendingDecode.Add($"{i}{j}{k}");
             }
 
-            StringBuilder decodedText = new();
+            StringBuilder decodedText = new(pendingDecode.Count);
             foreach (var numGroup in pendingDecode)
             {
                 decodedText.Append(d2[numGroup]);

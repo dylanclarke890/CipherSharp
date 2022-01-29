@@ -24,9 +24,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Hutton cipher.
+        /// Encode a message using the Hutton cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             string alphabet = AppConstants.Alphabet;
@@ -60,9 +60,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Hutton cipher.
+        /// Decode a message using the Hutton cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             string alphabet = AppConstants.Alphabet;

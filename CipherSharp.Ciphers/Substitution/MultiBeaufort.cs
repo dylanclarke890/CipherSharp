@@ -27,18 +27,18 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Beaufort cipher.
+        /// Encode a message using the Beaufort cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             return Process(true);
         }
 
         /// <summary>
-        /// Decipher some text using the Beaufort cipher.
+        /// Decode a message using the Beaufort cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             return Process( false);

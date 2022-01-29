@@ -30,9 +30,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Encipher some text using the Multi Vigenere cipher.
+        /// Encode a message using the Multi Vigenere cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         /// <exception cref="ArgumentException"/>
         public string Encode()
         {
@@ -40,9 +40,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Decipher some text using the Multi Vigenere cipher.
+        /// Decode a message using the Multi Vigenere cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         /// <exception cref="ArgumentException"/>
         public string Decode()
         {

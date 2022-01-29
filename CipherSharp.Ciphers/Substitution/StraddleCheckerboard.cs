@@ -35,9 +35,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Encipher some text using the Straddle Checkerboard cipher.
+        /// Encode a message using the Straddle Checkerboard cipher.
         /// </summary>
-        /// <returns>The enciphered text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var key = Alphabet.AlphabetPermutation(Key, Alpha).ToList();
@@ -80,9 +80,9 @@ namespace CipherSharp.Ciphers.Substitution
         }
 
         /// <summary>
-        /// Decipher some text using the Straddle Checkerboard cipher.
+        /// Decode a message using the Straddle Checkerboard cipher.
         /// </summary>
-        /// <returns>The deciphered text.</returns>
+        /// <returns>The decoded message.</returns>
         public string Decode()
         {
             var key = Alphabet.AlphabetPermutation(Key, Alpha).ToList();
