@@ -52,14 +52,14 @@ namespace CipherSharp.Ciphers.Substitution
                 keys = keys.Reverse().ToArray();
             }
 
-            string output = Message;
+            ReadOnlySpan<char> output = Message;
             foreach (var key in keys)
             {
-                Beaufort beaufort = new(output, key, Alpha);
+                Beaufort beaufort = new(output.ToString(), key, Alpha);
                 output = beaufort.Encode();
             }
 
-            return output;
+            return output.ToString();
         }
     }
 }

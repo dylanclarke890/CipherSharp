@@ -34,8 +34,7 @@ namespace CipherSharp.Ciphers.Substitution
             var k1 = Keys[0].Select(ch => alphabet.IndexOf(ch) + 1).ToList();
             var k2 = Alphabet.AlphabetPermutation(Keys[1]).ToList();
 
-            StringBuilder output = new();
-
+            StringBuilder output = new(Message.Length);
             for (int ctr = 0; ctr < Message.Length; ctr++)
             {
                 var letter = Message[ctr];
@@ -55,7 +54,6 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
 
-
             return output.ToString();
         }
 
@@ -70,8 +68,7 @@ namespace CipherSharp.Ciphers.Substitution
             var k1 = Keys[0].Select(ch => alphabet.IndexOf(ch) + 1).ToList();
             var k2 = Alphabet.AlphabetPermutation(Keys[1]).ToList();
 
-            StringBuilder output = new();
-
+            StringBuilder output = new(Message.Length);
             for (int ctr = 0; ctr < Message.Length; ctr++)
             {
                 var letter = Message[ctr];
@@ -90,7 +87,6 @@ namespace CipherSharp.Ciphers.Substitution
                     Swap(k2, letter, k2[^Math.Abs(A)]);
                 }
             }
-
 
             return output.ToString();
         }

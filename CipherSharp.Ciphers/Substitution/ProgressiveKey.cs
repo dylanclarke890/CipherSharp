@@ -42,8 +42,8 @@ namespace CipherSharp.Ciphers.Substitution
             var P = 0;
             var T = Message.ToNumber(Alpha);
             var M = Alpha.Length;
-            List<int> output = new();
 
+            List<int> output = new(Message.Length);
             foreach (var (keyNum, textNum) in K.Pad(Message.Length).Zip(T))
             {
                 output.Add((textNum + keyNum + P) % M);
@@ -65,8 +65,8 @@ namespace CipherSharp.Ciphers.Substitution
             var P = 0;
             var T = Message.ToNumber(Alpha);
             var M = Alpha.Length;
-            List<int> output = new();
 
+            List<int> output = new(Message.Length);
             foreach (var (keyNum, textNum) in K.Pad(Message.Length).Zip(T))
             {
                 output.Add((textNum - keyNum - P) % M);
