@@ -29,16 +29,15 @@ namespace CipherSharp.Ciphers.Square
         /// <summary>
         /// Encode a message using the Two Square cipher.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The encoded message.</returns>
-        public string Encode(bool displaySquare = true)
+        public string Encode()
         {
-            var (squareA, squareB) = CreateMatrixes( displaySquare);
+            var (squareA, squareB) = CreateMatrixes();
 
             int size = Mode is AlphabetMode.EX ? 6 : 5;
-            var codeGroups = Message.SplitIntoChunks(2);
+            var codeGroups = Message.SplitIntoChunks(2).ToList();
 
-            StringBuilder output = new();
+            StringBuilder output = new(codeGroups.Count);
             foreach (var group in codeGroups)
             {
                 ProcessLetterGroup(squareA, squareB, size, group, true, output);
@@ -48,18 +47,17 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Decode some text using the Two Square cipher.
+        /// Decode a message using the Two Square cipher.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The decoded text.</returns>
-        public string Decode(bool displaySquare = false)
+        /// <returns>The decoded message.</returns>
+        public string Decode()
         {
-            var (squareA, squareB) = CreateMatrixes(displaySquare);
+            var (squareA, squareB) = CreateMatrixes();
 
             int size = Mode is AlphabetMode.EX ? 6 : 5;
-            var codeGroups = Message.SplitIntoChunks(2);
+            var codeGroups = Message.SplitIntoChunks(2).ToList();
 
-            StringBuilder output = new();
+            StringBuilder output = new(codeGroups.Count);
             foreach (var group in codeGroups)
             {
                 ProcessLetterGroup(squareA, squareB, size, group, false, output);
@@ -89,19 +87,21 @@ namespace CipherSharp.Ciphers.Square
         /// <summary>
         /// Creates the matrixes for the cipher.
         /// </summary>
-        /// <param name="displaySquare">If <c>True</c>, will print the matrixes to the console.</param>
         /// <returns></returns>
-        private (IEnumerable<string>[], IEnumerable<string>[]) CreateMatrixes(bool displaySquare)
+        private (IEnumerable<string>[], IEnumerable<string>[]) CreateMatrixes()
         {
             var squareA = Matrix.Create(Keys[0], Mode).ToArray();
             var squareB = Matrix.Create(Keys[1], Mode).ToArray();
-            if (displaySquare)
-            {
-                squareA.Print();
-                squareB.Print();
-            }
 
             return (squareA, squareB);
+        }
+
+        public void DisplaySquares()
+        {
+            var squareA = Matrix.Create(Keys[0], Mode).ToArray();
+            var squareB = Matrix.Create(Keys[1], Mode).ToArray();
+            squareA.Print();
+            squareB.Print();
         }
 
         /// <summary>
