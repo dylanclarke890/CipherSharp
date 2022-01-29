@@ -27,10 +27,10 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Encrypt some text using the Two Square cipher.
+        /// Encode a message using the Two Square cipher.
         /// </summary>
         /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The encrypted text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode(bool displaySquare = true)
         {
             var (squareA, squareB) = CreateMatrixes( displaySquare);

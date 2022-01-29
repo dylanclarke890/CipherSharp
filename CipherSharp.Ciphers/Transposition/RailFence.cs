@@ -26,9 +26,9 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Encrypt some text using the Rail-fence cipher.
+        /// Encode a message using the Rail-fence cipher.
         /// </summary>
-        /// <returns>The encrypted text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             List<string> fence = PrepareEmptyFence(Key);

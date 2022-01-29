@@ -29,9 +29,9 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Encrypt some text using the AMSCO cipher
+        /// Encode a message using the AMSCO cipher
         /// </summary>
-        /// <returns>The encrypted text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var (internalKey, codeGroups) = ProcessInputData();

@@ -29,48 +29,45 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Encrypt some text using the Four Square cipher.
+        /// Encode a message using the Four Square cipher.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
-        /// <returns>The encrypted text.</returns>
-        public string Encode(bool displaySquare = true)
+        /// <returns>The encoded message.</returns>
+        public string Encode()
         {
-            return Process(displaySquare);
+            return Process();
         }
 
         /// <summary>
-        /// Decrypt some text using the Four Square cipher.
+        /// Decode a message using the Four Square cipher.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The decoded text.</returns>
-        public string Decode(bool displaySquare = true)
+        public string Decode()
         {
-            return Process(displaySquare);
+            return Process();
         }
 
         /// <summary>
         /// Processes the input through the cipher, and returns the result.
         /// </summary>
-        /// <param name="displaySquare">If true, will print the square to the console.</param>
         /// <returns>The resulting text.</returns>
-        private string Process(bool displaySquare)
+        private string Process()
         {
-
             var (squareA, squareB, alphaSquare) = CreateMatrixes();
-            if (displaySquare)
-            {
-                PrintMatrixes(squareA, squareB, alphaSquare);
-            }
-
             var codeGroups = Message.SplitIntoChunks(2);
-            string output = "";
-
+            
+            string output;
             foreach (var group in codeGroups)
             {
                 output = ProcessCodeGroup(squareA, squareB, alphaSquare, output, group);
             }
 
             return output;
+        }
+
+        public void PrintSquare()
+        {
+            var (squareA, squareB, alphaSquare) = CreateMatrixes();
+            PrintMatrixes(squareA, squareB, alphaSquare);
         }
 
         /// <summary>

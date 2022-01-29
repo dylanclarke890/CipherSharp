@@ -23,10 +23,10 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Encrypt some text using the Disrupted Transposition cipher.
+        /// Encode a message using the Disrupted Transposition cipher.
         /// </summary>
         /// <param name="complete">If true, will pad the grid with extra letters.</param>
-        /// <returns>The encrypted text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode(bool complete = false)
         {
             double gridSize = Math.Pow(Key.Length, 2);

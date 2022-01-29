@@ -30,7 +30,7 @@ namespace CipherSharp.Ciphers.Square
         }
 
         /// <summary>
-        /// Encrypt some text using the Playfair cipher.
+        /// Encode a message using the Playfair cipher.
         /// </summary>
         /// <param name="displaySquare">If <c>True</c>, will print the square to the console.</param>
         /// <returns>The encoded message.</returns>
@@ -142,7 +142,7 @@ namespace CipherSharp.Ciphers.Square
         /// <param name="squareIndices">The location of letters in the matrix.</param>
         /// <param name="codeGroups">The text to use, split into digraphs.</param>
         /// <param name="size">Used to prevent IndexOutOfRangeExceptions.</param>
-        /// <returns>The encrypted text.</returns>
+        /// <returns>The encoded message.</returns>
         private static string EncodeCodeGroups(IEnumerable<string>[] square, Dictionary<char, (int, int, int)> squareIndices,
             IEnumerable<string> codeGroups, int size)
         {

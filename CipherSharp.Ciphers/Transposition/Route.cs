@@ -21,9 +21,9 @@ namespace CipherSharp.Ciphers.Transposition
         }
 
         /// <summary>
-        /// Encrypt some text using the Route cipher.
+        /// Encode a message using the Route cipher.
         /// </summary>
-        /// <returns>The encrypted text.</returns>
+        /// <returns>The encoded message.</returns>
         public string Encode()
         {
             var codeGroups = Message.SplitIntoChunks(Key);
