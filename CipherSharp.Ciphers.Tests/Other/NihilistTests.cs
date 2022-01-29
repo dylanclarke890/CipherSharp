@@ -60,7 +60,7 @@ namespace CipherSharp.Tests.Ciphers.Other
             var result = nihilist.Decode();
 
             // Assert
-            Assert.Equal("H E L L O W O R L D", result);
+            Assert.Equal("HELLOWORLD", result);
         }
     }
 }

@@ -55,7 +55,7 @@ namespace CipherSharp.Ciphers.Square
             var (squareA, squareB, alphaSquare) = CreateMatrixes();
             var codeGroups = Message.SplitIntoChunks(2);
             
-            string output;
+            string output = "";
             foreach (var group in codeGroups)
             {
                 output = ProcessCodeGroup(squareA, squareB, alphaSquare, output, group);
