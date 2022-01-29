@@ -12,10 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             // Arrange
             string text = "HELLOWORLD";
             string[] key = new string[4] { "test", "key", "test", "key" };
-            bool complete = false;
             Disrupted<string> disrupted = new(text, key);
             // Act
-            var result = disrupted.Encode(complete);
+            var result = disrupted.Encode();
 
             // Assert
             Assert.Equal("ELLWHLOROD", result);
@@ -27,10 +26,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             // Arrange
             string text = "ELLWHLOROD";
             string[] key = new string[4] { "test", "key", "test", "key" };
-            bool complete = false;
             Disrupted<string> disrupted = new(text, key);
             // Act
-            var result = disrupted.Decode(complete);
+            var result = disrupted.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);

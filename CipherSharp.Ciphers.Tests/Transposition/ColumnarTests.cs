@@ -13,9 +13,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             string text = "HELLOWORLD";
             int[] key = new int[2] { 1, 2 };
             bool complete = true;
-            Columnar<int> columnar = new(text, key);
+            Columnar<int> columnar = new(text, key, complete);
             // Act
-            var result = columnar.Encode(complete);
+            var result = columnar.Encode();
 
             // Assert
             Assert.Equal("HLOOLELWRD", result);
@@ -28,9 +28,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             string text = "HLOOLELWRD";
             int[] key = new int[2] { 1, 2 };
             bool complete = true;
-            Columnar<int> columnar = new(text, key);
+            Columnar<int> columnar = new(text, key ,complete);
             // Act
-            var result = columnar.Decode(complete);
+            var result = columnar.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);
@@ -43,9 +43,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             string text = "HELLOWORLD";
             string[] key = new string[2] { "ABC", "DEF" };
             bool complete = true;
-            Columnar<string> columnar = new(text, key);
+            Columnar<string> columnar = new(text, key, complete);
             // Act
-            var result = columnar.Encode(complete);
+            var result = columnar.Encode();
 
             // Assert
             Assert.Equal("HLOOLELWRD", result);
@@ -58,9 +58,8 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             string text = "HLOOLELWRD";
             string[] key = new string[2] { "ABC", "DEF" };
             bool complete = true;
-            Columnar<string> columnar = new(text, key);
-            // Act
-            var result = columnar.Decode(complete);
+            Columnar<string> columnar = new(text, key, complete);
+            var result = columnar.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLD", result);

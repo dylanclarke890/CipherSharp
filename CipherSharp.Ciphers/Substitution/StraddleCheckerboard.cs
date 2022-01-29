@@ -120,7 +120,7 @@ namespace CipherSharp.Ciphers.Substitution
             {
                 if (Keys.Contains(int.Parse(Message[0].ToString())))
                 {
-                    pending.Add(Message[0].ToString() + Message[1].ToString());
+                    pending.Add(Message[0..1]);
                     Message = Message.Remove(0, 2);
                 }
                 else

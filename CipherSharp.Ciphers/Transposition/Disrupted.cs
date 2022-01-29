@@ -17,7 +17,7 @@ namespace CipherSharp.Ciphers.Transposition
     {
         public T[] Key { get; }
 
-        private double gridSize;
+        private readonly double gridSize;
 
         public Disrupted(string message, T[] key, bool complete = false) : base(message)
         {

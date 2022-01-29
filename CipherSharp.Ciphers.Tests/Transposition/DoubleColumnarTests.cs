@@ -12,10 +12,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             // Arrange
             string text = "HELLOWORLD";
             string[] initialKey = new string[2] { "ABC", "ABC" };
-            bool complete = true;
             DoubleColumnar columnar = new(text, initialKey);
             // Act
-            var result = columnar.Encode(complete);
+            var result = columnar.Encode();
 
             // Assert
             Assert.Equal("HDRWLEXLOOLX", result);
@@ -27,10 +26,9 @@ namespace CipherSharp.Tests.Ciphers.Transposition
             // Arrange
             string text = "HDRWLEXLOOLX";
             string[] initialKey = new string[2] { "ABC", "ABC" };
-            bool complete = true;
             DoubleColumnar columnar = new(text, initialKey);
             // Act
-            var result = columnar.Decode(complete);
+            var result = columnar.Decode();
 
             // Assert
             Assert.Equal("HELLOWORLDXX", result);
