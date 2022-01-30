@@ -34,7 +34,8 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The encoded message.</returns>
         public override string Encode()
         {
-            return Process();
+            Encoded = Process();
+            return Encoded;
         }
 
         /// <summary>
@@ -43,7 +44,8 @@ namespace CipherSharp.Ciphers.Square
         /// <returns>The decoded text.</returns>
         public override string Decode()
         {
-            return Process();
+            Decoded = Process();
+            return Decoded;
         }
 
         /// <summary>

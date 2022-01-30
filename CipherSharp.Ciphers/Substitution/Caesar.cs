@@ -40,7 +40,9 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Append(Alpha[(num + Key) % Alpha.Length]);
             }
 
-            return output.ToString();
+
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -58,7 +60,8 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Append(Alpha[(num + key) % Alpha.Length]);
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
     }
 }

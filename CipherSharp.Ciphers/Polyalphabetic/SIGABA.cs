@@ -151,7 +151,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 UpdateCipherPositions(cipherPositions, L);
             }
 
-            return string.Join(string.Empty, output);
+            Encoded = string.Join(string.Empty, output);
+            return Encoded;
         }
 
         /// <summary>
@@ -214,7 +215,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 UpdateCipherPositions(cipherPositions, L);
             }
 
-            return string.Join(string.Empty, output);
+            Decoded = string.Join(string.Empty, output);
+            return Decoded;
         }
 
         private static int AddCipherRotorsAndPositions(List<string> ciphersRotorSet, string indicator1, Dictionary<string, string> largeRotors, List<string> cipherRotors, List<int> cipherPositions)

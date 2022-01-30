@@ -53,7 +53,8 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 cipherText.Append(d2[ltrGroup]);
             }
 
-            return cipherText.ToString();
+            Encoded = cipherText.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -91,8 +92,9 @@ namespace CipherSharp.Ciphers.PolybiusSquare
             {
                 decodedText.Append(d2[numGroup]);
             }
-
-            return decodedText.ToString();
+            
+            Decoded = decodedText.ToString();
+            return Decoded;
         }
 
         /// <summary>

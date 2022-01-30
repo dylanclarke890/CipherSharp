@@ -48,9 +48,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             var T = new StraddleCheckerboard(Message, boardString, boardKey.ToArray(), alphabet).Encode();
             T = new Columnar<int>(T, simpleK.ToArray()).Encode();
-            T = new Disrupted<int>(T, disruptedK.ToArray()).Encode();
+            Encoded = new Disrupted<int>(T, disruptedK.ToArray()).Encode();
 
-            return T;
+            return Encoded;
         }
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace CipherSharp.Ciphers.Polyalphabetic
 
             var T = new Disrupted<int>(Message, disruptedK.ToArray()).Decode();
             T = new Columnar<int>(T, simpleK.ToArray()).Decode();
-            T = new StraddleCheckerboard(T, boardString, boardKey.ToArray(), alphabet).Decode();
+            Decoded = new StraddleCheckerboard(T, boardString, boardKey.ToArray(), alphabet).Decode();
 
-            return T;
+            return Decoded;
         }
 
         private static void ChainAddition(List<int> arr, int n)

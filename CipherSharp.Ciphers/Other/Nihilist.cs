@@ -42,7 +42,8 @@ namespace CipherSharp.Ciphers.Other
                 textNums[i] = textNums[i] + keyNums[i % kLength];
             }
 
-            return string.Join(" ", textNums);
+            Encoded = string.Join(" ", textNums);
+            return Encoded;
         }
 
         /// <summary>
@@ -65,8 +66,8 @@ namespace CipherSharp.Ciphers.Other
 
             var textnum = string.Join(" ", textNums);
 
-            textnum = new Polybius(textnum, Keys[0], " ", PolybiusMode).Decode();
-            return textnum;
+            Decoded = new Polybius(textnum, Keys[0], " ", PolybiusMode).Decode();
+            return Decoded;
         }
     }
 }

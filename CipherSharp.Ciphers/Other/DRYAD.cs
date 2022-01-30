@@ -62,7 +62,8 @@ namespace CipherSharp.Ciphers.Other
                 output.Append(' ');
             }
 
-            return output.ToString()[..^1]; 
+            Encoded = output.ToString()[..^1];
+            return Encoded; 
         }
 
         /// <summary>
@@ -94,7 +95,8 @@ namespace CipherSharp.Ciphers.Other
                 }
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         /// <summary>

@@ -32,7 +32,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The encoded message.</returns>
         public override string Encode()
         {
-            return Process(true);
+            Encoded = Process(true);
+            return Encoded;
         }
 
         /// <summary>
@@ -41,7 +42,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The decoded message.</returns>
         public override string Decode()
         {
-            return Process( false);
+            Decoded = Process(false);
+            return Decoded;
         }
 
         private string Process(bool encode)

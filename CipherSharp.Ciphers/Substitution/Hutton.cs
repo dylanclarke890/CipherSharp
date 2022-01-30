@@ -54,7 +54,8 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
 
-            return output.ToString();
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -88,7 +89,8 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         private static void Swap(List<char> alphabet, char a, char b)

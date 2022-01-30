@@ -42,7 +42,8 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 b.Append(nums[i * 2 + 1]);
             }
 
-            return new Polybius(a.Append(b).ToString(), Key).Decode();
+            Encoded = new Polybius(a.Append(b).ToString(), Key).Decode();
+            return Encoded;
         }
 
         /// <summary>
@@ -63,7 +64,8 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 result.Append($"{i}{j}");
             }
 
-            return new Polybius(result.ToString(), Key).Decode();
+            Decoded = new Polybius(result.ToString(), Key).Decode();
+            return Decoded;
         }
     }
 }

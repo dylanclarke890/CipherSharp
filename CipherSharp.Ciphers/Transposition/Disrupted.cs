@@ -70,7 +70,8 @@ namespace CipherSharp.Ciphers.Transposition
                 }
             }
 
-            return output.Replace(" ", string.Empty).ToString();
+            Encoded = output.Replace(" ", string.Empty).ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -142,7 +143,8 @@ namespace CipherSharp.Ciphers.Transposition
                 output2.Append(merged[num][rowNum..]);
             }
 
-            return output1.Append(output2).Replace(" ", string.Empty).ToString();
+            Decoded = output1.Append(output2).Replace(" ", string.Empty).ToString();
+            return Decoded;
         }
 
         /// <summary>

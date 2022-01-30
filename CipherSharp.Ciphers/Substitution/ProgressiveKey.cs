@@ -52,7 +52,9 @@ namespace CipherSharp.Ciphers.Substitution
                     P += NumKey;
                 }
             }
-            return string.Join(string.Empty, output.ToLetter(Alpha));
+
+            Encoded = string.Join(string.Empty, output.ToLetter(Alpha));
+            return Encoded;
         }
 
         /// <summary>
@@ -75,7 +77,9 @@ namespace CipherSharp.Ciphers.Substitution
                     P += NumKey;
                 }
             }
-            return string.Join(string.Empty, output.ToLetter(Alpha));
+
+            Decoded = string.Join(string.Empty, output.ToLetter(Alpha));
+            return Decoded;
         }
     }
 }

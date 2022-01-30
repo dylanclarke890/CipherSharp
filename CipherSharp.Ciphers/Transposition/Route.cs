@@ -47,7 +47,8 @@ namespace CipherSharp.Ciphers.Transposition
                 counter++;
             }
 
-            return output.ToString();
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -81,7 +82,8 @@ namespace CipherSharp.Ciphers.Transposition
                 }
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         /// <summary>

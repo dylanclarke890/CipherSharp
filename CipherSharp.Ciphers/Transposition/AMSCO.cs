@@ -44,7 +44,8 @@ namespace CipherSharp.Ciphers.Transposition
                     .Select(row => row.ToArray()[col].ToString()));
             }
 
-            return string.Join(string.Empty, output);
+            Encoded = string.Join(string.Empty, output);
+            return Encoded;
         }
 
         /// <summary>
@@ -94,7 +95,8 @@ namespace CipherSharp.Ciphers.Transposition
                 output.AddRange(internalKey.Select(i => groupings[i][j]));
             }
 
-            return string.Join(string.Empty, output);
+            Decoded = string.Join(string.Empty, output);
+            return Decoded;
         }
 
         /// <summary>

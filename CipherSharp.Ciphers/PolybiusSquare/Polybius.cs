@@ -62,7 +62,8 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 encoded.Append($"{string.Join(string.Empty, result[ltr].Append(Sep))}");
             }
 
-            return encoded.ToString().Trim();
+            Encoded = encoded.ToString().Trim();
+            return Encoded;
         }
 
         /// <summary>
@@ -92,7 +93,8 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 decoded.Append($"{result[pair]}");
             }
 
-            return string.Join(Sep, decoded);
+            Decoded = string.Join(Sep, decoded);
+            return Decoded;
         }
 
         /// <summary>

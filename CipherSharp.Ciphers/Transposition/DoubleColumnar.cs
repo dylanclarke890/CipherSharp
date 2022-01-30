@@ -29,7 +29,8 @@ namespace CipherSharp.Ciphers.Transposition
         public override string Encode()
         {
             var key = HandleInitialKey(Key);
-            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Encode(), key[1].ToArray(), _complete).Encode();
+            Encoded = new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Encode(), key[1].ToArray(), _complete).Encode();
+            return Encoded;
         }
 
         /// <summary>
@@ -39,7 +40,8 @@ namespace CipherSharp.Ciphers.Transposition
         public override string Decode()
         {
             var key = HandleInitialKey(Key);
-            return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Decode(), key[1].ToArray(), _complete).Decode();
+            Decoded =  new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Decode(), key[1].ToArray(), _complete).Decode();
+            return Decoded;
         }
 
         /// <summary>

@@ -39,7 +39,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The encoded message.</returns>
         public override string Encode()
         {
-            return Process();
+            Encoded = Process();
+            return Encoded;
         }
 
         /// <summary>
@@ -48,7 +49,8 @@ namespace CipherSharp.Ciphers.Substitution
         /// <returns>The decoded message.</returns>
         public override string Decode()
         {
-            return Process();
+            Decoded = Process();
+            return Decoded;
         }
 
         private string Process()

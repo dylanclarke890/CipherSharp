@@ -46,7 +46,8 @@ namespace CipherSharp.Ciphers.Substitution
             var numOutput = textAsNumbers.Select(num => (num * Key[0] + Key[1]) % Alpha.Length);
             var charOutput = numOutput.Select(num => AppConstants.Alphabet[num]);
 
-            return string.Join(string.Empty, charOutput);
+            Encoded = string.Join(string.Empty, charOutput);
+            return Encoded;
         }
 
         /// <summary>
@@ -74,7 +75,8 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         /// <summary>

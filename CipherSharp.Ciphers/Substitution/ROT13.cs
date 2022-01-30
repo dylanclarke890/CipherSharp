@@ -20,7 +20,8 @@
         /// <returns>The encoded message.</returns>
         public override string Encode()
         {
-            return _caesar.Encode();
+            Encoded = _caesar.Encode();
+            return Encoded;
         }
 
         /// <summary>
@@ -29,7 +30,8 @@
         /// <returns>The decoded message.</returns>
         public override string Decode()
         {
-            return _caesar.Decode();
+            Decoded = _caesar.Decode();
+            return Decoded;
         }
     }
 }

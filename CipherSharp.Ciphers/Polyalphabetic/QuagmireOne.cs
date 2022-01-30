@@ -31,7 +31,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 output.Append(t[key.IndexOf(Message[i])]);
             }
 
-            return output.ToString();
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         public override string Decode()
@@ -47,7 +48,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 output.Append(key[t.IndexOf(Message[i])]);
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         public override List<string> CreateTable(string key, string indicator)

@@ -40,7 +40,8 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Add(n);
             }
 
-            return string.Join(string.Empty, output.ToLetter(alphabet));
+            Encoded = string.Join(string.Empty, output.ToLetter(alphabet));
+            return Encoded;
         }
 
         /// <summary>
@@ -64,7 +65,8 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Add(n);
             }
 
-            return string.Join(string.Empty, output.ToLetter(alphabet));
+            Decoded = string.Join(string.Empty, output.ToLetter(alphabet));
+            return Decoded;
         }
     }
 }

@@ -43,7 +43,8 @@ namespace CipherSharp.Ciphers.Transposition
                 IncrementRailNumber(Key, ref railNumber, ref increment);
             }
 
-            return string.Join(string.Empty, fence);
+            Encoded = string.Join(string.Empty, fence);
+            return Encoded;
         }
 
         /// <summary>
@@ -88,7 +89,8 @@ namespace CipherSharp.Ciphers.Transposition
                 IncrementRailNumber(Key, ref railNumber, ref increment);
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         /// <summary>

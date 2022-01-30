@@ -21,7 +21,8 @@
         /// <returns>The encoded message.</returns>
         public override string Encode()
         {
-            return simpleSubstitution.Encode();
+            Encoded = simpleSubstitution.Encode();
+            return Encoded;
         }
 
         /// <summary>
@@ -30,7 +31,8 @@
         /// <returns>The decoded message.</returns>
         public override string Decode()
         {
-            return simpleSubstitution.Decode();
+            Decoded = simpleSubstitution.Encode();
+            return Decoded;
         }
     }
 }

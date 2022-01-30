@@ -50,7 +50,8 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Append(D[ltr]);
             }
 
-            return output.ToString();
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -84,7 +85,8 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Append(D[codeGroup]);
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         private void CreateDecodeBoard(List<char> key, Dictionary<string, char> D)

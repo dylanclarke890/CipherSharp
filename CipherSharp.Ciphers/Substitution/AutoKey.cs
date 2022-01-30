@@ -62,8 +62,8 @@ namespace CipherSharp.Ciphers.Substitution
                     output.Add((keyNum - textNum) % M);
                 }
             }
-
-            return string.Join(string.Empty, output.ToLetter(Alpha));
+            Encoded = string.Join(string.Empty, output.ToLetter(Alpha));
+            return Encoded;
         }
 
         /// <summary>
@@ -100,7 +100,8 @@ namespace CipherSharp.Ciphers.Substitution
                 }
             }
 
-            return string.Join(string.Empty, output.ToLetter(Alpha));
+            Decoded = string.Join(string.Empty, output.ToLetter(Alpha));
+            return Decoded;
         }
     }
 }

@@ -44,8 +44,8 @@ namespace CipherSharp.Ciphers.Square
             var codeGroups = Message.SplitIntoChunks(2);
             int size = Mode is AlphabetMode.EX ? 6 : 5;
 
-
-            return EncodeCodeGroups(square, squareIndices, codeGroups, size);
+            Encoded = EncodeCodeGroups(square, squareIndices, codeGroups, size);
+            return Encoded;
         }
 
         /// <summary>
@@ -62,7 +62,8 @@ namespace CipherSharp.Ciphers.Square
             var codeGroups = Message.SplitIntoChunks(2).ToList();
             int size = Mode is AlphabetMode.EX ? 6 : 5;
 
-            return DecodeCodeGroups(square, squareIndices, codeGroups, size);
+            Decoded = DecodeCodeGroups(square, squareIndices, codeGroups, size);
+            return Decoded;
         }
 
         public void DisplaySquare()

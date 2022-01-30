@@ -46,7 +46,8 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Append(internalKey[Alpha.IndexOf(ltr)]);
             }
 
-            return output.ToString();
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -63,7 +64,8 @@ namespace CipherSharp.Ciphers.Substitution
                 output.Append(Alpha[internalKey.IndexOf(ltr)]);
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
     }
 }

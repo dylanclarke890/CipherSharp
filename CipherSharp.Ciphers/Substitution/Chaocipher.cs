@@ -35,7 +35,8 @@ namespace CipherSharp.Ciphers.Substitution
                 rightRotor = RotateRight(rightRotor, ltr);
             }
 
-            return output.ToString();
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -56,7 +57,8 @@ namespace CipherSharp.Ciphers.Substitution
                 rightRotor = RotateRight(rightRotor, rightRotor[pos]);
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         private static string RotateNTimes(string key, int n)

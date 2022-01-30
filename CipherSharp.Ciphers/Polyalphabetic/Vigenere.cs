@@ -38,7 +38,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <returns>The encoded text.</returns>
         public override string Encode()
         {
-            return Process(true);
+            Encoded = Process(true);
+            return Encoded;
         }
 
         /// <summary>
@@ -47,7 +48,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// <returns>The decoded text.</returns>
         public override string Decode()
         {
-            return Process(false);
+            Decoded = Process(false);
+            return Decoded;
         }
 
         public string Process(bool encode)

@@ -52,7 +52,8 @@ namespace CipherSharp.Ciphers.Transposition
                         .Select(row => row[col]));
             }
 
-            return string.Join(string.Empty, output);
+            Encoded = string.Join(string.Empty, output);
+            return Encoded;
         }
 
         /// <summary>
@@ -81,7 +82,8 @@ namespace CipherSharp.Ciphers.Transposition
                         .Select(col => pending[col][row].ToString()));
             }
 
-            return string.Join(string.Empty, output);
+            Decoded = string.Join(string.Empty, output);
+            return Decoded;
         }
     }
 }

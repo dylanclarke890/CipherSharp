@@ -83,7 +83,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            return output.ToString();
+            Encoded = output.ToString();
+            return Encoded;
         }
 
         /// <summary>
@@ -113,7 +114,8 @@ namespace CipherSharp.Ciphers.Polyalphabetic
                 innerRing = RotateNTimes(innerRing, Turn);
             }
 
-            return output.ToString();
+            Decoded = output.ToString();
+            return Decoded;
         }
 
         /// <exception cref="InvalidOperationException"/>
