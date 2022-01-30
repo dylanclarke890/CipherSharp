@@ -30,7 +30,7 @@ namespace CipherSharp.Ciphers.Square
         /// Encode a message using the Two Square cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var (squareA, squareB) = CreateMatrixes();
 
@@ -50,7 +50,7 @@ namespace CipherSharp.Ciphers.Square
         /// Decode a message using the Two Square cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var (squareA, squareB) = CreateMatrixes();
 

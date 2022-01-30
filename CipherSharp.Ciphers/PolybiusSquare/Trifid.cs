@@ -29,7 +29,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Encode a message using the Trifid cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var (d1, d2) = GetCipherDicts();
 
@@ -60,7 +60,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Decode a message using the Trifid cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var (d1, d2) = GetCipherDicts();
 

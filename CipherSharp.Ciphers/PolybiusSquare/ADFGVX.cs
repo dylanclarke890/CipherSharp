@@ -37,18 +37,20 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Encode a message using the ADFGVX cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
-            return Process(true);
+            Encoded = Process(true);
+            return Encoded;
         }
 
         /// <summary>
         /// Decode a message using the ADFGVX cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
-            return Process(false);
+            Decoded = Process(false);
+            return Decoded;
         }
 
         public void DisplaySquare()
@@ -64,9 +66,10 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// <returns>The processed text.</returns>
         private string Process(bool encode)
         {
-            while (Message.Length < ColumnarKeys.Length)
+            var message = Message[..];
+            while (message.Length < ColumnarKeys.Length)
             {
-                Message += "X";
+                message += "X";
             }
 
             string alphabet = Alphabet.AlphabetPermutation(MatrixKey, AppConstants.AlphaNumeric);
@@ -84,8 +87,8 @@ namespace CipherSharp.Ciphers.PolybiusSquare
                 d2[joinedPair] = letter;
             }
 
-            StringBuilder processed = new(Message.Length);
-            foreach (var ltr in Message)
+            StringBuilder processed = new(message.Length);
+            foreach (var ltr in message)
             {
                 processed.Append(d1[ltr]);
             }

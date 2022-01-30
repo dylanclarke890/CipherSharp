@@ -29,7 +29,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Encode a message using the Rail-fence cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             List<string> fence = PrepareEmptyFence(Key);
 
@@ -50,7 +50,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decode some text using the Rail-fence cipher.
         /// </summary>
         /// <returns>The decoded text.</returns>
-        public string Decode()
+        public override string Decode()
         {
             List<int> chunks = new(Key);
             for (int i = 0; i < Key; i++)

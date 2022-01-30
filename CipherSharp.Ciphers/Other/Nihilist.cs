@@ -26,7 +26,7 @@ namespace CipherSharp.Ciphers.Other
         /// Encode a message using the Nihilist cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             // Convert the vigenere key into numbers using the polybius square
             var keynum = new Polybius(Keys[1], Keys[0], " ", PolybiusMode).Encode();
@@ -49,7 +49,7 @@ namespace CipherSharp.Ciphers.Other
         /// Decode a message using the Nihilist cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             // Convert the vigenere key into numbers using the polybius square
             var keynum = new Polybius(Keys[1], Keys[0], " ", PolybiusMode).Encode();

@@ -39,13 +39,13 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Encode a message using the ADFGX cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
-            Message = ProcessText(Message);
-            var (d1, d2) = GetCipherDicts(Message, MatrixKey);
+            var message = ProcessText(Message);
+            var (d1, d2) = GetCipherDicts(message, MatrixKey);
 
-            StringBuilder symbols = new(Message.Length);
-            foreach (var ltr in Message)
+            StringBuilder symbols = new(message.Length);
+            foreach (var ltr in message)
             {
                 symbols.Append(d1[ltr]);
             }
@@ -66,13 +66,13 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Decode a message using the ADFGX cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
-            Message = ProcessText(Message);
-            var (d1, d2) = GetCipherDicts(Message, MatrixKey);
+            var message = ProcessText(Message);
+            var (d1, d2) = GetCipherDicts(message, MatrixKey);
 
-            StringBuilder symbols = new(Message.Length);
-            foreach (var ltr in Message)
+            StringBuilder symbols = new(message.Length);
+            foreach (var ltr in message)
             {
                 symbols.Append(d1[ltr]);
             }

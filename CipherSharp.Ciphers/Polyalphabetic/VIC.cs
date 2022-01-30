@@ -35,7 +35,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Encode a message using the VIC cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             // create keystream
             var kstr = VICKeyStream();
@@ -57,7 +57,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Decode a message using the VIC cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             // create keystream
 

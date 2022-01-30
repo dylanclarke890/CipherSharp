@@ -34,7 +34,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// </summary>
         /// <returns>The encoded message.</returns>
         /// <exception cref="ArgumentException"/>
-        public string Encode()
+        public override string Encode()
         {
             return Process(true);
         }
@@ -44,7 +44,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// </summary>
         /// <returns>The decoded message.</returns>
         /// <exception cref="ArgumentException"/>
-        public string Decode()
+        public override string Decode()
         {
             return Process(false);
         }

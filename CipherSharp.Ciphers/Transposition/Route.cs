@@ -24,7 +24,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Encode a message using the Route cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var codeGroups = Message.SplitIntoChunks(Key);
 
@@ -54,7 +54,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decode some text using the Route cipher.
         /// </summary>
         /// <returns>The decoded text.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var key = Message.Length / Key;
             var groups = Message.SplitIntoChunks(key).ToList();

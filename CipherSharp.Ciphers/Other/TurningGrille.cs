@@ -41,7 +41,7 @@ namespace CipherSharp.Ciphers.Other
         /// </summary>
         /// <returns>The encoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
-        public string Encode()
+        public override string Encode()
         {
             var keyGroups = Keys.Split((int)Math.Pow(GrilleSize / 2, 2));
 
@@ -68,7 +68,7 @@ namespace CipherSharp.Ciphers.Other
         /// </summary>
         /// <returns>The decoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
-        public string Decode()
+        public override string Decode()
         {
             var keyGroups = Keys.Split((int)Math.Pow(GrilleSize / 2, 2));
 

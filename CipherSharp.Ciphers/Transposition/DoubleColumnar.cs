@@ -26,7 +26,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Encode a message using the Double Columnar transposition cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var key = HandleInitialKey(Key);
             return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Encode(), key[1].ToArray(), _complete).Encode();
@@ -36,7 +36,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decode a message using the Double Columnar transposition cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var key = HandleInitialKey(Key);
             return new Columnar<char>(new Columnar<char>(Message, key[0].ToArray(), _complete).Decode(), key[1].ToArray(), _complete).Decode();

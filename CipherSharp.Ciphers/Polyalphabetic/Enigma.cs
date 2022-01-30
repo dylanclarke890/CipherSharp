@@ -67,7 +67,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Encode a message using the Enigma cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             return Process();
         }
@@ -76,7 +76,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Decode a message using the Enigma cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             return Process();
         }

@@ -40,7 +40,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Encode a message using the AutoKey cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var K = Key.ToNumber(Alpha).ToList();
             var T = Message.ToNumber(Alpha);
@@ -70,7 +70,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Decode a message using the AutoKey cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var T = Message.ToNumber(Alpha).ToList();
             var K = Key.ToNumber(Alpha).ToList();

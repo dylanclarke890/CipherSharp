@@ -22,7 +22,6 @@ namespace CipherSharp.Ciphers.Substitution
             {
                 throw new ArgumentException($"'{nameof(alphabet)}' cannot be null or whitespace.", nameof(alphabet));
             }
-            Message = message;
             Key = key;
             Alpha = alphabet;
         }
@@ -31,7 +30,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Encode a message using the Caesar cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();
 
@@ -48,7 +47,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Decode a message using the Caesar cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             List<int> textAsNumbers = Message.Select(ch => Alpha.IndexOf(ch)).ToList();
 

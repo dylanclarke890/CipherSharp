@@ -55,7 +55,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// </summary>
         /// <returns>The encoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
-        public string Encode()
+        public override string Encode()
         {
             CheckMessageForNonLetters();
 
@@ -92,7 +92,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// </summary>
         /// <returns>The decoded message.</returns>
         /// <exception cref="InvalidOperationException"/>
-        public string Decode()
+        public override string Decode()
         {
             string outerRing = GetOuterRing();
             string innerRing = GetInnerRing(outerRing);

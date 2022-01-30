@@ -19,7 +19,7 @@
         /// Encode a message using the Atbash cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             return simpleSubstitution.Encode();
         }
@@ -28,7 +28,7 @@
         /// Decode a message using the Atbash cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             return simpleSubstitution.Decode();
         }

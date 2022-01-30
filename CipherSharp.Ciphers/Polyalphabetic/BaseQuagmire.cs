@@ -28,18 +28,6 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         }
 
         /// <summary>
-        /// Encode a message using the Quagmire cipher.
-        /// </summary>
-        /// <returns>The encoded message.</returns>
-        public abstract string Encode();
-
-        /// <summary>
-        /// Decode a message using the Quagmire cipher.
-        /// </summary>
-        /// <returns>The decoded message.</returns>
-        public abstract string Decode();
-
-        /// <summary>
         /// Create the cipher table for the Quagmire cipher.
         /// </summary>
         /// <param name="key">The permutated alphabet to use.</param>

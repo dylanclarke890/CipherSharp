@@ -21,7 +21,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Encode a message using the Chaocipher cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var leftRotor = (Keys[0] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[0]);
             var rightRotor = (Keys[1] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[1]);
@@ -42,7 +42,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Decode a message using the Chaocipher cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var leftRotor = (Keys[0] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[0]);
             var rightRotor = (Keys[1] == "") ? AppConstants.Alphabet : Alphabet.AlphabetPermutation(Keys[1]);

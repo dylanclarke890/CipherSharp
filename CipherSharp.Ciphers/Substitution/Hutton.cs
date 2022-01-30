@@ -27,7 +27,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Encode a message using the Hutton cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             string alphabet = AppConstants.Alphabet;
 
@@ -61,7 +61,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Decode a message using the Hutton cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             string alphabet = AppConstants.Alphabet;
 

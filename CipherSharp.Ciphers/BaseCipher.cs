@@ -15,5 +15,22 @@ namespace CipherSharp.Ciphers
         }
 
         public string Message { get; set; }
+
+        private string encoded;
+        public string Encoded
+        {
+            get { return encoded ?? Encode(); }
+            set { encoded = value; }
+        }
+
+        private string decoded;
+        public string Decoded
+        {
+            get { return decoded ?? Decode(); }
+            set { decoded = value; }
+        }
+
+        public abstract string Encode();
+        public abstract string Decode();
     }
 }

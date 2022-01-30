@@ -100,7 +100,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Encode a message using the SIGABA cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var message = Message
                 .Replace("Z", "X") // SIGABA turned 'Z' into 'X'
@@ -158,7 +158,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Decode a message using the SIGABA cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var ciphersRotorSet = CipherKey.ToList();
             var controlRotorsSet = ControlKey.ToList();

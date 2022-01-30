@@ -40,7 +40,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Encode a message using the Columnar transposition cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var pending = Message.SplitIntoChunks(numOfCols);
 
@@ -59,7 +59,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decodes a message using the Columnar transposition cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             (int numOfRows, int remainder) = Utilities.DivMod(Message.Length, numOfCols);
             var longCols = internalKey[..(Message.Length % numOfCols)];

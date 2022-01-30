@@ -34,7 +34,7 @@ namespace CipherSharp.Ciphers.Square
         /// Encode a message using the Playfair cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             ProcessMessage();
 
@@ -52,7 +52,7 @@ namespace CipherSharp.Ciphers.Square
         /// Decode a message using the Playfair cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             ProcessMessage();
 

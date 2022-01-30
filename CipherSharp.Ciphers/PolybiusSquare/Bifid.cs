@@ -29,7 +29,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Encode a message using the Bifid cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             string nums = new Polybius(Message, Key).Encode();
 
@@ -49,7 +49,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Decode a message using the Bifid cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             string nums = new Polybius(Message, Key).Encode();
             int half = nums.Length / 2;

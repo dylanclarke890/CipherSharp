@@ -41,7 +41,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Encode a message using the Polybius Square cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             CheckText(true);
             var (key, text) = ProcessInput();
@@ -69,7 +69,7 @@ namespace CipherSharp.Ciphers.PolybiusSquare
         /// Decode a message using the Polybius Square cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             CheckText(false);
             var (key, text) = ProcessInput();

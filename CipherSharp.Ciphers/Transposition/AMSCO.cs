@@ -32,7 +32,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Encode a message using the AMSCO cipher
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var (internalKey, codeGroups) = ProcessInputData();
 
@@ -51,7 +51,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decode some text using the AMSCO cipher
         /// </summary>
         /// <returns>The decpded text.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var (internalKey, codeGroups) = ProcessInputData();
             int numRows = codeGroups.Count;

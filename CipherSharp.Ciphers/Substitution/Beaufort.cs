@@ -37,7 +37,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Encode a message using the Beaufort cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             return Process();
         }
@@ -46,7 +46,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Decode a message using the Beaufort cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             return Process();
         }

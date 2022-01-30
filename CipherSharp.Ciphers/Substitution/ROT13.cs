@@ -18,7 +18,7 @@
         /// Encode a message using the ROT13 cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             return _caesar.Encode();
         }
@@ -27,7 +27,7 @@
         /// Decode a message using the ROT13 cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             return _caesar.Decode();
         }

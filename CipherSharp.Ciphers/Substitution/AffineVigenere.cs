@@ -24,7 +24,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Encode a message using the Affine Vigenere cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             string alphabet = AppConstants.AlphaNumeric + "#";
             var txtAsNums = Message.ToNumber(alphabet);
@@ -47,7 +47,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Decode a message using the Affine Vigenere cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             string alphabet = AppConstants.AlphaNumeric + "#";
             var txtAsNums = Message.ToNumber(alphabet);

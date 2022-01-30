@@ -39,7 +39,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Encode a message using the Disrupted Transposition cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
 {
             Message = _complete ? Message.Pad((int)_gridSize) : Message.Pad((int)_gridSize, string.Empty, " ");
             var rank = Key.ToArray().UniqueRank();
@@ -77,7 +77,7 @@ namespace CipherSharp.Ciphers.Transposition
         /// Decode some text using the Disrupted Transposition cipher.
         /// </summary>
         /// <returns>The decoded text.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var rank = Key.ToArray().UniqueRank();
             List<string> grid = CreateEmptyGrid(Key);

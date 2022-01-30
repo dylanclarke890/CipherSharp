@@ -36,7 +36,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Encode a message using the Progressive Key cipher.
         /// </summary>
         /// <returns>The encoded message.</returns>
-        public string Encode()
+        public override string Encode()
         {
             var K = TextKey.ToNumber(Alpha);
             var P = 0;
@@ -59,7 +59,7 @@ namespace CipherSharp.Ciphers.Substitution
         /// Decode a message using the Progressive Key cipher.
         /// </summary>
         /// <returns>The decoded message.</returns>
-        public string Decode()
+        public override string Decode()
         {
             var K = TextKey.ToNumber(Alpha);
             var P = 0;

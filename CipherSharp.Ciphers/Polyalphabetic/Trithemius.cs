@@ -22,7 +22,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Encode some text using the Trithemius cipher.
         /// </summary>
         /// <returns>The encoded text.</returns>
-        public string Encode()
+        public override string Encode()
         {
             return Process(true);
         }
@@ -31,7 +31,7 @@ namespace CipherSharp.Ciphers.Polyalphabetic
         /// Decode some text using the Trithemius cipher.
         /// </summary>
         /// <returns>The decoded text.</returns>
-        public string Decode()
+        public override string Decode()
         {
             return Process(false);
         }
