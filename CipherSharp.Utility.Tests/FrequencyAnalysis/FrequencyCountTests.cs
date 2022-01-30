@@ -1,8 +1,8 @@
-﻿using CipherSharp.Attacks.FrequencyAnalysis;
+﻿using CipherSharp.Utility.FrequencyAnalysis;
 using System.Collections.Generic;
 using Xunit;
 
-namespace CipherSharp.Attacks.Tests.FrequencyAnalysis
+namespace CipherSharp.Utility.Tests.FrequencyAnalysis
 {
     public class FrequencyCountTests
     {

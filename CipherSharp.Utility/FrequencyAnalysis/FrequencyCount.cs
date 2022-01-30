@@ -1,7 +1,7 @@
-﻿using CipherSharp.Attacks.Extensions;
+﻿using CipherSharp.Utility.Extensions;
 using System.Collections.Generic;
 
-namespace CipherSharp.Attacks.FrequencyAnalysis
+namespace CipherSharp.Utility.FrequencyAnalysis
 {
     public class FrequencyCount
     {

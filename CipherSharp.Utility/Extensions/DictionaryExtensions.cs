@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CipherSharp.Attacks.Extensions
+namespace CipherSharp.Utility.Extensions
 {
     public static class DictionaryExtensions
     {
