@@ -42,6 +42,83 @@ namespace CipherSharp.Ciphers.Substitution
         {
             var key = Alphabet.AlphabetPermutation(Key, Alpha).ToList();
             Dictionary<char, string> D = new();
+            CreateEncodeBoard(key, D);
+
+            StringBuilder output = new(Message.Length);
+            foreach (var ltr in Message)
+            {
+                output.Append(D[ltr]);
+            }
+
+            return output.ToString();
+        }
+
+        /// <summary>
+        /// Decode a message using the Straddle Checkerboard cipher.
+        /// </summary>
+        /// <returns>The decoded message.</returns>
+        public string Decode()
+        {
+            var key = Alphabet.AlphabetPermutation(Key, Alpha).ToList();
+            Dictionary<string, char> D = new();
+            CreateDecodeBoard(key, D);
+
+            List<string> pending = new();
+            while (Message.Length > 0)
+            {
+                if (Keys.Contains(Message[0] - 48))
+                {
+                    pending.Add(Message[0].ToString() + Message[1].ToString());
+                    Message = Message.Remove(0, 2);
+                }
+                else
+                {
+                    pending.Add(Message[0].ToString());
+                    Message = Message.Remove(0, 1);
+                }
+            }
+
+            StringBuilder output = new(pending.Count);
+            foreach (var codeGroup in pending)
+            {
+                output.Append(D[codeGroup]);
+            }
+
+            return output.ToString();
+        }
+
+        private void CreateDecodeBoard(List<char> key, Dictionary<string, char> D)
+        {
+            // First row of the checkerboard
+            for (int i = 0; i < 10; i++)
+            {
+                if (!Keys.Contains(i))
+                {
+                    D[i.ToString()] = key[0];
+                    key.RemoveAt(0);
+                }
+            }
+
+            // Second row
+            for (int i = 0; i < 10; i++)
+            {
+                var codeGroup = Keys[0].ToString() + i.ToString();
+                D[codeGroup] = key[0];
+                key.RemoveAt(0);
+            }
+
+            // Third row
+            int keyLeft = key.Count;
+            for (int i = 0; i < keyLeft; i++)
+            {
+                var codeGroup = Keys[1].ToString() + i.ToString();
+                D[codeGroup] = key[0];
+                key.RemoveAt(0);
+            }
+        }
+
+        private void CreateEncodeBoard(List<char> key, Dictionary<char, string> D)
+        {
 
             // First row of the checkerboard
             for (int i = 0; i < 10; i++)
@@ -69,74 +146,6 @@ namespace CipherSharp.Ciphers.Substitution
                 D[key[0]] = codeGroup;
                 key.RemoveAt(0);
             }
-
-            StringBuilder output = new(Message.Length);
-            foreach (var ltr in Message)
-            {
-                output.Append(D[ltr]);
-            }
-
-            return output.ToString();
-        }
-
-        /// <summary>
-        /// Decode a message using the Straddle Checkerboard cipher.
-        /// </summary>
-        /// <returns>The decoded message.</returns>
-        public string Decode()
-        {
-            var key = Alphabet.AlphabetPermutation(Key, Alpha).ToList();
-            Dictionary<string, char> D = new();
-
-            // First row of the checkerboard
-            for (int i = 0; i < 10; i++)
-            {
-                if (!Keys.Contains(i))
-                {
-                    D[i.ToString()] = key[0];
-                    key.RemoveAt(0);
-                }
-            }
-
-            // Second row
-            for (int i = 0; i < 10; i++)
-            {
-                var codeGroup = Keys[0].ToString() + i.ToString();
-                D[codeGroup] = key[0];
-                key.RemoveAt(0);
-            }
-
-            // Third row
-            int keyLeft = key.Count;
-            for (int i = 0; i < keyLeft; i++)
-            {
-                var codeGroup = Keys[1].ToString() + i.ToString();
-                D[codeGroup] = key[0];
-                key.RemoveAt(0);
-            }
-
-            List<string> pending = new();
-            while (Message.Length > 0)
-            {
-                if (Keys.Contains(int.Parse(Message[0].ToString())))
-                {
-                    pending.Add(Message[0..1]);
-                    Message = Message.Remove(0, 2);
-                }
-                else
-                {
-                    pending.Add(Message[0].ToString());
-                    Message = Message.Remove(0, 1);
-                }
-            }
-
-            StringBuilder output = new();
-            foreach (var codeGroup in pending)
-            {
-                output.Append(D[codeGroup]);
-            }
-
-            return output.ToString();
         }
     }
 }
