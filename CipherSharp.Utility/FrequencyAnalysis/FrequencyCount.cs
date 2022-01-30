@@ -5,6 +5,8 @@ namespace CipherSharp.Utility.FrequencyAnalysis
 {
     public class FrequencyCount
     {
+        public const string AlphabetOrderedByFrequency = "ETAOINSHRDLCUMWFGYPBVKJXQZ";
+
         public Dictionary<char, int> Monogram(string msg)
         {
             Dictionary<char, int> counts = new(msg.Length);
