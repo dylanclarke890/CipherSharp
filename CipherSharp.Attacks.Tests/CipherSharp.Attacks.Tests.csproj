@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CipherSharp.Ciphers\CipherSharp.Ciphers.csproj" />
+    <ProjectReference Include="..\CipherSharp.Attacks\CipherSharp.Attacks.csproj" />
   </ItemGroup>
 
 </Project>
