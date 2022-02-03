@@ -25,9 +25,9 @@ namespace CipherSharp.Attacks
 
         public Dictionary<int, string> BruteForce()
         {
-            Dictionary<int, string> results = new(26);
+            Dictionary<int, string> results = new(25);
 
-            for (int i = 0; i < 26; i++)
+            for (int i = 1; i < 26; i++)
             {
                 Caesar caesar = new(Msg, i);
                 results[i] = caesar.Decoded;
@@ -38,8 +38,8 @@ namespace CipherSharp.Attacks
 
         public Dictionary<char, string> FrequencyAnalysisGuesses()
         {
-            var counts = _frequencyCount.Monogram(Msg);
-            var mostFrequent = counts.OrderByDescending(kv => kv.Value).ToList()[0];
+            var counts = _frequencyCount.Monogram();
+            var mostFrequent = counts.OrderByDescending(kv => kv.Value).First();
             var alpha = AppConstants.Alphabet;
 
             Dictionary<char, string> guesses = new(26);
