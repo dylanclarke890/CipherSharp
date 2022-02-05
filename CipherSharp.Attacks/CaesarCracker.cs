@@ -1,24 +1,21 @@
 ﻿using CipherSharp.Ciphers.Substitution;
 using CipherSharp.Utility.FrequencyAnalysis;
-using CipherSharp.Utility.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CipherSharp.Attacks
 {
     public class CaesarCracker
     {
-        private readonly FrequencyCount _frequencyCount;
-
-        public CaesarCracker(FrequencyCount frequencyCount, string msg)
+        public CaesarCracker(string msg)
         {
             if (string.IsNullOrEmpty(msg))
             {
                 throw new ArgumentException($"'{nameof(msg)}' cannot be null or empty.", nameof(msg));
             }
-            _frequencyCount = frequencyCount;
-            Msg = msg;
+            Msg = msg.ToUpper();
         }
 
         public string Msg { get; }
@@ -36,22 +33,103 @@ namespace CipherSharp.Attacks
             return results;
         }
 
-        public Dictionary<char, string> FrequencyAnalysisGuesses()
+        public List<string> FrequencyAnalysis()
         {
-            var counts = _frequencyCount.Monogram();
-            var mostFrequent = counts.OrderByDescending(kv => kv.Value).First();
-            var alpha = AppConstants.Alphabet;
+            List<string> guesses = new(5);
+            List<int> freq = FillWithZeros(26);
+            List<int> freqSorted = FillWithZeros(26);
+            List<int> used = FillWithZeros(26);
 
-            Dictionary<char, string> guesses = new(26);
+            GetLetterFrequency(freq);
 
-            for (int i = 0; i < 26; i++)
-            {
-                char current = FrequencyCount.AlphabetOrderedByFrequency[i];
-                Caesar caesar = new(Msg, alpha.IndexOf(mostFrequent.Key) - alpha.IndexOf(current));
-                guesses[current] = caesar.Decoded;
-            }
+            freqSorted = freq.OrderByDescending(num => num).ToList();
+
+            MakeGuesses(guesses, freq, freqSorted, used);
 
             return guesses;
+        }
+
+        private void MakeGuesses(List<string> possibleResults, List<int> freq, List<int> freqSorted, List<int> used)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                int ch = -1;
+                for (int j = 0; j < 26; j++)
+                {
+                    if (freqSorted[i] == freq[j] && used[j] == 0)
+                    {
+                        used[j] = 1;
+                        ch = j;
+                        break;
+                    }
+                }
+
+                if (ch == -1)
+                {
+                    break;
+                }
+
+                int shift = FrequencyCount.AlphabetOrderedByFrequency[i] - 'A' - ch;
+                possibleResults.Add(GetPossiblePlainText(shift));
+            }
+        }
+
+        private string GetPossiblePlainText(int possibleShift)
+        {
+            StringBuilder result = new(Msg.Length);
+
+            for (int k = 0; k < Msg.Length; k++)
+            {
+                var ltr = Msg[k];
+
+                if (ltr is ' ') // Insert whitespace as is
+                {
+                    result.Append(' '); 
+                    continue;
+                }
+                else if (ltr is '\n' or '\r') // ignore new lines
+                {
+                    continue; 
+                }
+
+                int y = Msg[k] - 'A';
+                y += possibleShift;
+
+                if (y < 0)
+                {
+                    y += 26;
+                }
+                else if (y > 25)
+                {
+                    y -= 26;
+                }
+                result.Append((char)('A' + y));
+            }
+
+            return result.ToString();
+        }
+
+        private void GetLetterFrequency(List<int> freq)
+        {
+            foreach (char ltr in Msg)
+            {
+                if (ltr is not ' ' and not '\n' and not '\r')
+                {
+                    freq[ltr - 'A']++;
+                }
+            }
+        }
+
+        private static List<int> FillWithZeros(int capacity)
+        {
+            List<int> padded = new(capacity);
+
+            for (int i = 0; i < capacity; i++)
+            {
+                padded.Add(0);
+            }
+
+            return padded;
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using CipherSharp.Utility.Extensions;
-using CipherSharp.Utility.FileHandling;
 using System;
 using System.Collections.Generic;
 
@@ -29,7 +28,7 @@ namespace CipherSharp.Utility.FrequencyAnalysis
         private string _msg;
         public string Msg { get { return _msg; } set { _msg = value.ToUpper(); } }
 
-        public Dictionary<char, decimal> Monogram()
+        public Dictionary<char, int> Monogram()
         {
             Dictionary<char, int> counts = new(26);
             for (int i = 0; i < Msg.Length; i++)
@@ -37,7 +36,7 @@ namespace CipherSharp.Utility.FrequencyAnalysis
                 counts.AddOrUpdate(Msg[i]);
             }
 
-            return GetFrequencyWeights(counts, Msg.Length);
+            return counts;
         }
 
         public Dictionary<string, decimal> Bigram()
@@ -67,7 +66,7 @@ namespace CipherSharp.Utility.FrequencyAnalysis
             return GetFrequencyWeights(counts, Msg.Length);
         }
 
-        private static Dictionary<T, decimal> GetFrequencyWeights<T>(Dictionary<T, int> counts, int totalMessageLength)
+        public static Dictionary<T, decimal> GetFrequencyWeights<T>(Dictionary<T, int> counts, int totalMessageLength)
         {
             Dictionary<T, decimal> frequencyWeights = new(26);
             

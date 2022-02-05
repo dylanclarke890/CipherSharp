@@ -1,8 +1,4 @@
-﻿using CipherSharp.Attacks;
-using CipherSharp.Utility.FrequencyAnalysis;
-using System;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using Xunit;
 
 namespace CipherSharp.Attacks.Tests
@@ -20,7 +16,7 @@ namespace CipherSharp.Attacks.Tests
         public void BruteForce_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var caesarCracker = new CaesarCracker(new FrequencyCount(EncodedText), EncodedText);
+            var caesarCracker = new CaesarCracker(EncodedText);
 
             // Act
             var result = caesarCracker.BruteForce();
@@ -30,16 +26,16 @@ namespace CipherSharp.Attacks.Tests
         }
 
         [Fact]
-        public void FrequencyAnalysisGuess_StateUnderTest_ExpectedBehavior()
+        public void FrequencyAnalysisAlternate_StateUnderTest_ExpectedBehavior()
         {
             // Arrange
-            var caesarCracker = new CaesarCracker(new FrequencyCount(EncodedText), EncodedText);
+            var caesarCracker = new CaesarCracker(EncodedText);
 
             // Act
-            var result = caesarCracker.FrequencyAnalysisGuesses();
+            var result = caesarCracker.FrequencyAnalysis();
 
             // Assert
-            Assert.Equal(new(), result);
+            Assert.Equal(5, result.Count);
         }
     }
 }
